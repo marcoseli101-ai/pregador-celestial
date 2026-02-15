@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { Layout } from "@/components/Layout";
 import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
@@ -23,20 +24,22 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/estudo-biblico" element={<EstudoBiblico />} />
-            <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
-            <Route path="/biblioteca" element={<Biblioteca />} />
-            <Route path="/multimidia" element={<Multimidia />} />
-            <Route path="/dicionario" element={<Dicionario />} />
-            <Route path="/questionarios" element={<Questionarios />} />
-            <Route path="/devocional" element={<Devocional />} />
-            <Route path="/login" element={<Login />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/estudo-biblico" element={<EstudoBiblico />} />
+              <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
+              <Route path="/biblioteca" element={<Biblioteca />} />
+              <Route path="/multimidia" element={<Multimidia />} />
+              <Route path="/dicionario" element={<Dicionario />} />
+              <Route path="/questionarios" element={<Questionarios />} />
+              <Route path="/devocional" element={<Devocional />} />
+              <Route path="/login" element={<Login />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
