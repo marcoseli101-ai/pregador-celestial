@@ -41,6 +41,30 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_devotionals: {
+        Row: {
+          content: string
+          created_at: string
+          date_label: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          date_label: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          date_label?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_sermons: {
         Row: {
           content: string
