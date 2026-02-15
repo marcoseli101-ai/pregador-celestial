@@ -70,7 +70,7 @@ const EstudoBiblico = () => {
           <>
             <Card className="mb-6">
               <CardContent className="p-6 space-y-3">
-                {chapterData?.verses.map((v) => (
+                {(chapterData?.verses ?? []).map((v) => (
                   <p key={v.number} className="leading-relaxed text-sm">
                     <span className="font-bold text-accent mr-1.5">{v.number}</span>
                     {v.text}
