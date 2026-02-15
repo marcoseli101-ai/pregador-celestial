@@ -1,12 +1,49 @@
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Save, Copy, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { streamSermon } from "@/lib/stream-chat";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const GeradorPregacoes = () => {
   const [tema, setTema] = useState("");
+  const [publico, setPublico] = useState("");
+  const [tempo, setTempo] = useState("");
+  const [nivel, setNivel] = useState("");
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+  const handleGenerate = async () => {
+    if (!tema.trim()) { toast.error("Digite um tema para a pregação"); return; }
+    setResult("");
+    setLoading(true);
+    let accumulated = "";
+    await streamSermon({
+      tema, publico, tempo, nivel,
+      onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
+      onDone: () => setLoading(false),
+      onError: (msg) => { toast.error(msg); setLoading(false); },
+    });
+  };
+
+  const handleSave = async () => {
+    if (!user) { toast.error("Faça login para salvar pregações"); return; }
+    if (!result) return;
+    const { error } = await supabase.from("saved_sermons").insert({
+      user_id: user.id, title: tema, tema, publico, tempo, nivel, content: result,
+    });
+    if (error) toast.error("Erro ao salvar"); else toast.success("Pregação salva!");
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(result);
+    toast.success("Copiado!");
+  };
 
   return (
     <div className="container py-12">
@@ -15,52 +52,44 @@ const GeradorPregacoes = () => {
         <p className="text-muted-foreground">Gere esboços e sermões completos com inteligência artificial e base bíblica sólida.</p>
       </div>
 
-      <div className="mx-auto max-w-2xl">
-        <Card className="shadow-celestial border-celestial/20">
+      <div className="mx-auto max-w-4xl grid gap-8 lg:grid-cols-[400px_1fr]">
+        <Card className="shadow-celestial border-celestial/20 h-fit">
           <CardHeader>
             <CardTitle className="font-serif">Configure sua Pregação</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <div>
               <Label>Tema da Mensagem</Label>
-              <input
-                type="text"
-                value={tema}
-                onChange={(e) => setTema(e.target.value)}
-                placeholder="Ex: O poder da fé, A volta de Jesus, Santidade..."
-                className="mt-1 w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              />
+              <input type="text" value={tema} onChange={(e) => setTema(e.target.value)} placeholder="Ex: O poder da fé, A volta de Jesus..." className="mt-1 w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <Label>Público-Alvo</Label>
-                <Select>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="igreja">Igreja</SelectItem>
-                    <SelectItem value="jovens">Jovens</SelectItem>
-                    <SelectItem value="cruzada">Cruzada Evangelística</SelectItem>
-                    <SelectItem value="congresso">Congresso</SelectItem>
-                    <SelectItem value="casais">Casais</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label>Tempo de Pregação</Label>
-                <Select>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="15">15 minutos</SelectItem>
-                    <SelectItem value="30">30 minutos</SelectItem>
-                    <SelectItem value="45">45 minutos</SelectItem>
-                    <SelectItem value="60">1 hora</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div>
+              <Label>Público-Alvo</Label>
+              <Select value={publico} onValueChange={setPublico}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="igreja">Igreja</SelectItem>
+                  <SelectItem value="jovens">Jovens</SelectItem>
+                  <SelectItem value="cruzada">Cruzada Evangelística</SelectItem>
+                  <SelectItem value="congresso">Congresso</SelectItem>
+                  <SelectItem value="casais">Casais</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Tempo de Pregação</Label>
+              <Select value={tempo} onValueChange={setTempo}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15">15 minutos</SelectItem>
+                  <SelectItem value="30">30 minutos</SelectItem>
+                  <SelectItem value="45">45 minutos</SelectItem>
+                  <SelectItem value="60">1 hora</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label>Nível Espiritual</Label>
-              <Select>
+              <Select value={nivel} onValueChange={setNivel}>
                 <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="exortacao">Exortação</SelectItem>
@@ -70,11 +99,31 @@ const GeradorPregacoes = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="w-full bg-gradient-gold text-background hover:opacity-90 gap-2 text-base" size="lg">
-              <Sparkles className="h-5 w-5" /> Gerar Pregação
+            <Button onClick={handleGenerate} disabled={loading} className="w-full bg-gradient-gold text-background hover:opacity-90 gap-2 text-base" size="lg">
+              {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
+              {loading ? "Gerando..." : "Gerar Pregação"}
             </Button>
           </CardContent>
         </Card>
+
+        {(result || loading) && (
+          <Card className="shadow-celestial border-celestial/20">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="font-serif">Pregação Gerada</CardTitle>
+              {result && !loading && (
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="h-4 w-4 mr-1" /> Copiar</Button>
+                  <Button variant="outline" size="sm" onClick={handleSave}><Save className="h-4 w-4 mr-1" /> Salvar</Button>
+                </div>
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
+                {result || <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando pregação com IA...</div>}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
