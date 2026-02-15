@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, BookOpen, Sun, Moon, LogOut } from "lucide-react";
+import { Menu, X, BookOpen, Sun, Moon, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const navItems = [
   { label: "Início", path: "/" },
@@ -21,6 +22,7 @@ export function Header() {
   const [dark, setDark] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdminCheck();
 
   const toggleTheme = () => {
     setDark(!dark);
@@ -48,6 +50,13 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {isAdmin && (
+            <Link to="/admin">
+              <Button variant="ghost" size="sm" className="hidden sm:flex gap-1 text-accent">
+                <ShieldCheck className="h-4 w-4" /> Admin
+              </Button>
+            </Link>
+          )}
           <Button variant="ghost" size="icon" onClick={toggleTheme} className="hidden sm:flex">
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
@@ -75,6 +84,11 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link to="/admin" onClick={() => setMobileOpen(false)} className={cn("rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent flex items-center gap-1 text-accent", location.pathname === "/admin" ? "bg-accent text-accent-foreground" : "")}>
+                <ShieldCheck className="h-4 w-4" /> Painel Admin
+              </Link>
+            )}
             <div className="mt-3 flex gap-2">
               {user ? (
                 <Button variant="outline" className="w-full" onClick={() => { signOut(); setMobileOpen(false); }}>
