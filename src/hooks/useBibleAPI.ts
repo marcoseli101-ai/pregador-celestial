@@ -133,3 +133,115 @@ export function useBibleChapter(bookEnName: string | null, chapter: number | nul
 
   return { data, loading, error };
 }
+
+export interface VerseResult {
+  reference: string;
+  text: string;
+}
+
+export function useBibleVerse(reference: string | null) {
+  const [data, setData] = useState<VerseResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!reference) {
+      setData(null);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    const ref = encodeURIComponent(reference);
+    fetch(`https://bible-api.com/${ref}?translation=almeida`)
+      .then((r) => {
+        if (!r.ok) throw new Error("Falha ao carregar");
+        return r.json();
+      })
+      .then((json) => {
+        if (cancelled) return;
+        setData({
+          reference: json.reference ?? reference,
+          text: json.text?.trim() ?? "",
+        });
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Erro");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [reference]);
+
+  return { data, loading, error };
+}
+
+// Map Portuguese references to English for bible-api.com
+const PT_TO_EN: Record<string, string> = {
+  "Gênesis": "Genesis", "Êxodo": "Exodus", "Levítico": "Leviticus", "Números": "Numbers",
+  "Deuteronômio": "Deuteronomy", "Josué": "Joshua", "Juízes": "Judges", "Rute": "Ruth",
+  "1 Samuel": "1 Samuel", "2 Samuel": "2 Samuel", "1 Reis": "1 Kings", "2 Reis": "2 Kings",
+  "1 Crônicas": "1 Chronicles", "2 Crônicas": "2 Chronicles", "Esdras": "Ezra",
+  "Neemias": "Nehemiah", "Ester": "Esther", "Jó": "Job", "Salmos": "Psalms",
+  "Provérbios": "Proverbs", "Eclesiastes": "Ecclesiastes", "Cantares": "Song of Solomon",
+  "Isaías": "Isaiah", "Jeremias": "Jeremiah", "Lamentações": "Lamentations",
+  "Ezequiel": "Ezekiel", "Daniel": "Daniel", "Oséias": "Hosea", "Joel": "Joel",
+  "Amós": "Amos", "Obadias": "Obadiah", "Jonas": "Jonah", "Miquéias": "Micah",
+  "Naum": "Nahum", "Habacuque": "Habakkuk", "Sofonias": "Zephaniah", "Ageu": "Haggai",
+  "Zacarias": "Zechariah", "Malaquias": "Malachi", "Mateus": "Matthew", "Marcos": "Mark",
+  "Lucas": "Luke", "João": "John", "Atos": "Acts", "Romanos": "Romans",
+  "1 Coríntios": "1 Corinthians", "2 Coríntios": "2 Corinthians", "Gálatas": "Galatians",
+  "Efésios": "Ephesians", "Filipenses": "Philippians", "Colossenses": "Colossians",
+  "1 Tessalonicenses": "1 Thessalonians", "2 Tessalonicenses": "2 Thessalonians",
+  "1 Timóteo": "1 Timothy", "2 Timóteo": "2 Timothy", "Tito": "Titus",
+  "Filemom": "Philemon", "Hebreus": "Hebrews", "Tiago": "James",
+  "1 Pedro": "1 Peter", "2 Pedro": "2 Peter", "1 João": "1 John",
+  "2 João": "2 John", "3 João": "3 John", "Judas": "Jude", "Apocalipse": "Revelation",
+};
+
+export function translateRefToEn(ptRef: string): string {
+  for (const [pt, en] of Object.entries(PT_TO_EN)) {
+    if (ptRef.startsWith(pt)) {
+      return ptRef.replace(pt, en);
+    }
+  }
+  return ptRef;
+}
+
+export function useBibleVerses(ptReferences: string[]) {
+  const [results, setResults] = useState<Record<string, VerseResult>>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchAll = useCallback(async (refs: string[]) => {
+    if (refs.length === 0) return;
+    setLoading(true);
+    setError(null);
+    const newResults: Record<string, VerseResult> = {};
+
+    await Promise.all(
+      refs.map(async (ptRef) => {
+        try {
+          const enRef = translateRefToEn(ptRef);
+          const res = await fetch(`https://bible-api.com/${encodeURIComponent(enRef)}?translation=almeida`);
+          if (!res.ok) throw new Error("Falha");
+          const json = await res.json();
+          newResults[ptRef] = {
+            reference: ptRef,
+            text: json.text?.trim() ?? "",
+          };
+        } catch {
+          newResults[ptRef] = { reference: ptRef, text: "Não foi possível carregar este versículo." };
+        }
+      })
+    );
+
+    setResults(newResults);
+    setLoading(false);
+  }, []);
+
+  return { results, loading, error, fetchAll };
+}
