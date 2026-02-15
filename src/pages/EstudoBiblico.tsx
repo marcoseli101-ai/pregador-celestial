@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross } from "lucide-react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useBibleBooks, useBibleChapter, type BibleBook } from "@/hooks/useBibleAPI";
+import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
 
 const testamentLabel: Record<string, string> = {
   VT: "Antigo Testamento",
@@ -69,6 +69,8 @@ const EstudoBiblico = () => {
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos">("biblia");
+  const [expandedStudy, setExpandedStudy] = useState<string | null>(null);
+  const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
 
   const { data: chapterData, loading: chapterLoading, error: chapterError } = useBibleChapter(
     selectedBook?.abbrev.en ?? null,
@@ -291,32 +293,75 @@ const EstudoBiblico = () => {
           <h2 className="font-serif text-2xl font-semibold mb-6 text-center">
             Estudos <span className="text-gradient-gold">Temáticos</span>
           </h2>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-4">
             {BIBLE_STUDIES.map((study) => {
               const Icon = study.icon;
+              const isExpanded = expandedStudy === study.title;
+
+              const handleToggle = () => {
+                if (isExpanded) {
+                  setExpandedStudy(null);
+                } else {
+                  setExpandedStudy(study.title);
+                  fetchVerses(study.verses);
+                }
+              };
+
               return (
-                <Card key={study.title} className="hover:shadow-celestial hover:border-celestial/30 transition-all">
+                <Card
+                  key={study.title}
+                  className={`transition-all cursor-pointer ${isExpanded ? "shadow-celestial border-celestial/30" : "hover:shadow-celestial hover:border-celestial/30"}`}
+                  onClick={handleToggle}
+                >
                   <CardContent className="p-5 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
-                        <Icon className={`h-5 w-5 ${study.color}`} />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                          <Icon className={`h-5 w-5 ${study.color}`} />
+                        </div>
+                        <div>
+                          <h3 className="font-serif font-semibold text-sm">{study.title}</h3>
+                          <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{study.description}</p>
+                        </div>
                       </div>
-                      <h3 className="font-serif font-semibold text-sm">{study.title}</h3>
+                      <ChevronDown className={`h-5 w-5 text-muted-foreground shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{study.description}</p>
-                    <div className="pt-1">
-                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">Passagens-chave</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {study.verses.map((verse) => (
-                          <span
-                            key={verse}
-                            className="text-[11px] bg-secondary text-secondary-foreground px-2 py-0.5 rounded-md"
-                          >
-                            {verse}
-                          </span>
-                        ))}
+
+                    {/* Passagens-chave tags */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {study.verses.map((verse) => (
+                        <span
+                          key={verse}
+                          className="text-[11px] bg-secondary text-secondary-foreground px-2 py-0.5 rounded-md"
+                        >
+                          {verse}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Expanded verses content */}
+                    {isExpanded && (
+                      <div className="pt-3 border-t border-border space-y-4" onClick={(e) => e.stopPropagation()}>
+                        {versesLoading ? (
+                          <div className="flex items-center justify-center py-6">
+                            <Loader2 className="h-5 w-5 animate-spin text-accent mr-2" />
+                            <span className="text-sm text-muted-foreground">Carregando versículos...</span>
+                          </div>
+                        ) : (
+                          study.verses.map((verseRef) => {
+                            const result = verseResults[verseRef];
+                            return (
+                              <div key={verseRef} className="space-y-1">
+                                <p className="text-xs font-semibold text-accent">{verseRef}</p>
+                                <p className="text-sm leading-relaxed text-foreground/90 italic">
+                                  "{result?.text || "Carregando..."}"
+                                </p>
+                              </div>
+                            );
+                          })
+                        )}
                       </div>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               );
