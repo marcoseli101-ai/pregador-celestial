@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown } from "lucide-react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
+import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 
 const testamentLabel: Record<string, string> = {
   VT: "Antigo Testamento",
@@ -18,50 +20,8 @@ const FEATURED_VERSES = [
   { ref: "Provérbios 3:5-6", text: "Confia no Senhor de todo o teu coração, e não te estribes no teu próprio entendimento. Reconhece-o em todos os teus caminhos, e ele endireitará as tuas veredas.", theme: "Sabedoria" },
 ];
 
-const BIBLE_STUDIES = [
-  {
-    title: "A Graça de Deus",
-    description: "Estudo sobre a graça imerecida de Deus e como ela transforma vidas.",
-    icon: Heart,
-    verses: ["Efésios 2:8-9", "Romanos 5:8", "Tito 2:11", "2 Coríntios 12:9"],
-    color: "text-red-500",
-  },
-  {
-    title: "Fé e Confiança",
-    description: "Aprofunde-se no significado bíblico da fé e como exercitá-la no dia a dia.",
-    icon: Star,
-    verses: ["Hebreus 11:1", "Romanos 10:17", "Marcos 11:22-24", "Tiago 2:17"],
-    color: "text-accent",
-  },
-  {
-    title: "O Espírito Santo",
-    description: "Conheça a pessoa e a obra do Espírito Santo na vida do crente.",
-    icon: Flame,
-    verses: ["Atos 1:8", "João 14:26", "Gálatas 5:22-23", "Romanos 8:26"],
-    color: "text-orange-500",
-  },
-  {
-    title: "Oração e Intercessão",
-    description: "Princípios bíblicos para uma vida de oração poderosa e eficaz.",
-    icon: ScrollText,
-    verses: ["Mateus 6:9-13", "Filipenses 4:6-7", "1 Tessalonicenses 5:17", "Tiago 5:16"],
-    color: "text-blue-500",
-  },
-  {
-    title: "Salvação em Cristo",
-    description: "O plano de redenção de Deus revelado através de Jesus Cristo.",
-    icon: Cross,
-    verses: ["João 14:6", "Romanos 10:9-10", "Atos 4:12", "Efésios 1:7"],
-    color: "text-purple-500",
-  },
-  {
-    title: "Promessas de Deus",
-    description: "As grandes promessas da Bíblia para fortalecer sua caminhada espiritual.",
-    icon: Sparkles,
-    verses: ["Jeremias 29:11", "Isaías 40:31", "Josué 1:9", "Salmos 91:1-2"],
-    color: "text-emerald-500",
-  },
-];
+const STUDY_GROUPS_VT = ["Pentateuco", "Históricos", "Poéticos", "Profetas Maiores", "Profetas Menores"];
+const STUDY_GROUPS_NT = ["Evangelhos", "Históricos", "Cartas Paulinas", "Cartas Gerais", "Profético"];
 
 const EstudoBiblico = () => {
   const { books } = useBibleBooks();
@@ -70,7 +30,16 @@ const EstudoBiblico = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos">("biblia");
   const [expandedStudy, setExpandedStudy] = useState<string | null>(null);
+  const [studyFilter, setStudyFilter] = useState<"all" | "VT" | "NT">("all");
+  const [studySearch, setStudySearch] = useState("");
   const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
+
+  const filteredStudies = COMPLETE_BIBLE_STUDIES.filter((s) => {
+    const matchTestament = studyFilter === "all" || s.testament === studyFilter;
+    const q = studySearch.toLowerCase();
+    const matchSearch = !q || s.book.toLowerCase().includes(q) || s.title.toLowerCase().includes(q) || s.theme.toLowerCase().includes(q) || s.description.toLowerCase().includes(q);
+    return matchTestament && matchSearch;
+  });
 
   const { data: chapterData, loading: chapterLoading, error: chapterError } = useBibleChapter(
     selectedBook?.abbrev.en ?? null,
@@ -287,90 +256,217 @@ const EstudoBiblico = () => {
         </div>
       )}
 
-      {/* TAB: Estudos Bíblicos */}
+      {/* TAB: Estudos Bíblicos Completos */}
       {activeTab === "estudos" && (
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-serif text-2xl font-semibold mb-6 text-center">
-            Estudos <span className="text-gradient-gold">Temáticos</span>
+          <h2 className="font-serif text-2xl font-semibold mb-2 text-center">
+            Estudos de <span className="text-gradient-gold">Toda a Bíblia</span>
           </h2>
-          <div className="space-y-4">
-            {BIBLE_STUDIES.map((study) => {
-              const Icon = study.icon;
-              const isExpanded = expandedStudy === study.title;
+          <p className="text-muted-foreground text-center text-sm mb-6">66 livros · Antigo e Novo Testamento</p>
 
-              const handleToggle = () => {
-                if (isExpanded) {
-                  setExpandedStudy(null);
-                } else {
-                  setExpandedStudy(study.title);
-                  fetchVerses(study.verses);
-                }
-              };
-
-              return (
-                <Card
-                  key={study.title}
-                  className={`transition-all cursor-pointer ${isExpanded ? "shadow-celestial border-celestial/30" : "hover:shadow-celestial hover:border-celestial/30"}`}
-                  onClick={handleToggle}
-                >
-                  <CardContent className="p-5 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                          <Icon className={`h-5 w-5 ${study.color}`} />
-                        </div>
-                        <div>
-                          <h3 className="font-serif font-semibold text-sm">{study.title}</h3>
-                          <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{study.description}</p>
-                        </div>
-                      </div>
-                      <ChevronDown className={`h-5 w-5 text-muted-foreground shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                    </div>
-
-                    {/* Passagens-chave tags */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {study.verses.map((verse) => (
-                        <span
-                          key={verse}
-                          className="text-[11px] bg-secondary text-secondary-foreground px-2 py-0.5 rounded-md"
-                        >
-                          {verse}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Expanded verses content */}
-                    {isExpanded && (
-                      <div className="pt-3 border-t border-border space-y-4" onClick={(e) => e.stopPropagation()}>
-                        {versesLoading ? (
-                          <div className="flex items-center justify-center py-6">
-                            <Loader2 className="h-5 w-5 animate-spin text-accent mr-2" />
-                            <span className="text-sm text-muted-foreground">Carregando versículos...</span>
-                          </div>
-                        ) : (
-                          study.verses.map((verseRef) => {
-                            const result = verseResults[verseRef];
-                            return (
-                              <div key={verseRef} className="space-y-1">
-                                <p className="text-xs font-semibold text-accent">{verseRef}</p>
-                                <p className="text-sm leading-relaxed text-foreground/90 italic">
-                                  "{result?.text || "Carregando..."}"
-                                </p>
-                              </div>
-                            );
-                          })
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
+          {/* Filter */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <Button
+              size="sm"
+              variant={studyFilter === "all" ? "default" : "outline"}
+              className={studyFilter === "all" ? "bg-gradient-gold text-background" : ""}
+              onClick={() => setStudyFilter("all")}
+            >
+              Todos
+            </Button>
+            <Button
+              size="sm"
+              variant={studyFilter === "VT" ? "default" : "outline"}
+              className={studyFilter === "VT" ? "bg-gradient-gold text-background" : ""}
+              onClick={() => setStudyFilter("VT")}
+            >
+              Antigo Testamento
+            </Button>
+            <Button
+              size="sm"
+              variant={studyFilter === "NT" ? "default" : "outline"}
+              className={studyFilter === "NT" ? "bg-gradient-gold text-background" : ""}
+              onClick={() => setStudyFilter("NT")}
+            >
+              Novo Testamento
+            </Button>
           </div>
+
+          {/* Search studies */}
+          <div className="mx-auto max-w-xl mb-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={studySearch}
+                onChange={(e) => setStudySearch(e.target.value)}
+                placeholder="Buscar estudo por livro, tema ou palavra-chave..."
+                className="w-full rounded-lg border border-input bg-background px-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+          </div>
+
+          {/* Studies grouped by category */}
+          {(studyFilter === "all" || studyFilter === "VT" ? STUDY_GROUPS_VT : []).map((group) => {
+            const studies = filteredStudies.filter((s) => s.testament === "VT" && s.group === group);
+            if (studies.length === 0) return null;
+            return (
+              <StudyGroup
+                key={group}
+                groupName={group}
+                testament="Antigo Testamento"
+                studies={studies}
+                expandedStudy={expandedStudy}
+                setExpandedStudy={setExpandedStudy}
+                fetchVerses={fetchVerses}
+                versesLoading={versesLoading}
+                verseResults={verseResults}
+              />
+            );
+          })}
+          {(studyFilter === "all" || studyFilter === "NT" ? STUDY_GROUPS_NT : []).map((group) => {
+            const studies = filteredStudies.filter((s) => s.testament === "NT" && s.group === group);
+            if (studies.length === 0) return null;
+            return (
+              <StudyGroup
+                key={group}
+                groupName={group}
+                testament="Novo Testamento"
+                studies={studies}
+                expandedStudy={expandedStudy}
+                setExpandedStudy={setExpandedStudy}
+                fetchVerses={fetchVerses}
+                versesLoading={versesLoading}
+                verseResults={verseResults}
+              />
+            );
+          })}
+
+          {filteredStudies.length === 0 && (
+            <p className="text-center text-muted-foreground py-10">Nenhum estudo encontrado para "{studySearch}"</p>
+          )}
         </div>
       )}
     </div>
   );
 };
+
+// Study Group Component
+function StudyGroup({
+  groupName, testament, studies, expandedStudy, setExpandedStudy, fetchVerses, versesLoading, verseResults,
+}: {
+  groupName: string;
+  testament: string;
+  studies: BibleStudy[];
+  expandedStudy: string | null;
+  setExpandedStudy: (v: string | null) => void;
+  fetchVerses: (refs: string[]) => void;
+  versesLoading: boolean;
+  verseResults: Record<string, { reference: string; text: string }>;
+}) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-4">
+        <h3 className="font-serif text-lg font-semibold">{groupName}</h3>
+        <Badge variant="secondary" className="text-xs">{studies.length} livros</Badge>
+      </div>
+      <div className="space-y-3">
+        {studies.map((study) => {
+          const Icon = study.icon;
+          const isExpanded = expandedStudy === study.book;
+
+          const handleToggle = () => {
+            if (isExpanded) {
+              setExpandedStudy(null);
+            } else {
+              setExpandedStudy(study.book);
+              fetchVerses(study.keyVerses);
+            }
+          };
+
+          return (
+            <Card
+              key={study.book}
+              className={`transition-all cursor-pointer ${isExpanded ? "shadow-celestial border-celestial/30" : "hover:shadow-celestial hover:border-celestial/30"}`}
+              onClick={handleToggle}
+            >
+              <CardContent className="p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-lg bg-gradient-gold flex items-center justify-center shrink-0">
+                      <Icon className="h-5 w-5 text-background" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h4 className="font-serif font-semibold text-sm">{study.book}</h4>
+                        <Badge variant="outline" className="text-[10px]">{study.theme}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{study.title}</p>
+                    </div>
+                  </div>
+                  <ChevronDown className={`h-5 w-5 text-muted-foreground shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                </div>
+
+                {!isExpanded && (
+                  <p className="text-xs text-muted-foreground line-clamp-2">{study.description}</p>
+                )}
+
+                {isExpanded && (
+                  <div className="pt-3 border-t border-border space-y-5" onClick={(e) => e.stopPropagation()}>
+                    <p className="text-sm text-foreground/90 leading-relaxed">{study.description}</p>
+
+                    {/* Outline */}
+                    <div>
+                      <h5 className="text-xs font-semibold text-accent uppercase tracking-wider mb-2">Esboço do Livro</h5>
+                      <ol className="space-y-1.5">
+                        {study.outline.map((item, i) => (
+                          <li key={i} className="text-sm text-foreground/80 flex gap-2">
+                            <span className="text-accent font-bold shrink-0">{i + 1}.</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+
+                    {/* Key Verses */}
+                    <div>
+                      <h5 className="text-xs font-semibold text-accent uppercase tracking-wider mb-2">Versículos-Chave</h5>
+                      {versesLoading ? (
+                        <div className="flex items-center py-4">
+                          <Loader2 className="h-4 w-4 animate-spin text-accent mr-2" />
+                          <span className="text-sm text-muted-foreground">Carregando versículos...</span>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {study.keyVerses.map((ref) => {
+                            const result = verseResults[ref];
+                            return (
+                              <div key={ref} className="rounded-lg bg-muted/50 p-3">
+                                <p className="text-xs font-semibold text-accent mb-1">{ref}</p>
+                                <p className="text-sm leading-relaxed text-foreground/90 italic">
+                                  "{result?.text || "Carregando..."}"
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Application */}
+                    <div className="rounded-lg bg-accent/10 border border-accent/20 p-4">
+                      <h5 className="text-xs font-semibold text-accent uppercase tracking-wider mb-1">Aplicação Prática</h5>
+                      <p className="text-sm text-foreground/90 leading-relaxed">{study.application}</p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default EstudoBiblico;
