@@ -13,6 +13,7 @@ import Multimidia from "./pages/Multimidia";
 import Dicionario from "./pages/Dicionario";
 import Questionarios from "./pages/Questionarios";
 import Devocional from "./pages/Devocional";
+import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/dicionario" element={<Dicionario />} />
               <Route path="/questionarios" element={<Questionarios />} />
               <Route path="/devocional" element={<Devocional />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/login" element={<Login />} />
             </Route>
             <Route path="*" element={<NotFound />} />

@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      preachers: {
+        Row: {
+          active: boolean
+          bio: string | null
+          church: string | null
+          city: string | null
+          created_at: string
+          id: string
+          name: string
+          photo_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          bio?: string | null
+          church?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          photo_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          bio?: string | null
+          church?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          photo_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
