@@ -76,6 +76,7 @@ const Questionarios = () => {
               <ContentActions
                 content={`Questionário Bíblico\nResultado: ${score}/${questions.length}\n\n${questions.map((q, i) => `${i + 1}. ${q.question}\nResposta: ${q.options[q.correct]}`).join("\n\n")}`}
                 title="Resultado do Questionário Bíblico"
+                contentType="questionario"
                 className="justify-center mb-4"
               />
               <Button onClick={restart} className="bg-gradient-gold text-background">Tentar Novamente</Button>

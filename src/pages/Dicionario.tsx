@@ -51,6 +51,7 @@ const Dicionario = () => (
             <ContentActions
               content={`${w.transliteration} (${w.word})\nIdioma: ${w.language}\nSignificado: ${w.meaning}\nAplicação: ${w.application}\nReferências: ${w.verses}`}
               title={`Dicionário: ${w.transliteration}`}
+              contentType="dicionario"
               compact
               className="mt-3 pt-3 border-t border-border"
             />

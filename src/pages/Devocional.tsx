@@ -231,7 +231,7 @@ const Devocional = () => {
 
         {showActions && (
           <div className="flex gap-3 pt-2 flex-wrap">
-            <ContentActions content={displayContent} title="Devocional Diário" />
+            <ContentActions content={displayContent} title="Devocional Diário" contentType="devocional" />
             {user && !viewingDevotional && (
               <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving} className="gap-1.5">
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}

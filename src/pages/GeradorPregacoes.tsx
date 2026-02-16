@@ -118,7 +118,7 @@ const GeradorPregacoes = () => {
               </div>
               {result && !loading && (
                 <div className="flex gap-2 flex-wrap pt-4 border-t border-border">
-                  <ContentActions content={result} title={`Pregação: ${tema}`} />
+                  <ContentActions content={result} title={`Pregação: ${tema}`} contentType="pregacao" />
                   <Button variant="outline" size="sm" onClick={handleSave} className="gap-1.5"><Save className="h-4 w-4" /> Salvar</Button>
                 </div>
               )}

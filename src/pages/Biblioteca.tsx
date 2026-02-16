@@ -206,6 +206,7 @@ const SermonCard = ({ sermon: s }: { sermon: typeof sermons[number] }) => {
           <ContentActions
             content={`${s.title}\nTema: ${s.theme}\nTexto Base: ${s.verse}\n\n${s.content}`}
             title={s.title}
+            contentType="biblioteca"
             compact
           />
         </div>

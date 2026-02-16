@@ -77,6 +77,36 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_content: {
+        Row: {
+          content: string
+          content_type: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_devotionals: {
         Row: {
           content: string

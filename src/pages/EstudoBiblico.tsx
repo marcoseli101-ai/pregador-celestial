@@ -204,6 +204,7 @@ const EstudoBiblico = () => {
                     <ContentActions
                       content={chapterData.verses.map(v => `${v.number} ${v.text}`).join("\n")}
                       title={`${selectedBook.name} ${selectedChapter}`}
+                      contentType="estudo"
                     />
                   </div>
                 )}
@@ -341,7 +342,7 @@ const EstudoBiblico = () => {
                     <span className="text-xs text-muted-foreground font-medium">{v.ref}</span>
                   </div>
                   <p className="text-sm leading-relaxed italic text-foreground/90">"{v.text}"</p>
-                  <ContentActions content={`${v.ref}\n${v.text}`} title={`Versículo - ${v.ref}`} compact />
+                  <ContentActions content={`${v.ref}\n${v.text}`} title={`Versículo - ${v.ref}`} contentType="estudo" compact />
                 </CardContent>
               </Card>
             ))}
@@ -569,6 +570,7 @@ function StudyGroup({
                     <ContentActions
                       content={`${study.book} - ${study.title}\n\n${study.description}\n\nEsboço:\n${study.outline.map((o, i) => `${i + 1}. ${o}`).join("\n")}\n\nAplicação:\n${study.application}${commentaries[study.book] ? `\n\nComentário Teológico:\n${commentaries[study.book]}` : ""}`}
                       title={`Estudo: ${study.book}`}
+                      contentType="estudo"
                     />
 
                     {/* AI Theological Commentary */}
