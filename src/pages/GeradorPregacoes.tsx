@@ -109,19 +109,19 @@ const GeradorPregacoes = () => {
 
         {(result || loading) && (
           <Card className="shadow-celestial border-celestial/20">
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader>
               <CardTitle className="font-serif">Pregação Gerada</CardTitle>
-              {result && !loading && (
-                <div className="flex gap-2 flex-wrap">
-                  <ContentActions content={result} title={`Pregação: ${tema}`} compact />
-                  <Button variant="outline" size="sm" onClick={handleSave}><Save className="h-4 w-4 mr-1" /> Salvar</Button>
-                </div>
-              )}
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
                 {result || <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando pregação com IA...</div>}
               </div>
+              {result && !loading && (
+                <div className="flex gap-2 flex-wrap pt-4 border-t border-border">
+                  <ContentActions content={result} title={`Pregação: ${tema}`} />
+                  <Button variant="outline" size="sm" onClick={handleSave} className="gap-1.5"><Save className="h-4 w-4" /> Salvar</Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
