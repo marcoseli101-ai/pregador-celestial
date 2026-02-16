@@ -1,20 +1,26 @@
-import { Copy, Share2, FileDown } from "lucide-react";
+import { useState, useRef } from "react";
+import { Copy, Share2, FileDown, Volume2, VolumeX, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ContentActionsProps {
-  /** The text content to copy/share/export */
   content: string;
-  /** Title for the PDF and WhatsApp share */
   title?: string;
-  /** Compact mode with icon-only buttons */
+  contentType?: string;
   compact?: boolean;
-  /** Additional className */
   className?: string;
+  hideSave?: boolean;
 }
 
-export function ContentActions({ content, title = "Pregador Pro", compact = false, className = "" }: ContentActionsProps) {
+export function ContentActions({ content, title = "Pregador Pro", contentType = "geral", compact = false, className = "", hideSave = false }: ContentActionsProps) {
+  const { user } = useAuth();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const synthRef = useRef(window.speechSynthesis);
+
   const cleanText = (text: string) => text.replace(/[#*_]/g, "").trim();
 
   const handleCopy = async () => {
@@ -41,20 +47,17 @@ export function ContentActions({ content, title = "Pregador Pro", compact = fals
       const maxWidth = pageWidth - margin * 2;
       let y = 20;
 
-      // Title
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       const titleLines = doc.splitTextToSize(title, maxWidth);
       doc.text(titleLines, margin, y);
       y += titleLines.length * 8 + 5;
 
-      // Separator line
       doc.setDrawColor(200, 170, 80);
       doc.setLineWidth(0.5);
       doc.line(margin, y, pageWidth - margin, y);
       y += 10;
 
-      // Body content
       doc.setFont("helvetica", "normal");
       doc.setFontSize(11);
       const clean = cleanText(content);
@@ -69,7 +72,6 @@ export function ContentActions({ content, title = "Pregador Pro", compact = fals
         y += 6;
       }
 
-      // Footer
       const pageCount = doc.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
@@ -87,6 +89,73 @@ export function ContentActions({ content, title = "Pregador Pro", compact = fals
     }
   };
 
+  const handleAudio = () => {
+    const synth = synthRef.current;
+    if (isSpeaking) {
+      synth.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const clean = cleanText(content);
+    // Split into chunks of ~200 chars at sentence boundaries for better TTS
+    const chunks: string[] = [];
+    let remaining = clean;
+    while (remaining.length > 0) {
+      if (remaining.length <= 200) {
+        chunks.push(remaining);
+        break;
+      }
+      let splitAt = remaining.lastIndexOf(".", 200);
+      if (splitAt === -1 || splitAt < 50) splitAt = remaining.lastIndexOf(" ", 200);
+      if (splitAt === -1) splitAt = 200;
+      chunks.push(remaining.slice(0, splitAt + 1));
+      remaining = remaining.slice(splitAt + 1).trim();
+    }
+
+    const voices = synth.getVoices();
+    const ptVoice = voices.find(v => v.lang.startsWith("pt")) || voices[0];
+
+    let currentChunk = 0;
+    const speakNext = () => {
+      if (currentChunk >= chunks.length) {
+        setIsSpeaking(false);
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(chunks[currentChunk]);
+      utterance.lang = "pt-BR";
+      utterance.rate = 0.95;
+      if (ptVoice) utterance.voice = ptVoice;
+      utterance.onend = () => { currentChunk++; speakNext(); };
+      utterance.onerror = () => { setIsSpeaking(false); };
+      synth.speak(utterance);
+    };
+
+    setIsSpeaking(true);
+    speakNext();
+  };
+
+  const handleSave = async () => {
+    if (!user) {
+      toast.error("Faça login para salvar conteúdos.");
+      return;
+    }
+    setIsSaving(true);
+    const { error } = await supabase.from("saved_content").insert({
+      user_id: user.id,
+      title,
+      content,
+      content_type: contentType,
+    });
+    if (error) {
+      console.error(error);
+      toast.error("Erro ao salvar conteúdo.");
+    } else {
+      toast.success("Salvo na Área do Pregador!");
+    }
+    setIsSaving(false);
+  };
+
   if (!content) return null;
 
   if (compact) {
@@ -95,12 +164,20 @@ export function ContentActions({ content, title = "Pregador Pro", compact = fals
         <Button variant="ghost" size="icon" onClick={handleCopy} title="Copiar">
           <Copy className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={handleWhatsApp} title="Compartilhar no WhatsApp">
+        <Button variant="ghost" size="icon" onClick={handleWhatsApp} title="WhatsApp">
           <Share2 className="h-4 w-4" />
         </Button>
         <Button variant="ghost" size="icon" onClick={handlePDF} title="Gerar PDF">
           <FileDown className="h-4 w-4" />
         </Button>
+        <Button variant="ghost" size="icon" onClick={handleAudio} title={isSpeaking ? "Parar áudio" : "Ouvir"}>
+          {isSpeaking ? <VolumeX className="h-4 w-4 text-accent" /> : <Volume2 className="h-4 w-4" />}
+        </Button>
+        {!hideSave && (
+          <Button variant="ghost" size="icon" onClick={handleSave} disabled={isSaving} title="Salvar na Área do Pregador">
+            <Save className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     );
   }
@@ -116,6 +193,15 @@ export function ContentActions({ content, title = "Pregador Pro", compact = fals
       <Button variant="outline" size="sm" onClick={handlePDF} className="gap-1.5">
         <FileDown className="h-4 w-4" /> Gerar PDF
       </Button>
+      <Button variant="outline" size="sm" onClick={handleAudio} className="gap-1.5">
+        {isSpeaking ? <VolumeX className="h-4 w-4 text-accent" /> : <Volume2 className="h-4 w-4" />}
+        {isSpeaking ? "Parar" : "Ouvir"}
+      </Button>
+      {!hideSave && (
+        <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving} className="gap-1.5">
+          <Save className="h-4 w-4" /> Salvar
+        </Button>
+      )}
     </div>
   );
 }

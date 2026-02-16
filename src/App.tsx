@@ -15,6 +15,7 @@ import Questionarios from "./pages/Questionarios";
 import Devocional from "./pages/Devocional";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import AreaPregador from "./pages/AreaPregador";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/questionarios" element={<Questionarios />} />
               <Route path="/devocional" element={<Devocional />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/area-pregador" element={<AreaPregador />} />
               <Route path="/login" element={<Login />} />
             </Route>
             <Route path="*" element={<NotFound />} />

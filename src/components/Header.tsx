@@ -15,6 +15,7 @@ const navItems = [
   { label: "Dicionário", path: "/dicionario" },
   { label: "Questionários", path: "/questionarios" },
   { label: "Devocional", path: "/devocional" },
+  { label: "Área do Pregador", path: "/area-pregador" },
 ];
 
 export function Header() {
