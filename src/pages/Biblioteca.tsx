@@ -2,6 +2,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { FileText, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { ContentActions } from "@/components/ContentActions";
 
 const categories = [
   "Todos", "Avivamento", "Fé", "Santidade", "Salvação", "Arrependimento",
@@ -63,6 +64,12 @@ const Biblioteca = () => {
                   <h3 className="font-serif text-lg font-semibold mt-1">{s.title}</h3>
                   <p className="text-xs text-muted-foreground mt-1 font-medium">{s.verse}</p>
                   <p className="text-sm text-muted-foreground mt-2">{s.excerpt}</p>
+                  <ContentActions
+                    content={`${s.title}\nTema: ${s.theme}\nTexto Base: ${s.verse}\n\n${s.excerpt}`}
+                    title={s.title}
+                    compact
+                    className="mt-3"
+                  />
                 </div>
               </div>
             </CardContent>

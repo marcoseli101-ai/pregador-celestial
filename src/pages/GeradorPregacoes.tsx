@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Save, Copy, Loader2 } from "lucide-react";
+import { Sparkles, Save, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { streamSermon } from "@/lib/stream-chat";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ContentActions } from "@/components/ContentActions";
 
 const GeradorPregacoes = () => {
   const [tema, setTema] = useState("");
@@ -111,8 +112,8 @@ const GeradorPregacoes = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="font-serif">Pregação Gerada</CardTitle>
               {result && !loading && (
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="h-4 w-4 mr-1" /> Copiar</Button>
+                <div className="flex gap-2 flex-wrap">
+                  <ContentActions content={result} title={`Pregação: ${tema}`} compact />
                   <Button variant="outline" size="sm" onClick={handleSave}><Save className="h-4 w-4 mr-1" /> Salvar</Button>
                 </div>
               )}

@@ -1,6 +1,7 @@
 import { Languages, Search, Volume2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ContentActions } from "@/components/ContentActions";
 
 const words = [
   { word: "שָׁלוֹם", transliteration: "Shalom", language: "Hebraico", meaning: "Paz, completude, bem-estar", application: "Expressa a paz plena que vem de Deus, não apenas ausência de conflito, mas integridade total.", verses: "Isaías 26:3, João 14:27" },
@@ -47,6 +48,12 @@ const Dicionario = () => (
               <p><span className="font-semibold">Aplicação:</span> <span className="text-muted-foreground">{w.application}</span></p>
               <p><span className="font-semibold">Referências:</span> <span className="text-muted-foreground">{w.verses}</span></p>
             </div>
+            <ContentActions
+              content={`${w.transliteration} (${w.word})\nIdioma: ${w.language}\nSignificado: ${w.meaning}\nAplicação: ${w.application}\nReferências: ${w.verses}`}
+              title={`Dicionário: ${w.transliteration}`}
+              compact
+              className="mt-3 pt-3 border-t border-border"
+            />
           </CardContent>
         </Card>
       ))}

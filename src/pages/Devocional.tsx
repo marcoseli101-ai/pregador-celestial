@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
-import { Calendar, BookOpen, Heart, Loader2, RefreshCw, Share2, Sparkles, Save, History, Trash2, ChevronLeft } from "lucide-react";
+import { Calendar, BookOpen, Heart, Loader2, RefreshCw, Sparkles, Save, History, Trash2, ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { ContentActions } from "@/components/ContentActions";
 
 interface SavedDevotional {
   id: string;
@@ -230,17 +231,15 @@ const Devocional = () => {
 
         {showActions && (
           <div className="flex gap-3 pt-2 flex-wrap">
-            <Button onClick={handleShare} className="flex-1 bg-gradient-gold text-background hover:opacity-90 gap-2">
-              <Share2 className="h-4 w-4" /> Compartilhar
-            </Button>
+            <ContentActions content={displayContent} title="Devocional Diário" />
             {user && !viewingDevotional && (
-              <Button variant="outline" onClick={handleSave} disabled={isSaving} className="gap-2">
+              <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving} className="gap-1.5">
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 Salvar
               </Button>
             )}
             {!viewingDevotional && (
-              <Button variant="outline" onClick={generateDevotional} className="gap-2">
+              <Button variant="outline" size="sm" onClick={generateDevotional} className="gap-1.5">
                 <RefreshCw className="h-4 w-4" /> Novo
               </Button>
             )}

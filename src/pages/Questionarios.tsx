@@ -3,6 +3,7 @@ import { HelpCircle, CheckCircle, XCircle, Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ContentActions } from "@/components/ContentActions";
 
 const questions = [
   {
@@ -69,9 +70,14 @@ const Questionarios = () => {
               <Trophy className="h-16 w-16 mx-auto mb-4 text-accent" />
               <h2 className="font-serif text-2xl font-bold mb-2">Resultado</h2>
               <p className="text-3xl font-bold text-gradient-gold mb-2">{score}/{questions.length}</p>
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground mb-4">
                 {score === questions.length ? "Perfeito! Você é um grande conhecedor da Palavra!" : "Continue estudando e crescendo na Palavra!"}
               </p>
+              <ContentActions
+                content={`Questionário Bíblico\nResultado: ${score}/${questions.length}\n\n${questions.map((q, i) => `${i + 1}. ${q.question}\nResposta: ${q.options[q.correct]}`).join("\n\n")}`}
+                title="Resultado do Questionário Bíblico"
+                className="justify-center mb-4"
+              />
               <Button onClick={restart} className="bg-gradient-gold text-background">Tentar Novamente</Button>
             </CardContent>
           </Card>
