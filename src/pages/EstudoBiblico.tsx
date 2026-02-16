@@ -1,11 +1,66 @@
-import { useState } from "react";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter } from "lucide-react";
+import { useState, useCallback, useRef } from "react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 
+const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
+
+async function streamCommentary({
+  book, theme, description, onDelta, onDone, onError,
+}: {
+  book: string; theme: string; description: string;
+  onDelta: (text: string) => void;
+  onDone: () => void;
+  onError: (msg: string) => void;
+}) {
+  const resp = await fetch(COMMENTARY_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ book, theme, description }),
+  });
+
+  if (!resp.ok) {
+    const data = await resp.json().catch(() => ({ error: "Erro desconhecido" }));
+    onError(data.error || `Erro ${resp.status}`);
+    return;
+  }
+  if (!resp.body) { onError("Sem resposta"); return; }
+
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "";
+  let done = false;
+
+  while (!done) {
+    const { done: d, value } = await reader.read();
+    if (d) break;
+    buf += decoder.decode(value, { stream: true });
+    let idx: number;
+    while ((idx = buf.indexOf("\n")) !== -1) {
+      let line = buf.slice(0, idx);
+      buf = buf.slice(idx + 1);
+      if (line.endsWith("\r")) line = line.slice(0, -1);
+      if (line.startsWith(":") || line.trim() === "" || !line.startsWith("data: ")) continue;
+      const json = line.slice(6).trim();
+      if (json === "[DONE]") { done = true; break; }
+      try {
+        const p = JSON.parse(json);
+        const c = p.choices?.[0]?.delta?.content as string | undefined;
+        if (c) onDelta(c);
+      } catch {
+        buf = line + "\n" + buf;
+        break;
+      }
+    }
+  }
+  onDone();
+}
 const testamentLabel: Record<string, string> = {
   VT: "Antigo Testamento",
   NT: "Novo Testamento",
@@ -34,6 +89,34 @@ const EstudoBiblico = () => {
   const [studySearch, setStudySearch] = useState("");
   const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
 
+  // AI commentary state
+  const [commentaries, setCommentaries] = useState<Record<string, string>>({});
+  const [commentaryLoading, setCommentaryLoading] = useState<Record<string, boolean>>({});
+  const [commentaryError, setCommentaryError] = useState<Record<string, string>>({});
+  const commentaryRequestedRef = useRef<Set<string>>(new Set());
+
+  const generateCommentary = useCallback((study: BibleStudy) => {
+    if (commentaries[study.book] || commentaryLoading[study.book] || commentaryRequestedRef.current.has(study.book)) return;
+    commentaryRequestedRef.current.add(study.book);
+    setCommentaryLoading((p) => ({ ...p, [study.book]: true }));
+    setCommentaryError((p) => ({ ...p, [study.book]: "" }));
+    let accumulated = "";
+    streamCommentary({
+      book: study.book,
+      theme: study.theme,
+      description: study.description,
+      onDelta: (text) => {
+        accumulated += text;
+        setCommentaries((p) => ({ ...p, [study.book]: accumulated }));
+      },
+      onDone: () => setCommentaryLoading((p) => ({ ...p, [study.book]: false })),
+      onError: (msg) => {
+        setCommentaryError((p) => ({ ...p, [study.book]: msg }));
+        setCommentaryLoading((p) => ({ ...p, [study.book]: false }));
+        commentaryRequestedRef.current.delete(study.book);
+      },
+    });
+  }, [commentaries, commentaryLoading]);
   const filteredStudies = COMPLETE_BIBLE_STUDIES.filter((s) => {
     const matchTestament = studyFilter === "all" || s.testament === studyFilter;
     const q = studySearch.toLowerCase();
@@ -321,6 +404,10 @@ const EstudoBiblico = () => {
                 fetchVerses={fetchVerses}
                 versesLoading={versesLoading}
                 verseResults={verseResults}
+                commentaries={commentaries}
+                commentaryLoading={commentaryLoading}
+                commentaryError={commentaryError}
+                generateCommentary={generateCommentary}
               />
             );
           })}
@@ -338,6 +425,10 @@ const EstudoBiblico = () => {
                 fetchVerses={fetchVerses}
                 versesLoading={versesLoading}
                 verseResults={verseResults}
+                commentaries={commentaries}
+                commentaryLoading={commentaryLoading}
+                commentaryError={commentaryError}
+                generateCommentary={generateCommentary}
               />
             );
           })}
@@ -354,6 +445,7 @@ const EstudoBiblico = () => {
 // Study Group Component
 function StudyGroup({
   groupName, testament, studies, expandedStudy, setExpandedStudy, fetchVerses, versesLoading, verseResults,
+  commentaries, commentaryLoading, commentaryError, generateCommentary,
 }: {
   groupName: string;
   testament: string;
@@ -363,6 +455,10 @@ function StudyGroup({
   fetchVerses: (refs: string[]) => void;
   versesLoading: boolean;
   verseResults: Record<string, { reference: string; text: string }>;
+  commentaries: Record<string, string>;
+  commentaryLoading: Record<string, boolean>;
+  commentaryError: Record<string, string>;
+  generateCommentary: (study: BibleStudy) => void;
 }) {
   return (
     <div className="mb-8">
@@ -457,6 +553,54 @@ function StudyGroup({
                     <div className="rounded-lg bg-accent/10 border border-accent/20 p-4">
                       <h5 className="text-xs font-semibold text-accent uppercase tracking-wider mb-1">Aplicação Prática</h5>
                       <p className="text-sm text-foreground/90 leading-relaxed">{study.application}</p>
+                    </div>
+
+                    {/* AI Theological Commentary */}
+                    <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <BrainCircuit className="h-4 w-4 text-primary" />
+                        <h5 className="text-xs font-semibold text-primary uppercase tracking-wider">Comentário Teológico (IA)</h5>
+                      </div>
+                      {!commentaries[study.book] && !commentaryLoading[study.book] && !commentaryError[study.book] && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1.5"
+                          onClick={() => generateCommentary(study)}
+                        >
+                          <Sparkles className="h-3.5 w-3.5" />
+                          Gerar Comentário Teológico
+                        </Button>
+                      )}
+                      {commentaryLoading[study.book] && !commentaries[study.book] && (
+                        <div className="flex items-center gap-2 py-2">
+                          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                          <span className="text-sm text-muted-foreground">Gerando comentário...</span>
+                        </div>
+                      )}
+                      {commentaryError[study.book] && (
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className="h-4 w-4 text-destructive" />
+                          <span className="text-sm text-destructive">{commentaryError[study.book]}</span>
+                          <Button size="sm" variant="ghost" onClick={() => generateCommentary(study)}>Tentar novamente</Button>
+                        </div>
+                      )}
+                      {commentaries[study.book] && (
+                        <div className="prose prose-sm max-w-none text-foreground/90">
+                          {commentaries[study.book].split("\n").map((line, i) => {
+                            if (line.startsWith("### ")) return <h4 key={i} className="text-sm font-semibold mt-3 mb-1">{line.slice(4)}</h4>;
+                            if (line.startsWith("## ")) return <h3 key={i} className="text-sm font-bold mt-3 mb-1">{line.slice(3)}</h3>;
+                            if (line.startsWith("# ")) return <h3 key={i} className="text-base font-bold mt-3 mb-1">{line.slice(2)}</h3>;
+                            if (line.startsWith("- ")) return <li key={i} className="text-sm ml-4 list-disc">{line.slice(2)}</li>;
+                            if (line.startsWith("**") && line.endsWith("**")) return <p key={i} className="text-sm font-semibold">{line.slice(2, -2)}</p>;
+                            if (!line.trim()) return <br key={i} />;
+                            return <p key={i} className="text-sm leading-relaxed">{line}</p>;
+                          })}
+                          {commentaryLoading[study.book] && (
+                            <span className="inline-block w-2 h-4 bg-primary/50 animate-pulse ml-0.5" />
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
