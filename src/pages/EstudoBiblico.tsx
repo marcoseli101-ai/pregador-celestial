@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit } from "lucide-react";
+import { ContentActions } from "@/components/ContentActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -198,6 +199,14 @@ const EstudoBiblico = () => {
                 {chapterData?.verses?.length === 0 && (
                   <p className="text-muted-foreground text-center py-4">Nenhum versículo encontrado.</p>
                 )}
+                {chapterData?.verses && chapterData.verses.length > 0 && (
+                  <div className="pt-3 border-t border-border">
+                    <ContentActions
+                      content={chapterData.verses.map(v => `${v.number} ${v.text}`).join("\n")}
+                      title={`${selectedBook.name} ${selectedChapter}`}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -332,6 +341,7 @@ const EstudoBiblico = () => {
                     <span className="text-xs text-muted-foreground font-medium">{v.ref}</span>
                   </div>
                   <p className="text-sm leading-relaxed italic text-foreground/90">"{v.text}"</p>
+                  <ContentActions content={`${v.ref}\n${v.text}`} title={`Versículo - ${v.ref}`} compact />
                 </CardContent>
               </Card>
             ))}
@@ -554,6 +564,12 @@ function StudyGroup({
                       <h5 className="text-xs font-semibold text-accent uppercase tracking-wider mb-1">Aplicação Prática</h5>
                       <p className="text-sm text-foreground/90 leading-relaxed">{study.application}</p>
                     </div>
+
+                    {/* Content actions for the study */}
+                    <ContentActions
+                      content={`${study.book} - ${study.title}\n\n${study.description}\n\nEsboço:\n${study.outline.map((o, i) => `${i + 1}. ${o}`).join("\n")}\n\nAplicação:\n${study.application}${commentaries[study.book] ? `\n\nComentário Teológico:\n${commentaries[study.book]}` : ""}`}
+                      title={`Estudo: ${study.book}`}
+                    />
 
                     {/* AI Theological Commentary */}
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-3">
