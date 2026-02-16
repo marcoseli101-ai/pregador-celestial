@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-devotional]
 verify_jwt = false
+
+[functions.generate-bible-commentary]
+verify_jwt = false
