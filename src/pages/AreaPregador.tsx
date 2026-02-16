@@ -228,6 +228,13 @@ const AreaPregador = () => {
           })}
         </div>
       )}
+
+      {/* Credit */}
+      <div className="mt-12 pt-6 border-t border-border text-center">
+        <p className="text-sm text-muted-foreground">
+          Produzido por <span className="font-semibold text-foreground">Marcos Silva</span>
+        </p>
+      </div>
     </div>
   );
 };
