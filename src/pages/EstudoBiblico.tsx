@@ -126,7 +126,7 @@ const EstudoBiblico = () => {
   });
 
   const { data: chapterData, loading: chapterLoading, error: chapterError } = useBibleChapter(
-    selectedBook?.abbrev.en ?? null,
+    selectedBook?.name ?? null,
     selectedChapter
   );
 
