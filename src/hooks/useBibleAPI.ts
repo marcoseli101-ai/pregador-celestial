@@ -39,7 +39,7 @@ const BOOKS: BibleBook[] = [
   { abbrev:{pt:"ne",en:"nehemiah"}, author:"Neemias", chapters:13, group:"Históricos", name:"Neemias", testament:"VT" },
   { abbrev:{pt:"et",en:"esther"}, author:"Desconhecido", chapters:10, group:"Históricos", name:"Ester", testament:"VT" },
   { abbrev:{pt:"jó",en:"job"}, author:"Desconhecido", chapters:42, group:"Poéticos", name:"Jó", testament:"VT" },
-  { abbrev:{pt:"sl",en:"psalms"}, author:"Davi", chapters:150, group:"Poéticos", name:"Salmos", testament:"VT" },
+  { abbrev:{pt:"sl",en:"Salmos"}, author:"Davi", chapters:150, group:"Poéticos", name:"Salmos", testament:"VT" },
   { abbrev:{pt:"pv",en:"proverbs"}, author:"Salomão", chapters:31, group:"Poéticos", name:"Provérbios", testament:"VT" },
   { abbrev:{pt:"ec",en:"ecclesiastes"}, author:"Salomão", chapters:12, group:"Poéticos", name:"Eclesiastes", testament:"VT" },
   { abbrev:{pt:"ct",en:"song of solomon"}, author:"Salomão", chapters:8, group:"Poéticos", name:"Cantares", testament:"VT" },
