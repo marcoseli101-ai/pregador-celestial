@@ -9,11 +9,24 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { tema, publico, tempo, nivel } = await req.json();
+    const { tema, publico, tempo, nivel, mode, messages: chatMessages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `Você é um assistente especializado em pregação bíblica evangélica pentecostal. 
+    let messages: { role: string; content: string }[];
+
+    if (mode === "chat") {
+      // Q&A mode about the sermon
+      messages = [
+        {
+          role: "system",
+          content: `Você é um assistente teológico pentecostal especializado. O usuário gerou uma pregação e quer fazer perguntas sobre ela. Responda com profundidade bíblica, citando versículos relevantes. Use markdown para formatar.`,
+        },
+        ...(chatMessages || []),
+      ];
+    } else {
+      // Sermon generation mode
+      const systemPrompt = `Você é um assistente especializado em pregação bíblica evangélica pentecostal. 
 Gere pregações profundas, ungidas e com base bíblica sólida.
 Sempre inclua:
 - Texto base bíblico (referência completa)
@@ -24,16 +37,29 @@ Sempre inclua:
 - Conclusão com apelo e oração
 - Aplicação prática para a vida do ouvinte
 
+IMPORTANTE: Ao final da pregação, adicione uma seção separada chamada "## 📖 Referências Bíblicas Complementares"
+com pelo menos 8-10 versículos adicionais que se conectam diretamente com o tema da pregação.
+Para cada referência, inclua:
+- A referência completa (livro, capítulo e versículo)
+- O texto do versículo
+- Uma breve explicação de como se conecta ao tema
+
 Use linguagem espiritual forte mas acessível. Baseie-se na Bíblia Sagrada.
 Formate usando markdown com títulos, subtítulos e listas.`;
 
-    const userPrompt = `Gere uma pregação completa com as seguintes configurações:
+      const userPrompt = `Gere uma pregação completa com as seguintes configurações:
 - Tema: ${tema}
 - Público-alvo: ${publico || "Igreja"}
 - Tempo de pregação: ${tempo || "30"} minutos
 - Nível/Estilo: ${nivel || "Ensino"}
 
-Gere o sermão completo, estruturado e pronto para pregar.`;
+Gere o sermão completo, estruturado e pronto para pregar, incluindo a seção de referências bíblicas complementares ao final.`;
+
+      messages = [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ];
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -43,10 +69,7 @@ Gere o sermão completo, estruturado e pronto para pregar.`;
       },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
+        messages,
         stream: true,
       }),
     });
