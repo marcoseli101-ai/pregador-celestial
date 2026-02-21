@@ -1,22 +1,12 @@
 const GENERATE_SERMON_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-sermon`;
 
-export async function streamSermon({
-  tema, publico, tempo, nivel, onDelta, onDone, onError,
-}: {
-  tema: string; publico: string; tempo: string; nivel: string;
+type SSECallbacks = {
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (msg: string) => void;
-}) {
-  const resp = await fetch(GENERATE_SERMON_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-    },
-    body: JSON.stringify({ tema, publico, tempo, nivel }),
-  });
+};
 
+async function parseSSEStream(resp: Response, { onDelta, onDone, onError }: SSECallbacks) {
   if (!resp.ok) {
     const data = await resp.json().catch(() => ({ error: "Erro desconhecido" }));
     onError(data.error || `Erro ${resp.status}`);
@@ -54,7 +44,6 @@ export async function streamSermon({
     }
   }
 
-  // Final flush
   if (textBuffer.trim()) {
     for (let raw of textBuffer.split("\n")) {
       if (!raw) continue;
@@ -72,4 +61,38 @@ export async function streamSermon({
   }
 
   onDone();
+}
+
+export async function streamSermon({
+  tema, publico, tempo, nivel, onDelta, onDone, onError,
+}: {
+  tema: string; publico: string; tempo: string; nivel: string;
+} & SSECallbacks) {
+  const resp = await fetch(GENERATE_SERMON_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ tema, publico, tempo, nivel }),
+  });
+  await parseSSEStream(resp, { onDelta, onDone, onError });
+}
+
+export type ChatMessage = { role: "user" | "assistant"; content: string };
+
+export async function streamSermonChat({
+  messages, onDelta, onDone, onError,
+}: {
+  messages: ChatMessage[];
+} & SSECallbacks) {
+  const resp = await fetch(GENERATE_SERMON_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ mode: "chat", messages }),
+  });
+  await parseSSEStream(resp, { onDelta, onDone, onError });
 }
