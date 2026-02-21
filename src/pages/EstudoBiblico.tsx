@@ -1,11 +1,13 @@
-import { useState, useCallback, useRef } from "react";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit } from "lucide-react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2 } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
@@ -81,6 +83,7 @@ const STUDY_GROUPS_NT = ["Evangelhos", "Históricos", "Cartas Paulinas", "Cartas
 
 const EstudoBiblico = () => {
   const { books } = useBibleBooks();
+  const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -157,8 +160,16 @@ const EstudoBiblico = () => {
     }
   };
 
+  // Mark chapter as read when viewing
+  useEffect(() => {
+    if (selectedBook && selectedChapter && chapterData?.verses?.length) {
+      markChapterRead(selectedBook.name, selectedChapter);
+    }
+  }, [selectedBook, selectedChapter, chapterData, markChapterRead]);
+
   // === CHAPTER READING VIEW ===
   if (selectedBook && selectedChapter) {
+    const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
     return (
       <div className="container py-8 max-w-3xl">
         <Button variant="ghost" onClick={handleBack} className="mb-4 gap-1">
@@ -170,6 +181,13 @@ const EstudoBiblico = () => {
             {selectedBook.name} <span className="text-gradient-gold">{selectedChapter}</span>
           </h1>
           <p className="text-sm text-muted-foreground mt-1">{selectedBook.author} · {selectedBook.group}</p>
+          <div className="mt-3 max-w-xs mx-auto">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>Progresso do livro</span>
+              <span>{bookProg.read}/{bookProg.total} capítulos ({bookProg.percent}%)</span>
+            </div>
+            <Progress value={bookProg.percent} className="h-2" />
+          </div>
         </div>
 
         {chapterLoading ? (
@@ -228,6 +246,7 @@ const EstudoBiblico = () => {
   // === CHAPTER SELECTION VIEW ===
   if (selectedBook) {
     const chapters = Array.from({ length: selectedBook.chapters }, (_, i) => i + 1);
+    const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
     return (
       <div className="container py-8">
         <Button variant="ghost" onClick={handleBack} className="mb-4 gap-1">
@@ -239,19 +258,30 @@ const EstudoBiblico = () => {
           <p className="text-sm text-muted-foreground mt-1">
             {selectedBook.chapters} capítulos · {selectedBook.author} · {selectedBook.group}
           </p>
+          <div className="mt-3 max-w-xs mx-auto">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>Progresso de leitura</span>
+              <span>{bookProg.read}/{bookProg.total} ({bookProg.percent}%)</span>
+            </div>
+            <Progress value={bookProg.percent} className="h-2" />
+          </div>
         </div>
 
         <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 max-w-3xl mx-auto">
-          {chapters.map((ch) => (
-            <Button
-              key={ch}
-              variant="outline"
-              className="h-12 text-sm font-semibold hover:bg-accent hover:text-accent-foreground transition-all"
-              onClick={() => setSelectedChapter(ch)}
-            >
-              {ch}
-            </Button>
-          ))}
+          {chapters.map((ch) => {
+            const read = isChapterRead(selectedBook.name, ch);
+            return (
+              <Button
+                key={ch}
+                variant={read ? "default" : "outline"}
+                className={`h-12 text-sm font-semibold transition-all ${read ? "bg-accent text-accent-foreground" : "hover:bg-accent hover:text-accent-foreground"}`}
+                onClick={() => setSelectedChapter(ch)}
+              >
+                {read && <CheckCircle2 className="h-3 w-3 mr-0.5" />}
+                {ch}
+              </Button>
+            );
+          })}
         </div>
       </div>
     );
@@ -308,19 +338,28 @@ const EstudoBiblico = () => {
                 {testamentLabel[testament] ?? testament}
               </h2>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {tBooks.map((b) => (
-                  <Card
-                    key={b.abbrev.pt}
-                    className="cursor-pointer hover:shadow-celestial hover:border-celestial/30 transition-all hover:-translate-y-0.5"
-                    onClick={() => setSelectedBook(b)}
-                  >
-                    <CardContent className="p-3 text-center">
-                      <BookOpen className="h-4 w-4 mx-auto mb-1 text-accent" />
-                      <p className="text-xs font-medium truncate">{b.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{b.chapters} cap.</p>
-                    </CardContent>
-                  </Card>
-                ))}
+                {(tBooks as BibleBook[]).map((b) => {
+                  const prog = getBookProgress(b.name, b.chapters);
+                  return (
+                    <Card
+                      key={b.abbrev.pt}
+                      className="cursor-pointer hover:shadow-celestial hover:border-celestial/30 transition-all hover:-translate-y-0.5"
+                      onClick={() => setSelectedBook(b)}
+                    >
+                      <CardContent className="p-3 text-center">
+                        <BookOpen className="h-4 w-4 mx-auto mb-1 text-accent" />
+                        <p className="text-xs font-medium truncate">{b.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{b.chapters} cap.</p>
+                        {prog.read > 0 && (
+                          <div className="mt-1.5">
+                            <Progress value={prog.percent} className="h-1" />
+                            <p className="text-[9px] text-muted-foreground mt-0.5">{prog.percent}%</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           ))}
