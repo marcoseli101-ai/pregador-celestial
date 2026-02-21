@@ -8,7 +8,7 @@ import { bibleDictionary, categories } from "@/data/bibleDictionary";
 
 const Dicionario = () => {
   const [search, setSearch] = useState("");
-  const [selectedLang, setSelectedLang] = useState<"Todos" | "Hebraico" | "Grego">("Todos");
+  const [selectedLang, setSelectedLang] = useState<"Todos" | "Hebraico" | "Grego" | "Aramaico">("Todos");
   const [selectedCategory, setSelectedCategory] = useState<string>("Todas");
 
   const filtered = useMemo(() => {
@@ -64,7 +64,7 @@ const Dicionario = () => {
         <div className="flex items-center gap-2 flex-wrap">
           <Filter className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-semibold text-muted-foreground mr-1">Idioma:</span>
-          {(["Todos", "Hebraico", "Grego"] as const).map((lang) => (
+          {(["Todos", "Hebraico", "Grego", "Aramaico"] as const).map((lang) => (
             <Badge
               key={lang}
               variant={selectedLang === lang ? "default" : "outline"}
