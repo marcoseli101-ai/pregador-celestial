@@ -1,7 +1,7 @@
 export interface DictionaryWord {
   word: string;
   transliteration: string;
-  language: "Hebraico" | "Grego";
+  language: "Hebraico" | "Grego" | "Aramaico";
   meaning: string;
   application: string;
   verses: string;
@@ -122,6 +122,57 @@ export const bibleDictionary: DictionaryWord[] = [
   { word: "κρίσις", transliteration: "Krisis", language: "Grego", meaning: "Juízo, julgamento, decisão", application: "O juízo final de Deus sobre toda a humanidade segundo Suas obras.", verses: "João 5:22, Atos 17:31", category: "Escatologia" },
   { word: "ὀργή", transliteration: "Orgē", language: "Grego", meaning: "Ira, indignação", application: "A justa indignação de Deus contra o pecado e a injustiça.", verses: "Romanos 1:18, João 3:36", category: "Atributos de Deus" },
   { word: "ἀφεσις", transliteration: "Aphesis", language: "Grego", meaning: "Perdão, remissão, libertação", application: "O perdão dos pecados concedido por Deus através do sacrifício de Cristo.", verses: "Efésios 1:7, Atos 2:38", category: "Salvação" },
+
+  // === ARAMAICO ===
+  { word: "אַבָּא", transliteration: "Abba", language: "Aramaico", meaning: "Pai, papai (íntimo)", application: "Termo íntimo para 'pai', usado por Jesus na oração no Getsêmani, revelando proximidade com Deus.", verses: "Marcos 14:36, Romanos 8:15, Gálatas 4:6", category: "Nomes de Deus" },
+  { word: "מָרָנָא תָא", transliteration: "Maranatha", language: "Aramaico", meaning: "Nosso Senhor, vem!", application: "Exclamação de expectativa pela volta de Cristo, usada como saudação na igreja primitiva.", verses: "1 Coríntios 16:22, Apocalipse 22:20", category: "Escatologia" },
+  { word: "טָלִיתָא קוּמִי", transliteration: "Talitha Kumi", language: "Aramaico", meaning: "Menina, levanta-te!", application: "Palavras de Jesus ao ressuscitar a filha de Jairo, demonstrando Seu poder sobre a morte.", verses: "Marcos 5:41", category: "Milagres" },
+  { word: "אֵפְפַתָּא", transliteration: "Effatha", language: "Aramaico", meaning: "Abre-te!", application: "Palavra de Jesus ao curar o surdo-mudo, mostrando autoridade sobre enfermidades.", verses: "Marcos 7:34", category: "Milagres" },
+  { word: "אֵלִי אֵלִי לְמָא שְׁבַקְתָּנִי", transliteration: "Eli Eli Lema Sabachtani", language: "Aramaico", meaning: "Deus meu, Deus meu, por que me desamparaste?", application: "O clamor de Jesus na cruz, citando o Salmo 22, expressando a profundidade do Seu sacrifício.", verses: "Mateus 27:46, Marcos 15:34", category: "Cristologia" },
+  { word: "כֵּיפָא", transliteration: "Kefa", language: "Aramaico", meaning: "Rocha, pedra", application: "Nome dado por Jesus a Simão Pedro, significando firmeza e fundamento da fé.", verses: "João 1:42, Mateus 16:18", category: "Vida Espiritual" },
+  { word: "בַּר נָשָׁא", transliteration: "Bar Nasha", language: "Aramaico", meaning: "Filho do homem", application: "Título messiânico usado por Jesus para Si mesmo, apontando para Daniel 7:13.", verses: "Daniel 7:13, Marcos 10:45", category: "Cristologia" },
+  { word: "בַּר", transliteration: "Bar", language: "Aramaico", meaning: "Filho", application: "Prefixo patronímico aramaico (equivalente ao hebraico 'Ben'). Usado em nomes como Bartimeu, Barnabé.", verses: "Mateus 16:17, Atos 4:36", category: "Antropologia" },
+  { word: "מַמּוֹנָא", transliteration: "Mammona", language: "Aramaico", meaning: "Riqueza, dinheiro, posses", application: "Jesus personificou a riqueza como um senhor rival que compete com Deus pela devoção do homem.", verses: "Mateus 6:24, Lucas 16:13", category: "Vida Espiritual" },
+  { word: "רַבּוּנִי", transliteration: "Rabbuni", language: "Aramaico", meaning: "Meu grande mestre", application: "Forma intensificada de 'Rabi'. Maria Madalena usou ao reconhecer Jesus ressurreto.", verses: "João 20:16, Marcos 10:51", category: "Cristologia" },
+  { word: "גֵּיהִנָּם", transliteration: "Gehinnam", language: "Aramaico", meaning: "Geena, inferno, vale de Hinom", application: "Lugar de juízo final dos ímpios. Jesus usou para advertir sobre a condenação eterna.", verses: "Mateus 5:22, Marcos 9:43", category: "Escatologia" },
+  { word: "פַּרְדֵּס", transliteration: "Pardes", language: "Aramaico", meaning: "Paraíso, jardim, pomar", application: "O lugar de descanso dos justos na presença de Deus após a morte.", verses: "Lucas 23:43, 2 Coríntios 12:4", category: "Escatologia" },
+
+  // === EXPRESSÕES COMPOSTAS HEBRAICAS ===
+  { word: "בָּרוּךְ הַשֵּׁם", transliteration: "Baruch HaShem", language: "Hebraico", meaning: "Bendito seja o Nome (de Deus)", application: "Expressão de louvor e gratidão a Deus, reconhecendo Sua bondade em todas as circunstâncias.", verses: "Salmo 113:2, Jó 1:21", category: "Adoração" },
+  { word: "קְדוֹשׁ יִשְׂרָאֵל", transliteration: "Qedosh Israel", language: "Hebraico", meaning: "Santo de Israel", application: "Título divino usado especialmente por Isaías, enfatizando a santidade e relação de Deus com Israel.", verses: "Isaías 1:4, Isaías 41:14", category: "Nomes de Deus" },
+  { word: "רוּחַ הַקֹּדֶשׁ", transliteration: "Ruach HaQodesh", language: "Hebraico", meaning: "Espírito Santo, Espírito de santidade", application: "O Espírito de Deus que santifica, capacita e guia o povo de Deus.", verses: "Isaías 63:10-11, Salmo 51:11", category: "Espírito Santo" },
+  { word: "עֵץ חַיִּים", transliteration: "Etz Chaim", language: "Hebraico", meaning: "Árvore da vida", application: "Símbolo da vida eterna na presença de Deus, do Éden ao novo céu e nova terra.", verses: "Gênesis 2:9, Apocalipse 22:2", category: "Escatologia" },
+  { word: "אוֹר הָעוֹלָם", transliteration: "Or HaOlam", language: "Hebraico", meaning: "Luz do mundo", application: "Título messiânico que aponta para Cristo como aquele que ilumina toda a humanidade.", verses: "Isaías 49:6, João 8:12", category: "Cristologia" },
+  { word: "שִׁיר הַשִּׁירִים", transliteration: "Shir HaShirim", language: "Hebraico", meaning: "Cântico dos Cânticos", application: "O mais excelente dos cânticos, alegoria do amor entre Deus e Seu povo.", verses: "Cantares 1:1", category: "Escrituras" },
+  { word: "יוֹם יְהוָה", transliteration: "Yom Yahweh", language: "Hebraico", meaning: "Dia do Senhor", application: "O grande dia do juízo e intervenção divina na história humana.", verses: "Joel 2:31, Amós 5:18", category: "Escatologia" },
+  { word: "עֶבֶד יְהוָה", transliteration: "Eved Yahweh", language: "Hebraico", meaning: "Servo do Senhor", application: "Título messiânico dos cânticos de Isaías, cumprido plenamente em Jesus Cristo.", verses: "Isaías 42:1, Isaías 53:11", category: "Cristologia" },
+  { word: "אֲרוֹן הַבְּרִית", transliteration: "Aron HaBerit", language: "Hebraico", meaning: "Arca da Aliança", application: "O objeto mais sagrado do tabernáculo, representando a presença de Deus entre Seu povo.", verses: "Êxodo 25:10, Josué 3:3", category: "Tabernáculo/Templo" },
+  { word: "קֹדֶשׁ הַקֳּדָשִׁים", transliteration: "Qodesh HaQodashim", language: "Hebraico", meaning: "Santo dos Santos", application: "O lugar mais sagrado do templo onde habitava a presença de Deus.", verses: "Êxodo 26:33-34, Hebreus 9:3", category: "Tabernáculo/Templo" },
+  { word: "דְּבַר יְהוָה", transliteration: "Devar Yahweh", language: "Hebraico", meaning: "Palavra do Senhor", application: "A revelação autoritativa de Deus aos profetas e ao Seu povo.", verses: "Jeremias 1:4, Ezequiel 1:3", category: "Escrituras" },
+  { word: "כִּסֵּא דָּוִד", transliteration: "Kisse David", language: "Hebraico", meaning: "Trono de Davi", application: "O trono eterno prometido à linhagem de Davi, cumprido em Cristo.", verses: "2 Samuel 7:16, Lucas 1:32", category: "Cristologia" },
+  { word: "מֶלֶךְ הַמְּלָכִים", transliteration: "Melech HaMelachim", language: "Hebraico", meaning: "Rei dos Reis", application: "Título supremo de soberania atribuído a Deus e a Cristo glorificado.", verses: "Deuteronômio 10:17, Apocalipse 19:16", category: "Cristologia" },
+  { word: "שֵׂה הָאֱלֹהִים", transliteration: "Seh HaElohim", language: "Hebraico", meaning: "Cordeiro de Deus", application: "Cristo como o sacrifício perfeito que tira o pecado do mundo.", verses: "Isaías 53:7, João 1:29", category: "Cristologia" },
+  { word: "בֵּית לֶחֶם", transliteration: "Beit Lechem", language: "Hebraico", meaning: "Casa do pão", application: "Cidade natal de Jesus, cujo nome profeticamente aponta para Cristo como o pão da vida.", verses: "Miquéias 5:2, Mateus 2:1", category: "Geografia Bíblica" },
+  { word: "יְרוּשָׁלַיִם", transliteration: "Yerushalayim", language: "Hebraico", meaning: "Cidade da paz, fundação de paz", application: "A cidade santa de Deus, centro da adoração e destino da peregrinação espiritual.", verses: "Salmo 122:6, Apocalipse 21:2", category: "Geografia Bíblica" },
+  { word: "גָּלְגֹּלֶת", transliteration: "Golgolet", language: "Hebraico", meaning: "Calvário, lugar da caveira", application: "O local da crucificação de Jesus, onde o preço da redenção foi pago.", verses: "Mateus 27:33, João 19:17", category: "Geografia Bíblica" },
+
+  // === EXPRESSÕES COMPOSTAS GREGAS ===
+  { word: "ὁ ἀμνὸς τοῦ θεοῦ", transliteration: "Ho Amnos tou Theou", language: "Grego", meaning: "O Cordeiro de Deus", application: "Declaração de João Batista identificando Jesus como o sacrifício definitivo pelos pecados.", verses: "João 1:29, João 1:36", category: "Cristologia" },
+  { word: "ὁ ἄλφα καὶ τὸ ὦ", transliteration: "Ho Alpha kai to Ō", language: "Grego", meaning: "O Alfa e o Ômega", application: "Cristo como o princípio e o fim de todas as coisas, eterno e soberano.", verses: "Apocalipse 1:8, Apocalipse 22:13", category: "Cristologia" },
+  { word: "υἱὸς θεοῦ", transliteration: "Huios Theou", language: "Grego", meaning: "Filho de Deus", application: "A divindade de Cristo como segunda pessoa da Trindade, igual ao Pai.", verses: "Mateus 16:16, João 20:31", category: "Cristologia" },
+  { word: "ἐγώ εἰμι", transliteration: "Egō Eimi", language: "Grego", meaning: "Eu Sou", application: "Auto-declaração divina de Jesus, ecoando o nome de Deus revelado a Moisés.", verses: "João 8:58, João 6:35", category: "Cristologia" },
+  { word: "καινὴ διαθήκη", transliteration: "Kainē Diathēkē", language: "Grego", meaning: "Nova Aliança", application: "A aliança estabelecida pelo sangue de Cristo, substituindo a antiga aliança mosaica.", verses: "Lucas 22:20, Hebreus 8:8", category: "Teologia" },
+  { word: "πλήρωμα τοῦ χρόνου", transliteration: "Plērōma tou Chronou", language: "Grego", meaning: "Plenitude do tempo", application: "O momento perfeito escolhido por Deus para enviar Seu Filho ao mundo.", verses: "Gálatas 4:4, Efésios 1:10", category: "Teologia" },
+  { word: "σῶμα Χριστοῦ", transliteration: "Sōma Christou", language: "Grego", meaning: "Corpo de Cristo", application: "A igreja como organismo vivo unido a Cristo, cada membro com função essencial.", verses: "1 Coríntios 12:27, Efésios 4:12", category: "Igreja" },
+  { word: "θεόπνευστος", transliteration: "Theopneustos", language: "Grego", meaning: "Inspirado por Deus, soprado por Deus", application: "Toda Escritura é divinamente inspirada, soprada pelo próprio Deus.", verses: "2 Timóteo 3:16", category: "Escrituras" },
+  { word: "ἀρραβών", transliteration: "Arrabōn", language: "Grego", meaning: "Penhor, garantia, sinal", application: "O Espírito Santo como garantia da herança eterna que Deus prometeu aos crentes.", verses: "Efésios 1:14, 2 Coríntios 1:22", category: "Espírito Santo" },
+  { word: "κενόω", transliteration: "Kenoō", language: "Grego", meaning: "Esvaziar-se, humilhar-se", application: "Cristo esvaziou-se de Sua glória divina para assumir forma humana (kenosis).", verses: "Filipenses 2:7", category: "Cristologia" },
+  { word: "ἀποκάλυψις", transliteration: "Apokalypsis", language: "Grego", meaning: "Revelação, desvelamento", application: "A revelação divina dos mistérios de Deus, especialmente sobre os últimos tempos.", verses: "Apocalipse 1:1, Gálatas 1:12", category: "Escatologia" },
+  { word: "παρρησία", transliteration: "Parrēsia", language: "Grego", meaning: "Ousadia, franqueza, confiança", application: "A coragem e liberdade dada pelo Espírito para proclamar o evangelho sem medo.", verses: "Atos 4:31, Hebreus 4:16", category: "Vida Espiritual" },
+  { word: "οἰκονομία", transliteration: "Oikonomia", language: "Grego", meaning: "Dispensação, administração, plano", application: "O plano divino de Deus para administrar Sua obra redentora na história.", verses: "Efésios 1:10, Efésios 3:9", category: "Teologia" },
+  { word: "κατάρτισις", transliteration: "Katartisis", language: "Grego", meaning: "Aperfeiçoamento, restauração", application: "O processo de Deus de equipar e aperfeiçoar os santos para a obra do ministério.", verses: "Efésios 4:12, 2 Coríntios 13:9", category: "Igreja" },
+  { word: "ὁμολογία", transliteration: "Homologia", language: "Grego", meaning: "Confissão, profissão de fé", application: "A declaração pública de fé em Cristo como Senhor e Salvador.", verses: "Romanos 10:9-10, Hebreus 4:14", category: "Vida Espiritual" },
 ];
 
 export const categories = [...new Set(bibleDictionary.map(w => w.category))].sort();
+export const languages = [...new Set(bibleDictionary.map(w => w.language))].sort();
