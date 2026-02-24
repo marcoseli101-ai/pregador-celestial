@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2, Sun, Moon, Palette, Maximize, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
 
 type SlideType = "title" | "subtitle" | "content" | "verse" | "conclusion";
@@ -401,9 +402,18 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
               else setCurrentSlide(c => Math.max(c - 1, 0));
             }}
           >
-            <div className="w-full h-full flex items-center justify-center p-4">
-              <SlidePreview slide={slideData.slides[currentSlide]} index={currentSlide} total={slideData.slides.length} theme={theme} />
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.03 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="w-full h-full flex items-center justify-center p-4"
+              >
+                <SlidePreview slide={slideData.slides[currentSlide]} index={currentSlide} total={slideData.slides.length} theme={theme} />
+              </motion.div>
+            </AnimatePresence>
             {/* Controls - visible on hover */}
             <div className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/80 to-transparent p-6 flex items-center justify-between cursor-default"
               onClick={(e) => e.stopPropagation()}
@@ -447,7 +457,17 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
               <p className="text-muted-foreground">A IA está criando seus slides...</p>
             </div>
           ) : slideData && theme ? (
-            <SlidePreview slide={slideData.slides[currentSlide]} index={currentSlide} total={slideData.slides.length} theme={theme} />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                <SlidePreview slide={slideData.slides[currentSlide]} index={currentSlide} total={slideData.slides.length} theme={theme} />
+              </motion.div>
+            </AnimatePresence>
           ) : null}
         </div>
 
