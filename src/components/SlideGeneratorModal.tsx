@@ -59,7 +59,6 @@ const THEMES: Record<ThemeKey, { label: string; icon: typeof Sun; colors: Record
 
 function SlidePreview({ slide, index, total, theme }: { slide: Slide; index: number; total: number; theme: ThemeKey }) {
   const c = THEMES[theme].colors[slide.type] || THEMES[theme].colors.content;
-  const isCentered = slide.type === "title" || slide.type === "subtitle" || slide.type === "conclusion";
 
   return (
     <div
@@ -69,7 +68,7 @@ function SlidePreview({ slide, index, total, theme }: { slide: Slide; index: num
       {/* Top accent bar */}
       <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.accent }} />
 
-      <div className={`flex-1 flex flex-col ${isCentered ? "items-center justify-center text-center" : "justify-center"} px-8 md:px-14 py-8 overflow-auto`}>
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-8 md:px-14 py-8 overflow-auto">
         <h2
           className="font-bold leading-snug mb-4"
           style={{
@@ -83,11 +82,11 @@ function SlidePreview({ slide, index, total, theme }: { slide: Slide; index: num
         </h2>
 
         {slide.bullets && slide.bullets.length > 0 && (
-          <ul className={`space-y-2 ${isCentered ? "max-w-[85%]" : "max-w-[95%]"}`}>
+          <ul className="space-y-2 max-w-[85%]">
             {slide.bullets.map((b, i) => (
               <li
                 key={i}
-                className="flex items-start gap-3 leading-relaxed"
+                className="leading-relaxed"
                 style={{
                   color: c.bulletFg,
                   fontSize: "clamp(0.85rem, 2vw, 1.15rem)",
@@ -95,10 +94,7 @@ function SlidePreview({ slide, index, total, theme }: { slide: Slide; index: num
                   overflowWrap: "anywhere",
                 }}
               >
-                {!isCentered && (
-                  <span className="mt-2 w-2 h-2 rounded-full flex-shrink-0" style={{ background: c.accent }} />
-                )}
-                <span>{b}</span>
+                {b}
               </li>
             ))}
           </ul>
@@ -106,10 +102,9 @@ function SlidePreview({ slide, index, total, theme }: { slide: Slide; index: num
 
         {slide.verse && (
           <blockquote
-            className={`mt-4 italic leading-relaxed ${isCentered ? "" : "border-l-4 pl-4"}`}
+            className="mt-4 italic leading-relaxed"
             style={{
               color: c.accent,
-              borderColor: c.accent,
               fontSize: "clamp(0.8rem, 1.8vw, 1rem)",
               wordBreak: "break-word",
               overflowWrap: "anywhere",
@@ -242,7 +237,7 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
     slideData.slides.forEach((slide, i) => {
       if (i > 0) pdf.addPage();
       const c = getColors(slide.type);
-      const isCentered = slide.type === "title" || slide.type === "subtitle" || slide.type === "conclusion";
+      const isCentered = true;
 
       const hexToRgb = (hex: string) => [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
 
@@ -300,7 +295,7 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
 
     slideData.slides.forEach((slide) => {
       const c = getColors(slide.type);
-      const isCentered = slide.type === "title" || slide.type === "subtitle" || slide.type === "conclusion";
+      const isCentered = true;
       const pSlide = pptx.addSlide();
       pSlide.background = { color: c.bg.replace("#", "") };
       pSlide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 0.08, fill: { color: c.accent.replace("#", "") } });
