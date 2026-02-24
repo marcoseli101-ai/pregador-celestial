@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
-import { Copy, Share2, FileDown, Volume2, VolumeX, Save } from "lucide-react";
+import { Copy, Share2, FileDown, Volume2, VolumeX, Save, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { SlideGeneratorModal } from "./SlideGeneratorModal";
 
 interface ContentActionsProps {
   content: string;
@@ -19,6 +20,7 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
   const { user } = useAuth();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [slidesOpen, setSlidesOpen] = useState(false);
   const synthRef = useRef(window.speechSynthesis);
 
   const cleanText = (text: string) => text.replace(/[#*_]/g, "").trim();
@@ -178,6 +180,10 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
             <Save className="h-4 w-4" />
           </Button>
         )}
+        <Button variant="ghost" size="icon" onClick={() => setSlidesOpen(true)} title="Gerar Slides">
+          <Presentation className="h-4 w-4" />
+        </Button>
+        <SlideGeneratorModal content={content} open={slidesOpen} onClose={() => setSlidesOpen(false)} />
       </div>
     );
   }
@@ -202,6 +208,10 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
           <Save className="h-4 w-4" /> Salvar
         </Button>
       )}
+      <Button variant="outline" size="sm" onClick={() => setSlidesOpen(true)} className="gap-1.5">
+        <Presentation className="h-4 w-4" /> Slides
+      </Button>
+      <SlideGeneratorModal content={content} open={slidesOpen} onClose={() => setSlidesOpen(false)} />
     </div>
   );
 }
