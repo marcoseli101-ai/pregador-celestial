@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2, Sun, Moon, Palette } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2, Sun, Moon, Palette, Maximize, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
@@ -139,6 +139,8 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
   const [slideData, setSlideData] = useState<SlideData | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [theme, setTheme] = useState<ThemeKey | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const fullscreenRef = useRef<HTMLDivElement>(null);
 
   // Reset state when modal closes
   useEffect(() => {
@@ -147,8 +149,45 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
       setCurrentSlide(0);
       setTheme(null);
       setLoading(false);
+      setIsFullscreen(false);
     }
   }, [open]);
+
+  // Fullscreen change listener
+  useEffect(() => {
+    const handler = () => {
+      if (!document.fullscreenElement) setIsFullscreen(false);
+    };
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
+
+  // Keyboard navigation in fullscreen
+  useEffect(() => {
+    if (!isFullscreen || !slideData) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        setCurrentSlide(c => Math.min(c + 1, slideData.slides.length - 1));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setCurrentSlide(c => Math.max(c - 1, 0));
+      } else if (e.key === "Escape") {
+        document.exitFullscreen?.();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isFullscreen, slideData]);
+
+  const toggleFullscreen = useCallback(() => {
+    if (!fullscreenRef.current) return;
+    if (!document.fullscreenElement) {
+      fullscreenRef.current.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+    }
+  }, []);
 
   const generate = useCallback(async () => {
     if (content.length < 50) {
@@ -353,9 +392,49 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
     );
   }
 
+  // Fullscreen presentation view
+  if (isFullscreen && slideData && theme) {
+    const c = THEMES[theme].colors[slideData.slides[currentSlide].type];
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="relative w-full max-w-4xl max-h-[90vh] bg-card rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          <div ref={fullscreenRef} className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center cursor-none group"
+            onClick={(e) => {
+              const rect = (e.target as HTMLElement).getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              if (x > rect.width / 2) setCurrentSlide(c => Math.min(c + 1, slideData.slides.length - 1));
+              else setCurrentSlide(c => Math.max(c - 1, 0));
+            }}
+          >
+            <div className="w-full h-full flex items-center justify-center p-4">
+              <SlidePreview slide={slideData.slides[currentSlide]} index={currentSlide} total={slideData.slides.length} theme={theme} />
+            </div>
+            {/* Controls - visible on hover */}
+            <div className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/80 to-transparent p-6 flex items-center justify-between cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" disabled={currentSlide === 0} onClick={() => setCurrentSlide(c => c - 1)}>
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <span className="text-white/80 text-sm min-w-[60px] text-center">{currentSlide + 1} / {slideData.slides.length}</span>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" disabled={currentSlide === slideData.slides.length - 1} onClick={() => setCurrentSlide(c => c + 1)}>
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullscreen}>
+                <Minimize className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-4xl max-h-[90vh] bg-card rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <div ref={fullscreenRef} className="relative w-full max-w-4xl max-h-[90vh] bg-card rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
             <Presentation className="h-5 w-5 text-primary" />
@@ -391,6 +470,9 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
               </Button>
             </div>
             <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={toggleFullscreen} className="gap-2">
+                <Maximize className="h-4 w-4" /> Apresentar
+              </Button>
               <Button variant="outline" onClick={downloadPDF} className="gap-2">
                 <FileText className="h-4 w-4" /> PDF
               </Button>
