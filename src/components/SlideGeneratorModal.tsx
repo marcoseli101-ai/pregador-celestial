@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -120,12 +120,11 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
     }
   }, [content, onClose]);
 
-  // Auto-generate on open
-  useState(() => {
+  useEffect(() => {
     if (open && !slideData && !loading) {
       generate();
     }
-  });
+  }, [open]);
 
   const downloadPDF = useCallback(() => {
     if (!slideData) return;
