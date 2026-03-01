@@ -21,7 +21,15 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [slidesOpen, setSlidesOpen] = useState(false);
-  const synthRef = useRef(window.speechSynthesis);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+
+  // Lazy init to avoid crash on mobile reload when speechSynthesis isn't ready
+  const getSynth = () => {
+    if (!synthRef.current && typeof window !== "undefined" && window.speechSynthesis) {
+      synthRef.current = window.speechSynthesis;
+    }
+    return synthRef.current;
+  };
 
   const cleanText = (text: string) => text.replace(/[#*_]/g, "").trim();
 
@@ -92,7 +100,11 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
   };
 
   const handleAudio = () => {
-    const synth = synthRef.current;
+    const synth = getSynth();
+    if (!synth) {
+      toast.error("Áudio não suportado neste navegador.");
+      return;
+    }
     if (isSpeaking) {
       synth.cancel();
       setIsSpeaking(false);
@@ -100,7 +112,6 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
     }
 
     const clean = cleanText(content);
-    // Split into chunks of ~200 chars at sentence boundaries for better TTS
     const chunks: string[] = [];
     let remaining = clean;
     while (remaining.length > 0) {
