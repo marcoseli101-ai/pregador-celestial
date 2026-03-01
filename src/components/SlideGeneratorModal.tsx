@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2, Sun, Moon, Palette, Maximize, Minimize } from "lucide-react";
+import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2, Sun, Moon, Palette, Maximize, Minimize, Timer, TimerOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -136,6 +136,9 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
   const [currentSlide, setCurrentSlide] = useState(0);
   const [theme, setTheme] = useState<ThemeKey | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
 
   // Reset state when modal closes
@@ -146,8 +149,21 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
       setTheme(null);
       setLoading(false);
       setIsFullscreen(false);
+      setTimerRunning(false);
+      setElapsedSeconds(0);
+      if (timerRef.current) clearInterval(timerRef.current);
     }
   }, [open]);
+
+  // Timer logic
+  useEffect(() => {
+    if (timerRunning) {
+      timerRef.current = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
+    } else if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [timerRunning]);
 
   // Fullscreen change listener
   useEffect(() => {
@@ -414,6 +430,23 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
                 <SlidePreview slide={slideData.slides[currentSlide]} index={currentSlide} total={slideData.slides.length} theme={theme} />
               </motion.div>
             </AnimatePresence>
+            {/* Timer display - always visible top-right */}
+            <div className="absolute top-4 right-4 flex items-center gap-2 opacity-70 group-hover:opacity-100 transition-opacity cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/20 h-8 w-8"
+                onClick={() => setTimerRunning(r => !r)}
+                title={timerRunning ? "Pausar cronômetro" : "Iniciar cronômetro"}
+              >
+                {timerRunning ? <TimerOff className="h-4 w-4" /> : <Timer className="h-4 w-4" />}
+              </Button>
+              <span className="text-white font-mono text-lg min-w-[70px] text-center tabular-nums">
+                {String(Math.floor(elapsedSeconds / 60)).padStart(2, "0")}:{String(elapsedSeconds % 60).padStart(2, "0")}
+              </span>
+            </div>
             {/* Controls - visible on hover */}
             <div className="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/80 to-transparent p-6 flex items-center justify-between cursor-default"
               onClick={(e) => e.stopPropagation()}
@@ -427,9 +460,14 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
                   <ChevronRight className="h-5 w-5" />
                 </Button>
               </div>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullscreen}>
-                <Minimize className="h-5 w-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" className="text-white/70 hover:bg-white/20 text-xs" onClick={() => { setElapsedSeconds(0); setTimerRunning(false); }}>
+                  Zerar
+                </Button>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullscreen}>
+                  <Minimize className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
