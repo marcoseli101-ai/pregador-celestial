@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2 } from "lucide-react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
+import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/data/thematicStudies";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 
 const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
@@ -87,10 +88,12 @@ const EstudoBiblico = () => {
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos">("biblia");
+  const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos" | "tematicos">("biblia");
   const [expandedStudy, setExpandedStudy] = useState<string | null>(null);
   const [studyFilter, setStudyFilter] = useState<"all" | "VT" | "NT">("all");
   const [studySearch, setStudySearch] = useState("");
+  const [expandedThematic, setExpandedThematic] = useState<string | null>(null);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
 
   // AI commentary state
@@ -303,6 +306,7 @@ const EstudoBiblico = () => {
           { key: "biblia" as const, label: "Bíblia", icon: BookOpen },
           { key: "versiculos" as const, label: "Versículos", icon: Sparkles },
           { key: "estudos" as const, label: "Estudos Bíblicos", icon: ScrollText },
+          { key: "tematicos" as const, label: "Estudos Temáticos", icon: Lightbulb },
         ]).map(({ key, label, icon: Icon }) => (
           <Button
             key={key}
@@ -486,6 +490,114 @@ const EstudoBiblico = () => {
           {filteredStudies.length === 0 && (
             <p className="text-center text-muted-foreground py-10">Nenhum estudo encontrado para "{studySearch}"</p>
           )}
+        </div>
+      )}
+
+      {/* TAB: Estudos Temáticos */}
+      {activeTab === "tematicos" && (
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-serif text-2xl font-semibold mb-2 text-center">
+            Estudos <span className="text-gradient-gold">Temáticos</span>
+          </h2>
+          <p className="text-muted-foreground text-center text-sm mb-8">
+            Análises transversais de temas que percorrem toda a Bíblia
+          </p>
+
+          <div className="space-y-4">
+            {THEMATIC_STUDIES.map((study) => {
+              const Icon = study.icon;
+              const isExpanded = expandedThematic === study.id;
+              return (
+                <Card
+                  key={study.id}
+                  className={`transition-all cursor-pointer ${isExpanded ? "shadow-celestial border-celestial/30" : "hover:shadow-celestial hover:border-celestial/30"}`}
+                  onClick={() => setExpandedThematic(isExpanded ? null : study.id)}
+                >
+                  <CardContent className="p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-lg bg-gradient-gold flex items-center justify-center shrink-0">
+                          <Icon className="h-5 w-5 text-background" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="font-serif font-semibold text-sm">{study.title}</h4>
+                            <Badge variant="outline" className="text-[10px]">{study.theme}</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
+                            {study.sections.length} seções de estudo
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronDown className={`h-5 w-5 text-muted-foreground shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                    </div>
+
+                    {!isExpanded && (
+                      <p className="text-xs text-muted-foreground line-clamp-2">{study.description}</p>
+                    )}
+
+                    {isExpanded && (
+                      <div className="pt-3 border-t border-border space-y-5" onClick={(e) => e.stopPropagation()}>
+                        <p className="text-sm text-foreground/90 leading-relaxed">{study.description}</p>
+
+                        {study.sections.map((section, idx) => {
+                          const sectionKey = `${study.id}-${idx}`;
+                          const isSectionOpen = expandedSection === sectionKey;
+                          return (
+                            <div key={idx} className="rounded-lg border border-border overflow-hidden">
+                              <button
+                                className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors text-left"
+                                onClick={() => setExpandedSection(isSectionOpen ? null : sectionKey)}
+                              >
+                                <h5 className="font-serif font-semibold text-sm">{section.heading}</h5>
+                                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isSectionOpen ? "rotate-180" : ""}`} />
+                              </button>
+
+                              {isSectionOpen && (
+                                <div className="px-4 pb-4 space-y-4">
+                                  <p className="text-sm text-foreground/90 leading-relaxed">{section.content}</p>
+
+                                  <div>
+                                    <h6 className="text-xs font-semibold text-accent uppercase tracking-wider mb-2">Referências Bíblicas</h6>
+                                    <div className="space-y-1.5">
+                                      {section.verses.map((verse, vi) => (
+                                        <p key={vi} className="text-sm text-foreground/80 leading-relaxed pl-3 border-l-2 border-accent/30">
+                                          {verse}
+                                        </p>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  <div className="rounded-lg bg-accent/10 border border-accent/20 p-4">
+                                    <h6 className="text-xs font-semibold text-accent uppercase tracking-wider mb-1">Simbolismo e Significado</h6>
+                                    <p className="text-sm text-foreground/90 leading-relaxed">{section.symbolism}</p>
+                                  </div>
+
+                                  <ContentActions
+                                    content={`${section.heading}\n\n${section.content}\n\nReferências:\n${section.verses.join("\n")}\n\nSimbolismo:\n${section.symbolism}`}
+                                    title={`${study.title} - ${section.heading}`}
+                                    contentType="estudo"
+                                    compact
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+
+                        {/* Full study content actions */}
+                        <ContentActions
+                          content={study.sections.map(s => `## ${s.heading}\n\n${s.content}\n\nReferências:\n${s.verses.join("\n")}\n\nSimbolismo:\n${s.symbolism}`).join("\n\n---\n\n")}
+                          title={study.title}
+                          contentType="estudo"
+                        />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
