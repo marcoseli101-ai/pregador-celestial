@@ -1,11 +1,12 @@
-import { useState, useRef } from "react";
-import { Copy, Share2, FileDown, Volume2, VolumeX, Save, Presentation } from "lucide-react";
+import { useState } from "react";
+import { Copy, Share2, FileDown, Volume2, Save, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { SlideGeneratorModal } from "./SlideGeneratorModal";
+import { AudioPlayerModal } from "./AudioPlayerModal";
 
 interface ContentActionsProps {
   content: string;
@@ -18,18 +19,9 @@ interface ContentActionsProps {
 
 export function ContentActions({ content, title = "Pregador Pro", contentType = "geral", compact = false, className = "", hideSave = false }: ContentActionsProps) {
   const { user } = useAuth();
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [slidesOpen, setSlidesOpen] = useState(false);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-
-  // Lazy init to avoid crash on mobile reload when speechSynthesis isn't ready
-  const getSynth = () => {
-    if (!synthRef.current && typeof window !== "undefined" && window.speechSynthesis) {
-      synthRef.current = window.speechSynthesis;
-    }
-    return synthRef.current;
-  };
+  const [audioOpen, setAudioOpen] = useState(false);
 
   const cleanText = (text: string) => text.replace(/[#*_]/g, "").trim();
 
@@ -99,55 +91,6 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
     }
   };
 
-  const handleAudio = () => {
-    const synth = getSynth();
-    if (!synth) {
-      toast.error("Áudio não suportado neste navegador.");
-      return;
-    }
-    if (isSpeaking) {
-      synth.cancel();
-      setIsSpeaking(false);
-      return;
-    }
-
-    const clean = cleanText(content);
-    const chunks: string[] = [];
-    let remaining = clean;
-    while (remaining.length > 0) {
-      if (remaining.length <= 200) {
-        chunks.push(remaining);
-        break;
-      }
-      let splitAt = remaining.lastIndexOf(".", 200);
-      if (splitAt === -1 || splitAt < 50) splitAt = remaining.lastIndexOf(" ", 200);
-      if (splitAt === -1) splitAt = 200;
-      chunks.push(remaining.slice(0, splitAt + 1));
-      remaining = remaining.slice(splitAt + 1).trim();
-    }
-
-    const voices = synth.getVoices();
-    const ptVoice = voices.find(v => v.lang.startsWith("pt")) || voices[0];
-
-    let currentChunk = 0;
-    const speakNext = () => {
-      if (currentChunk >= chunks.length) {
-        setIsSpeaking(false);
-        return;
-      }
-      const utterance = new SpeechSynthesisUtterance(chunks[currentChunk]);
-      utterance.lang = "pt-BR";
-      utterance.rate = 0.95;
-      if (ptVoice) utterance.voice = ptVoice;
-      utterance.onend = () => { currentChunk++; speakNext(); };
-      utterance.onerror = () => { setIsSpeaking(false); };
-      synth.speak(utterance);
-    };
-
-    setIsSpeaking(true);
-    speakNext();
-  };
-
   const handleSave = async () => {
     if (!user) {
       toast.error("Faça login para salvar conteúdos.");
@@ -183,8 +126,8 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
         <Button variant="ghost" size="icon" onClick={handlePDF} title="Gerar PDF">
           <FileDown className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" onClick={handleAudio} title={isSpeaking ? "Parar áudio" : "Ouvir"}>
-          {isSpeaking ? <VolumeX className="h-4 w-4 text-accent" /> : <Volume2 className="h-4 w-4" />}
+        <Button variant="ghost" size="icon" onClick={() => setAudioOpen(true)} title="Ouvir">
+          <Volume2 className="h-4 w-4" />
         </Button>
         {!hideSave && (
           <Button variant="ghost" size="icon" onClick={handleSave} disabled={isSaving} title="Salvar na Área do Pregador">
@@ -195,6 +138,7 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
           <Presentation className="h-4 w-4" />
         </Button>
         <SlideGeneratorModal content={content} open={slidesOpen} onClose={() => setSlidesOpen(false)} />
+        <AudioPlayerModal content={content} open={audioOpen} onClose={() => setAudioOpen(false)} />
       </div>
     );
   }
@@ -210,9 +154,8 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
       <Button variant="outline" size="sm" onClick={handlePDF} className="gap-1.5">
         <FileDown className="h-4 w-4" /> Gerar PDF
       </Button>
-      <Button variant="outline" size="sm" onClick={handleAudio} className="gap-1.5">
-        {isSpeaking ? <VolumeX className="h-4 w-4 text-accent" /> : <Volume2 className="h-4 w-4" />}
-        {isSpeaking ? "Parar" : "Ouvir"}
+      <Button variant="outline" size="sm" onClick={() => setAudioOpen(true)} className="gap-1.5">
+        <Volume2 className="h-4 w-4" /> Ouvir
       </Button>
       {!hideSave && (
         <Button variant="outline" size="sm" onClick={handleSave} disabled={isSaving} className="gap-1.5">
@@ -223,6 +166,7 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
         <Presentation className="h-4 w-4" /> Slides
       </Button>
       <SlideGeneratorModal content={content} open={slidesOpen} onClose={() => setSlidesOpen(false)} />
+      <AudioPlayerModal content={content} open={audioOpen} onClose={() => setAudioOpen(false)} />
     </div>
   );
 }
