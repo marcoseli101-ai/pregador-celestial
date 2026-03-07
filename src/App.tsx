@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Layout } from "@/components/Layout";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
 import GeradorPregacoes from "./pages/GeradorPregacoes";
@@ -28,7 +29,10 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route element={<Layout />}>
+            <Route path="/login" element={<Layout />}>
+              <Route index element={<Login />} />
+            </Route>
+            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route path="/" element={<Index />} />
               <Route path="/estudo-biblico" element={<EstudoBiblico />} />
               <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
@@ -39,7 +43,6 @@ const App = () => (
               <Route path="/devocional" element={<Devocional />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/area-pregador" element={<AreaPregador />} />
-              <Route path="/login" element={<Login />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
