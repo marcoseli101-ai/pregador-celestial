@@ -197,7 +197,38 @@ const Dicionario = () => {
         </div>
       </div>
 
-      {/* Loading */}
+      {/* Search History */}
+      {history.length > 0 && !loading && (
+        <div className="mx-auto max-w-xl mb-8">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span className="text-sm font-semibold">Pesquisas recentes</span>
+            </div>
+            <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-7" onClick={clearHistory}>
+              Limpar histórico
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {history.map((word) => (
+              <Badge
+                key={word}
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors group pr-1"
+              >
+                <span onClick={() => { setSearch(word); handleSearchWithWord(word); }}>{word}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); removeFromHistory(word); }}
+                  className="ml-1 rounded-full p-0.5 opacity-50 group-hover:opacity-100 hover:bg-destructive/20"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
       {loading && (
         <div className="text-center py-16">
           <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-primary" />
