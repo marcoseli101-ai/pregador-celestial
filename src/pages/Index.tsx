@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
-  HelpCircle, Calendar, ArrowRight, Cross, Star, Users, ChevronRight
+  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight
 } from "lucide-react";
+
+import heroBible from "@/assets/hero-bible.jpg";
+import bibleLandscape from "@/assets/bible-landscape.jpg";
+import bibleScrolls from "@/assets/bible-scrolls.jpg";
+import bibleCross from "@/assets/bible-cross.jpg";
 
 const features = [
   { icon: BookOpen, title: "Estudo Bíblico Avançado", desc: "Bíblia completa com busca, comparação e comentários teológicos.", link: "/estudo-biblico" },
@@ -41,15 +46,11 @@ const stagger = {
 const Index = () => {
   return (
     <div className="overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center bg-gradient-celestial text-primary-foreground">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl animate-glow-pulse" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-celestial-glow/20 blur-3xl animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5">
-            <Cross className="h-[500px] w-[500px]" strokeWidth={0.5} />
-          </div>
+      {/* Hero Section with Background Image */}
+      <section className="relative min-h-[90vh] flex items-center">
+        <div className="absolute inset-0">
+          <img src={heroBible} alt="Bíblia aberta com luz divina" className="w-full h-full object-cover" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222,47%,6%)/0.75] via-[hsl(222,47%,6%)/0.6] to-[hsl(222,47%,6%)/0.85]" />
         </div>
 
         <div className="container relative z-10 py-20">
@@ -60,14 +61,14 @@ const Index = () => {
             className="mx-auto max-w-3xl text-center"
           >
             <motion.div variants={fadeUp} className="mb-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-sm font-medium text-gold-light">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))/0.4] bg-[hsl(var(--gold))/0.15] px-4 py-1.5 text-sm font-medium text-[hsl(var(--gold-light))]">
                 <Star className="h-3.5 w-3.5" /> Plataforma para Pregadores do Evangelho
               </span>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="mb-6 font-serif text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl"
+              className="mb-6 font-serif text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl text-[hsl(40,60%,90%)]"
             >
               Preparando Pregadores{" "}
               <span className="text-gradient-gold">Cheios da Palavra</span>{" "}
@@ -76,7 +77,7 @@ const Index = () => {
 
             <motion.p
               variants={fadeUp}
-              className="mb-8 text-lg text-primary-foreground/80 sm:text-xl"
+              className="mb-8 text-lg sm:text-xl text-[hsl(40,60%,90%)/0.8]"
             >
               Transforme vidas através da pregação do Evangelho com ferramentas
               poderosas de estudo bíblico, geração de sermões e materiais multimídia.
@@ -89,13 +90,13 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/estudo-biblico">
-                <Button size="lg" variant="outline" className="gap-2 text-base border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                <Button size="lg" variant="outline" className="gap-2 text-base border-[hsl(40,60%,90%)/0.3] text-[hsl(40,60%,90%)] hover:bg-[hsl(40,60%,90%)/0.1]">
                   <BookOpen className="h-5 w-5" /> Estudar a Bíblia
                 </Button>
               </Link>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-10 flex items-center justify-center gap-8 text-sm text-primary-foreground/60">
+            <motion.div variants={fadeUp} className="mt-10 flex items-center justify-center gap-8 text-sm text-[hsl(40,60%,90%)/0.6] flex-wrap">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 <span>+1.000 pregadores</span>
@@ -113,8 +114,19 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Bible Landscape Parallax Divider */}
+      <section className="relative h-[40vh] min-h-[250px] overflow-hidden">
+        <img
+          src={bibleLandscape}
+          alt="Paisagem bíblica - Monte das Oliveiras ao pôr do sol"
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/30" />
+      </section>
+
       {/* Features Grid */}
-      <section className="py-20">
+      <section className="py-20 bg-background">
         <div className="container">
           <motion.div
             initial="hidden"
@@ -141,7 +153,7 @@ const Index = () => {
             {features.map((f) => (
               <motion.div key={f.title} variants={fadeUp}>
                 <Link to={f.link}>
-                  <Card className="group h-full cursor-pointer border-border/50 transition-all hover:shadow-celestial hover:border-celestial/30 hover:-translate-y-1">
+                  <Card className="group h-full cursor-pointer border-border/50 transition-all hover:shadow-celestial hover:border-[hsl(var(--celestial))/0.3] hover:-translate-y-1">
                     <CardContent className="p-6">
                       <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-gold shadow-gold">
                         <f.icon className="h-6 w-6 text-background" />
@@ -160,6 +172,17 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Scrolls Image Divider */}
+      <section className="relative h-[35vh] min-h-[220px] overflow-hidden">
+        <img
+          src={bibleScrolls}
+          alt="Pergaminhos bíblicos antigos com cruz e luz dourada"
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/40" />
+      </section>
+
       {/* Theme Tags */}
       <section className="py-16 bg-muted/50">
         <div className="container text-center">
@@ -172,7 +195,7 @@ const Index = () => {
           <div className="flex flex-wrap justify-center gap-3">
             {themes.map((t) => (
               <Link key={t} to={`/biblioteca?tema=${t.toLowerCase()}`}>
-                <span className="inline-flex items-center rounded-full border border-gold/30 bg-card px-5 py-2 text-sm font-medium text-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:shadow-gold cursor-pointer">
+                <span className="inline-flex items-center rounded-full border border-[hsl(var(--gold))/0.3] bg-card px-5 py-2 text-sm font-medium text-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:shadow-gold cursor-pointer">
                   {t}
                 </span>
               </Link>
@@ -181,16 +204,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Devocional Preview */}
-      <section className="py-20">
-        <div className="container">
+      {/* Devocional Preview with Background Image */}
+      <section className="relative py-24 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bibleCross} alt="Cruz ao nascer do sol" className="w-full h-full object-cover" loading="lazy" />
+          <div className="absolute inset-0 bg-[hsl(222,47%,6%)/0.7]" />
+        </div>
+        <div className="container relative z-10">
           <div className="mx-auto max-w-2xl text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-2">
+              <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-2 text-[hsl(40,60%,90%)]">
                 Devocional do Dia
               </motion.h2>
               <motion.div variants={fadeUp}>
-                <Card className="mt-6 overflow-hidden border-gold/20">
+                <Card className="mt-6 overflow-hidden border-[hsl(var(--gold))/0.3] bg-card/90 backdrop-blur-md">
                   <CardContent className="p-8">
                     <p className="font-serif text-sm font-semibold text-accent uppercase tracking-widest mb-4">
                       Versículo do Dia
@@ -227,7 +254,7 @@ const Index = () => {
                 <CardContent className="p-6">
                   <div className="flex gap-1 mb-4">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-gold text-gold" />
+                      <Star key={i} className="h-4 w-4 fill-[hsl(var(--gold))] text-[hsl(var(--gold))]" />
                     ))}
                   </div>
                   <p className="text-sm italic mb-4 text-primary-foreground/90">"{t.text}"</p>
@@ -242,8 +269,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20">
+      {/* CTA with subtle background */}
+      <section className="py-20 bg-background">
         <div className="container text-center">
           <h2 className="font-serif text-3xl font-bold mb-4">
             Comece a Preparar Pregações <span className="text-gradient-gold">Poderosas</span>
