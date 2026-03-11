@@ -53,6 +53,8 @@ const Dicionario = () => {
       return;
     }
 
+    addToHistory(q);
+    setHistory(getHistory());
     setLoading(true);
     setHasSearched(true);
     setResults([]);
