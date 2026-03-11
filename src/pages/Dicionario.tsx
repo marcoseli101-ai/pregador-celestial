@@ -18,6 +18,21 @@ interface DictionaryEntry {
   related_words: { word: string; transliteration: string }[];
 }
 
+const HISTORY_KEY = "bible-dict-history";
+const MAX_HISTORY = 15;
+
+const getHistory = (): string[] => {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+  } catch { return []; }
+};
+
+const addToHistory = (word: string) => {
+  const history = getHistory().filter((w) => w.toLowerCase() !== word.toLowerCase());
+  history.unshift(word);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY)));
+};
+
 const Dicionario = () => {
   const [search, setSearch] = useState("");
   const [selectedLang, setSelectedLang] = useState<"Todos" | "Hebraico" | "Grego" | "Aramaico">("Todos");
@@ -25,6 +40,11 @@ const Dicionario = () => {
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
+
+  useEffect(() => {
+    setHistory(getHistory());
+  }, []);
 
   const handleSearch = async () => {
     const q = search.trim();
