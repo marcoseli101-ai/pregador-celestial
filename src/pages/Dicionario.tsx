@@ -111,6 +111,8 @@ const Dicionario = () => {
   };
 
   const handleSearchWithWord = async (word: string) => {
+    addToHistory(word);
+    setHistory(getHistory());
     setLoading(true);
     setHasSearched(true);
     setResults([]);
@@ -125,6 +127,17 @@ const Dicionario = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const removeFromHistory = (word: string) => {
+    const updated = getHistory().filter((w) => w !== word);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+    setHistory(updated);
+  };
+
+  const clearHistory = () => {
+    localStorage.removeItem(HISTORY_KEY);
+    setHistory([]);
   };
 
   return (
