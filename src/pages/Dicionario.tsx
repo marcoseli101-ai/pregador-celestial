@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Search, Volume2, BookOpen, Loader2, Languages, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Volume2, BookOpen, Loader2, Languages, Sparkles, Clock, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,21 @@ interface DictionaryEntry {
   related_words: { word: string; transliteration: string }[];
 }
 
+const HISTORY_KEY = "bible-dict-history";
+const MAX_HISTORY = 15;
+
+const getHistory = (): string[] => {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+  } catch { return []; }
+};
+
+const addToHistory = (word: string) => {
+  const history = getHistory().filter((w) => w.toLowerCase() !== word.toLowerCase());
+  history.unshift(word);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY)));
+};
+
 const Dicionario = () => {
   const [search, setSearch] = useState("");
   const [selectedLang, setSelectedLang] = useState<"Todos" | "Hebraico" | "Grego" | "Aramaico">("Todos");
@@ -25,6 +40,11 @@ const Dicionario = () => {
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
+
+  useEffect(() => {
+    setHistory(getHistory());
+  }, []);
 
   const handleSearch = async () => {
     const q = search.trim();
@@ -33,6 +53,8 @@ const Dicionario = () => {
       return;
     }
 
+    addToHistory(q);
+    setHistory(getHistory());
     setLoading(true);
     setHasSearched(true);
     setResults([]);
@@ -89,6 +111,8 @@ const Dicionario = () => {
   };
 
   const handleSearchWithWord = async (word: string) => {
+    addToHistory(word);
+    setHistory(getHistory());
     setLoading(true);
     setHasSearched(true);
     setResults([]);
@@ -103,6 +127,17 @@ const Dicionario = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const removeFromHistory = (word: string) => {
+    const updated = getHistory().filter((w) => w !== word);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+    setHistory(updated);
+  };
+
+  const clearHistory = () => {
+    localStorage.removeItem(HISTORY_KEY);
+    setHistory([]);
   };
 
   return (
@@ -162,7 +197,38 @@ const Dicionario = () => {
         </div>
       </div>
 
-      {/* Loading */}
+      {/* Search History */}
+      {history.length > 0 && !loading && (
+        <div className="mx-auto max-w-xl mb-8">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span className="text-sm font-semibold">Pesquisas recentes</span>
+            </div>
+            <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-7" onClick={clearHistory}>
+              Limpar histórico
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {history.map((word) => (
+              <Badge
+                key={word}
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors group pr-1"
+              >
+                <span onClick={() => { setSearch(word); handleSearchWithWord(word); }}>{word}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); removeFromHistory(word); }}
+                  className="ml-1 rounded-full p-0.5 opacity-50 group-hover:opacity-100 hover:bg-destructive/20"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
       {loading && (
         <div className="text-center py-16">
           <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-primary" />
