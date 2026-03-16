@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.generate-dictionary]
 verify_jwt = false
+
+[functions.theology-chat]
+verify_jwt = false
