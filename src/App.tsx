@@ -37,7 +37,7 @@ const App = () => (
               <Route path="/estudo-biblico" element={<EstudoBiblico />} />
               <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
               <Route path="/biblioteca" element={<Biblioteca />} />
-              <Route path="/multimidia" element={<Multimidia />} />
+              <Route path="/curso-teologia" element={<CursoTeologia />} />
               <Route path="/dicionario" element={<Dicionario />} />
               <Route path="/questionarios" element={<Questionarios />} />
               <Route path="/devocional" element={<Devocional />} />
