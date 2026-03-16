@@ -10,7 +10,7 @@ import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
 import GeradorPregacoes from "./pages/GeradorPregacoes";
 import Biblioteca from "./pages/Biblioteca";
-import Multimidia from "./pages/Multimidia";
+import CursoTeologia from "./pages/CursoTeologia";
 import Dicionario from "./pages/Dicionario";
 import Questionarios from "./pages/Questionarios";
 import Devocional from "./pages/Devocional";
