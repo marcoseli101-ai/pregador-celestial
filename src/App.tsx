@@ -10,7 +10,7 @@ import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
 import GeradorPregacoes from "./pages/GeradorPregacoes";
 import Biblioteca from "./pages/Biblioteca";
-import Multimidia from "./pages/Multimidia";
+import CursoTeologia from "./pages/CursoTeologia";
 import Dicionario from "./pages/Dicionario";
 import Questionarios from "./pages/Questionarios";
 import Devocional from "./pages/Devocional";
@@ -37,7 +37,7 @@ const App = () => (
               <Route path="/estudo-biblico" element={<EstudoBiblico />} />
               <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
               <Route path="/biblioteca" element={<Biblioteca />} />
-              <Route path="/multimidia" element={<Multimidia />} />
+              <Route path="/curso-teologia" element={<CursoTeologia />} />
               <Route path="/dicionario" element={<Dicionario />} />
               <Route path="/questionarios" element={<Questionarios />} />
               <Route path="/devocional" element={<Devocional />} />

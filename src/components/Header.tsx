@@ -11,7 +11,7 @@ const navItems = [
   { label: "Estudo Bíblico", path: "/estudo-biblico" },
   { label: "Gerador de Pregações", path: "/gerador-pregacoes" },
   { label: "Biblioteca", path: "/biblioteca" },
-  { label: "Multimídia", path: "/multimidia" },
+  { label: "Curso de Teologia", path: "/curso-teologia" },
   { label: "Dicionário", path: "/dicionario" },
   { label: "Questionários", path: "/questionarios" },
   { label: "Devocional", path: "/devocional" },
