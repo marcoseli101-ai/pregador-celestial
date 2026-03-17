@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, Play, FileText, Download, ExternalLink, Video } from "lucide-react";
+import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, Play, FileText, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +15,18 @@ import ReactMarkdown from "react-markdown";
    GRADE CURRICULAR — Baseada na CGADB / FAECAD / CPAD
    Convenção Geral das Assembleias de Deus no Brasil
    ══════════════════════════════════════════════════════════════ */
-const modules = [
+
+type Material = { title: string; type: string; description: string };
+type Lesson = {
+  id: string;
+  title: string;
+  content: string;
+  videoUrl: string;
+  videoTitle: string;
+  materials: Material[];
+};
+
+const modules: { id: number; title: string; lessons: Lesson[] }[] = [
   {
     id: 1,
     title: "Prolegômenos à Teologia Pentecostal",
@@ -24,11 +35,11 @@ const modules = [
         id: "1.1",
         title: "Introdução à Teologia Pentecostal",
         videoUrl: "https://www.youtube.com/embed/dFSbVen5K9s",
-        videoTitle: "Introdução à Teologia Pentecostal — Aula Completa",
+        videoTitle: "Introdução à Teologia Pentecostal",
         materials: [
-          { title: "Apostila: Fundamentos da Teologia Pentecostal", type: "pdf", description: "Material base com os conceitos fundamentais da teologia pentecostal clássica." },
-          { title: "Credo das Assembleias de Deus (CGADB)", type: "doc", description: "Documento oficial com as doutrinas fundamentais da denominação." },
-          { title: "Leitura complementar: O que é Pentecostalismo?", type: "artigo", description: "Artigo da CPAD sobre as raízes e características do movimento pentecostal." },
+          { title: "Apostila: Fundamentos da Teologia Pentecostal", type: "PDF", description: "Material base com os conceitos fundamentais da teologia pentecostal clássica." },
+          { title: "Credo das Assembleias de Deus (CGADB)", type: "DOC", description: "Documento oficial com as doutrinas fundamentais da denominação." },
+          { title: "O que é Pentecostalismo? — Artigo CPAD", type: "Artigo", description: "Artigo sobre as raízes e características do movimento pentecostal." },
         ],
         content: `### O que é Teologia Pentecostal?
 
@@ -52,6 +63,12 @@ A Convenção Geral das Assembleias de Deus no Brasil (CGADB), fundada em 1930, 
       {
         id: "1.2",
         title: "Credo e Declaração de Fé das Assembleias de Deus",
+        videoUrl: "https://www.youtube.com/embed/36-ybTSpiJ8",
+        videoTitle: "Declaração de Fé das Assembleias de Deus",
+        materials: [
+          { title: "Declaração de Fé da CGADB — Texto Completo", type: "PDF", description: "Documento oficial com todos os artigos de fé da CGADB." },
+          { title: "Estudo Comparativo: Credos Cristãos Históricos", type: "Artigo", description: "Comparação entre o credo assembleiano e os credos apostólico, niceno e atanasiano." },
+        ],
         content: `### As Verdades Fundamentais das Assembleias de Deus
 
 O Credo das Assembleias de Deus, conforme adotado pela CGADB, declara as seguintes doutrinas fundamentais:
@@ -89,6 +106,12 @@ Arrebatamento pré-tribulacional da Igreja e volta gloriosa para reinar.`,
       {
         id: "1.3",
         title: "Metodologia do Estudo Teológico",
+        videoUrl: "https://www.youtube.com/embed/HGHqu9_EPWQ",
+        videoTitle: "Como Estudar Teologia — Metodologia",
+        materials: [
+          { title: "Guia de Estudo: Ferramentas de Pesquisa Bíblica", type: "PDF", description: "Manual prático com métodos e ferramentas para o estudo teológico." },
+          { title: "Bibliografia Recomendada — Teologia Pentecostal", type: "Lista", description: "Lista de livros essenciais da CPAD e outros autores pentecostais." },
+        ],
         content: `### Como Estudar Teologia na Perspectiva Pentecostal
 
 #### Princípios Metodológicos
@@ -118,6 +141,12 @@ A CGADB incentiva seus ministros e obreiros a buscar formação teológica sóli
       {
         id: "2.1",
         title: "Bibliologia — A Doutrina das Escrituras",
+        videoUrl: "https://www.youtube.com/embed/FACeq82_1b8",
+        videoTitle: "Bibliologia — A Doutrina das Escrituras",
+        materials: [
+          { title: "Apostila: Bibliologia Completa", type: "PDF", description: "Estudo aprofundado sobre inspiração, inerrância e cânon bíblico." },
+          { title: "Tabela do Cânon Bíblico", type: "Infográfico", description: "Quadro comparativo dos 66 livros com autoria e data." },
+        ],
         content: `### A Bíblia: Palavra de Deus
 
 #### Inspiração das Escrituras
@@ -145,6 +174,12 @@ A Bíblia contém tudo que é necessário para a fé e a prática cristã.
       {
         id: "2.2",
         title: "Hermenêutica Pentecostal",
+        videoUrl: "https://www.youtube.com/embed/m74HHEZRM0w",
+        videoTitle: "Hermenêutica — Interpretação Bíblica",
+        materials: [
+          { title: "Manual de Hermenêutica Pentecostal", type: "PDF", description: "Guia prático de interpretação bíblica na perspectiva assembleiana." },
+          { title: "Exercícios de Exegese Bíblica", type: "Atividade", description: "Exercícios práticos para aplicar os princípios hermenêuticos estudados." },
+        ],
         content: `### Interpretação Bíblica na Perspectiva Pentecostal
 
 #### Princípios Hermenêuticos Fundamentais
@@ -178,6 +213,12 @@ Os pentecostais reconhecem que os textos narrativos de **Atos dos Apóstolos** t
       {
         id: "3.1",
         title: "A Doutrina de Deus",
+        videoUrl: "https://www.youtube.com/embed/J3b7-Q5bz4c",
+        videoTitle: "Teologia Própria — Os Atributos de Deus",
+        materials: [
+          { title: "Apostila: Atributos de Deus", type: "PDF", description: "Estudo sistemático dos atributos comunicáveis e incomunicáveis de Deus." },
+          { title: "Quadro Sinótico: A Trindade nas Escrituras", type: "Infográfico", description: "Referências bíblicas organizadas sobre a doutrina da Trindade." },
+        ],
         content: `### Teologia Própria — O Estudo de Deus
 
 #### A Existência de Deus
@@ -210,6 +251,12 @@ Um só Deus em três Pessoas co-eternas e co-iguais: Pai, Filho e Espírito Sant
       {
         id: "3.2",
         title: "Cristologia — A Pessoa de Cristo",
+        videoUrl: "https://www.youtube.com/embed/nx0sME1KJ0c",
+        videoTitle: "Cristologia — Quem é Jesus Cristo?",
+        materials: [
+          { title: "Apostila: Cristologia Completa", type: "PDF", description: "Estudo sobre a pessoa e obra de Cristo na perspectiva pentecostal." },
+          { title: "Profecias Messiânicas Cumpridas", type: "Tabela", description: "Lista de profecias do AT cumpridas em Jesus Cristo." },
+        ],
         content: `### Jesus Cristo: Verdadeiro Deus e Verdadeiro Homem
 
 #### A Divindade de Cristo
@@ -240,6 +287,11 @@ Cristo morreu **em nosso lugar**, carregando nossos pecados na cruz.
       {
         id: "3.3",
         title: "Ressurreição e Ascensão de Cristo",
+        videoUrl: "https://www.youtube.com/embed/SrXakBjCzQc",
+        videoTitle: "A Ressurreição de Cristo — Evidências",
+        materials: [
+          { title: "Estudo: Evidências Históricas da Ressurreição", type: "PDF", description: "Análise das evidências históricas e bíblicas da ressurreição corporal de Cristo." },
+        ],
         content: `### A Vitória de Cristo sobre a Morte
 
 #### A Ressurreição Corporal
@@ -276,6 +328,12 @@ As Assembleias de Deus confessam a ressurreição **literal, corporal e históri
       {
         id: "4.1",
         title: "A Pessoa do Espírito Santo",
+        videoUrl: "https://www.youtube.com/embed/oNNZO9i1Gjc",
+        videoTitle: "Pneumatologia — A Pessoa do Espírito Santo",
+        materials: [
+          { title: "Apostila: Pneumatologia Pentecostal", type: "PDF", description: "Estudo completo sobre a pessoa e obra do Espírito Santo." },
+          { title: "O Espírito Santo no AT e NT — Quadro Comparativo", type: "Infográfico", description: "Comparação da atuação do Espírito nos dois testamentos." },
+        ],
         content: `### O Espírito Santo: A Terceira Pessoa da Trindade
 
 Esta é uma das doutrinas mais importantes e distintivas da fé pentecostal conforme a CGADB.
@@ -306,6 +364,12 @@ O Espírito Santo **não é uma força impessoal**, mas uma Pessoa divina:
       {
         id: "4.2",
         title: "O Batismo no Espírito Santo",
+        videoUrl: "https://www.youtube.com/embed/3tma1bE6lto",
+        videoTitle: "Batismo no Espírito Santo — Doutrina CGADB",
+        materials: [
+          { title: "Estudo: Os 5 Relatos do Batismo em Atos", type: "PDF", description: "Análise exegética detalhada dos cinco relatos de batismo no Espírito em Atos." },
+          { title: "Testemunhos de Batismo no Espírito Santo", type: "Artigo", description: "Coletânea de testemunhos históricos e contemporâneos." },
+        ],
         content: `### A Doutrina Distintiva do Pentecostalismo
 
 #### Definição (conforme CGADB)
@@ -337,6 +401,12 @@ O Batismo no Espírito Santo é uma **experiência subsequente à salvação**, 
       {
         id: "4.3",
         title: "Os Dons Espirituais",
+        videoUrl: "https://www.youtube.com/embed/4l0vkPaW9Sw",
+        videoTitle: "Os 9 Dons do Espírito Santo",
+        materials: [
+          { title: "Apostila: Os Dons Espirituais — 1 Coríntios 12", type: "PDF", description: "Estudo detalhado de cada um dos nove dons espirituais." },
+          { title: "Dons vs. Fruto do Espírito — Comparativo", type: "Infográfico", description: "Diferença entre dons espirituais e o fruto do Espírito." },
+        ],
         content: `### Os Dons do Espírito Santo (1 Coríntios 12:4-11)
 
 As Assembleias de Deus creem na **atualidade de todos os dons espirituais**, rejeitando o cessacionismo.
@@ -376,6 +446,12 @@ Os dons sem o fruto são ineficazes. O amor é o **caminho mais excelente** (1 C
       {
         id: "5.1",
         title: "A Queda e a Necessidade da Salvação",
+        videoUrl: "https://www.youtube.com/embed/ByMjfPGLmNQ",
+        videoTitle: "Hamartiologia — A Doutrina do Pecado",
+        materials: [
+          { title: "Apostila: Soteriologia Arminiana", type: "PDF", description: "Estudo da doutrina da salvação na perspectiva arminiana das Assembleias de Deus." },
+          { title: "Calvinismo vs Arminianismo — Comparativo", type: "Tabela", description: "Comparação didática entre as duas posições teológicas." },
+        ],
         content: `### Hamartiologia — A Doutrina do Pecado
 
 #### A Criação e a Queda
@@ -403,6 +479,11 @@ Deus, em Sua graça, age **antes** da resposta humana, atraindo o pecador:
       {
         id: "5.2",
         title: "Justificação, Regeneração e Santificação",
+        videoUrl: "https://www.youtube.com/embed/RqKcPpMkWVo",
+        videoTitle: "Justificação e Santificação — Estudo Completo",
+        materials: [
+          { title: "Mapa Conceitual: O Processo da Salvação", type: "Infográfico", description: "Diagrama visual do caminho da salvação: convicção → arrependimento → fé → justificação → santificação → glorificação." },
+        ],
         content: `### O Processo da Salvação
 
 #### Arrependimento (*metánoia*)
@@ -447,6 +528,12 @@ A posição da CGADB afirma que o crente pode, por escolha voluntária e persist
       {
         id: "6.1",
         title: "O Livro de Atos como Modelo para a Igreja",
+        videoUrl: "https://www.youtube.com/embed/JglJKW5lmHs",
+        videoTitle: "Atos dos Apóstolos — Visão Panorâmica",
+        materials: [
+          { title: "Apostila: Atos dos Apóstolos — Leitura Pentecostal", type: "PDF", description: "Estudo do livro de Atos com ênfase na perspectiva pentecostal." },
+          { title: "Mapa das Viagens Missionárias de Paulo", type: "Mapa", description: "Mapa ilustrado das três viagens missionárias do apóstolo Paulo." },
+        ],
         content: `### Atos dos Apóstolos: O Manual Pentecostal
 
 #### Autoria e Propósito
@@ -477,6 +564,12 @@ Para os pentecostais, Atos não é apenas **descritivo** (conta o que aconteceu)
       {
         id: "6.2",
         title: "Os Avivamentos em Atos",
+        videoUrl: "https://www.youtube.com/embed/1NWHesTTG6k",
+        videoTitle: "Avivamentos no Livro de Atos",
+        materials: [
+          { title: "Cronologia dos Avivamentos em Atos", type: "Tabela", description: "Quadro cronológico dos principais avivamentos narrados em Atos." },
+          { title: "Princípios para o Avivamento Hoje", type: "Artigo", description: "Reflexão sobre como aplicar os princípios de avivamento à igreja contemporânea." },
+        ],
         content: `### Padrões de Avivamento no Livro de Atos
 
 #### Pentecostes — Atos 2
@@ -515,6 +608,12 @@ Para os pentecostais, Atos não é apenas **descritivo** (conta o que aconteceu)
       {
         id: "7.1",
         title: "A Doutrina da Igreja",
+        videoUrl: "https://www.youtube.com/embed/B_twMi9Wnto",
+        videoTitle: "Eclesiologia — O que é a Igreja?",
+        materials: [
+          { title: "Apostila: Eclesiologia Assembleiana", type: "PDF", description: "Estudo sobre a natureza, missão e governo da Igreja na perspectiva da CGADB." },
+          { title: "Estrutura Organizacional da CGADB", type: "Organograma", description: "Diagrama da estrutura hierárquica das Assembleias de Deus no Brasil." },
+        ],
         content: `### Eclesiologia na Perspectiva Assembleiana
 
 #### Definição
@@ -545,6 +644,12 @@ O modelo da CGADB é **congregacional com liderança pastoral**:
       {
         id: "7.2",
         title: "As Ordenanças da Igreja",
+        videoUrl: "https://www.youtube.com/embed/wP_DAFhp2Xk",
+        videoTitle: "Batismo e Santa Ceia — Ordenanças",
+        materials: [
+          { title: "Estudo: Batismo por Imersão — Base Bíblica", type: "PDF", description: "Defesa bíblica do batismo por imersão como praticado pelas Assembleias de Deus." },
+          { title: "Liturgia da Santa Ceia — Modelo CGADB", type: "DOC", description: "Roteiro litúrgico para celebração da Santa Ceia." },
+        ],
         content: `### Batismo em Águas e Santa Ceia
 
 As Assembleias de Deus reconhecem **duas ordenanças** instituídas por Cristo:
@@ -578,6 +683,13 @@ As Assembleias de Deus rejeitam a **transubstanciação** (católica) e a **cons
       {
         id: "8.1",
         title: "A Segunda Vinda de Cristo",
+        videoUrl: "https://www.youtube.com/embed/5PXJYLXLF2o",
+        videoTitle: "Escatologia — A Segunda Vinda de Cristo",
+        materials: [
+          { title: "Apostila: Escatologia Pré-Milenista", type: "PDF", description: "Estudo detalhado da posição escatológica oficial da CGADB." },
+          { title: "Linha do Tempo Escatológica", type: "Infográfico", description: "Diagrama visual: Arrebatamento → Tribulação → Milênio → Juízo Final → Eternidade." },
+          { title: "Tabela: Comparação das Posições Escatológicas", type: "Tabela", description: "Pré-milenismo vs. Amilenismo vs. Pós-milenismo." },
+        ],
         content: `### Escatologia Pentecostal (Posição da CGADB)
 
 As Assembleias de Deus adotam a posição **pré-milenista** e **pré-tribulacionista**.
@@ -610,6 +722,11 @@ Reinado literal de 1.000 anos de Cristo na terra.
       {
         id: "8.2",
         title: "Juízo Final e Estado Eterno",
+        videoUrl: "https://www.youtube.com/embed/qcQExjcFh8Y",
+        videoTitle: "O Juízo Final e a Eternidade",
+        materials: [
+          { title: "Estudo: Céu e Inferno nas Escrituras", type: "PDF", description: "Análise bíblica sobre o destino eterno dos salvos e dos perdidos." },
+        ],
         content: `### Os Eventos Finais
 
 #### O Tribunal de Cristo
@@ -647,6 +764,12 @@ Para os **ímpios** — julgamento final antes do estado eterno.
       {
         id: "9.1",
         title: "Origens do Movimento Pentecostal",
+        videoUrl: "https://www.youtube.com/embed/A6anPm6Y-Fg",
+        videoTitle: "História do Pentecostalismo — Origens",
+        materials: [
+          { title: "Apostila: História do Movimento Pentecostal", type: "PDF", description: "Do avivamento de Topeka à Rua Azusa e a expansão mundial." },
+          { title: "Linha do Tempo: Marcos do Pentecostalismo", type: "Infográfico", description: "1901 → Topeka | 1906 → Azusa | 1911 → Belém do Pará | 1914 → AG (EUA) | 1930 → CGADB." },
+        ],
         content: `### Do Século XIX ao Avivamento da Rua Azusa
 
 #### Antecedentes Históricos
@@ -674,6 +797,13 @@ Para os **ímpios** — julgamento final antes do estado eterno.
       {
         id: "9.2",
         title: "As Assembleias de Deus no Brasil",
+        videoUrl: "https://www.youtube.com/embed/PJzmyLZqV1c",
+        videoTitle: "História das Assembleias de Deus no Brasil",
+        materials: [
+          { title: "Biografia: Daniel Berg e Gunnar Vingren", type: "PDF", description: "Vida e obra dos fundadores das Assembleias de Deus no Brasil." },
+          { title: "Cronologia das Assembleias de Deus no Brasil", type: "Tabela", description: "Principais marcos históricos de 1911 até os dias atuais." },
+          { title: "O Diário do Pioneiro — Gunnar Vingren", type: "Artigo", description: "Trechos selecionados do diário de Gunnar Vingren sobre os primeiros anos em Belém." },
+        ],
         content: `### A História da Maior Denominação Evangélica do Brasil
 
 #### Os Fundadores
@@ -710,6 +840,13 @@ Para os **ímpios** — julgamento final antes do estado eterno.
       {
         id: "10.1",
         title: "Homilética — A Arte de Pregar",
+        videoUrl: "https://www.youtube.com/embed/oq-VO2HdIbs",
+        videoTitle: "Homilética — Como Preparar Sermões",
+        materials: [
+          { title: "Apostila: Homilética Pentecostal", type: "PDF", description: "Guia completo para preparação e apresentação de sermões bíblicos." },
+          { title: "Modelo de Esboço de Sermão", type: "DOC", description: "Template prático para estruturar seus sermões (temático, textual e expositivo)." },
+          { title: "10 Dicas para Pregar com Unção e Preparo", type: "Artigo", description: "Orientações práticas combinando estudo e dependência do Espírito." },
+        ],
         content: `### Pregação Pentecostal com Excelência
 
 #### O que é Homilética?
@@ -744,6 +881,13 @@ A ciência e arte de preparar e apresentar sermões bíblicos.
       {
         id: "10.2",
         title: "Teologia Pastoral e Liderança",
+        videoUrl: "https://www.youtube.com/embed/PnrMt3JZbmA",
+        videoTitle: "Teologia Pastoral — Liderança Cristã",
+        materials: [
+          { title: "Apostila: Teologia Pastoral", type: "PDF", description: "Estudo sobre requisitos, responsabilidades e ética do ministério pastoral." },
+          { title: "Manual do Obreiro — CGADB", type: "DOC", description: "Orientações oficiais para obreiros das Assembleias de Deus." },
+          { title: "A EBD como Pilar da Igreja Local", type: "Artigo", description: "Importância e organização da Escola Bíblica Dominical nas Assembleias de Deus." },
+        ],
         content: `### O Ministério Pastoral na Assembleia de Deus
 
 #### Requisitos Bíblicos (1 Timóteo 3:1-7; Tito 1:5-9)
@@ -794,6 +938,7 @@ const CursoTeologia = () => {
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [expandedModule, setExpandedModule] = useState<number | null>(0);
+  const [showVideo, setShowVideo] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -881,6 +1026,16 @@ const CursoTeologia = () => {
     }
   };
 
+  const getTypeColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "pdf": return "bg-destructive/10 text-destructive";
+      case "doc": return "bg-primary/10 text-primary";
+      case "infográfico": case "tabela": case "mapa": case "organograma": return "bg-accent/80 text-accent-foreground";
+      case "artigo": return "bg-secondary text-secondary-foreground";
+      default: return "bg-muted text-muted-foreground";
+    }
+  };
+
   return (
     <div className="container py-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 text-center">
@@ -889,7 +1044,7 @@ const CursoTeologia = () => {
           Curso de <span className="text-gradient-gold">Teologia</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Formação teológica completa na perspectiva pentecostal das Assembleias de Deus, com suporte de IA para tirar dúvidas.
+          Formação teológica completa na perspectiva pentecostal das Assembleias de Deus, com vídeo aulas e suporte de IA.
         </p>
         <div className="mt-4 flex items-center justify-center gap-3">
           <div className="h-2 w-48 rounded-full bg-muted overflow-hidden">
@@ -900,8 +1055,9 @@ const CursoTeologia = () => {
       </motion.div>
 
       <Tabs defaultValue="course" className="max-w-6xl mx-auto">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-6">
+        <TabsList className="grid w-full max-w-lg mx-auto grid-cols-3 mb-6">
           <TabsTrigger value="course" className="gap-2"><GraduationCap className="h-4 w-4" /> Aulas</TabsTrigger>
+          <TabsTrigger value="materials" className="gap-2"><FileText className="h-4 w-4" /> Material de Apoio</TabsTrigger>
           <TabsTrigger value="chat" className="gap-2"><MessageCircle className="h-4 w-4" /> Tirar Dúvidas</TabsTrigger>
         </TabsList>
 
@@ -935,14 +1091,14 @@ const CursoTeologia = () => {
                             {mod.lessons.map((les, li) => (
                               <button
                                 key={les.id}
-                                onClick={() => { setActiveModule(mi); setActiveLesson(li); }}
+                                onClick={() => { setActiveModule(mi); setActiveLesson(li); setShowVideo(false); }}
                                 className={cn(
                                   "w-full flex items-center gap-2 rounded-md px-3 py-1.5 text-xs transition-colors text-left",
                                   activeModule === mi && activeLesson === li ? "bg-accent/60 text-accent-foreground" : "hover:bg-muted/50 text-muted-foreground"
                                 )}
                               >
                                 {completedLessons.includes(les.id)
-                                  ? <CheckCircle2 className="h-3.5 w-3.5 text-green-500 shrink-0" />
+                                  ? <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
                                   : <Lock className="h-3.5 w-3.5 shrink-0 opacity-40" />}
                                 <span className="truncate">{les.title}</span>
                               </button>
@@ -965,34 +1121,146 @@ const CursoTeologia = () => {
                   <ChevronRight className="h-3 w-3" />
                   <span>Aula {activeLesson + 1}</span>
                 </div>
-                <h2 className="font-serif text-2xl font-bold mb-6">{currentLesson.title}</h2>
+                <h2 className="font-serif text-2xl font-bold mb-4">{currentLesson.title}</h2>
+
+                {/* Video Section */}
+                <div className="mb-6">
+                  {showVideo ? (
+                    <div className="rounded-xl overflow-hidden border border-border bg-black aspect-video">
+                      <iframe
+                        src={currentLesson.videoUrl}
+                        title={currentLesson.videoTitle}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setShowVideo(true)}
+                      className="w-full rounded-xl border border-border bg-muted/50 hover:bg-muted transition-colors p-6 flex items-center gap-4 group"
+                    >
+                      <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shrink-0">
+                        <Play className="h-7 w-7 text-primary ml-0.5" />
+                      </div>
+                      <div className="text-left">
+                        <p className="font-semibold text-foreground flex items-center gap-2">
+                          <Video className="h-4 w-4" />
+                          Vídeo Aula
+                        </p>
+                        <p className="text-sm text-muted-foreground">{currentLesson.videoTitle}</p>
+                      </div>
+                    </button>
+                  )}
+                </div>
+
+                {/* Lesson Content */}
                 <div className="prose prose-sm dark:prose-invert max-w-none">
                   <ReactMarkdown>{currentLesson.content}</ReactMarkdown>
                 </div>
+
+                {/* Materials for current lesson (compact) */}
+                {currentLesson.materials.length > 0 && (
+                  <div className="mt-8 border-t border-border pt-6">
+                    <h3 className="font-serif text-lg font-semibold mb-3 flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-primary" />
+                      Material de Apoio desta Aula
+                    </h3>
+                    <div className="grid gap-2">
+                      {currentLesson.materials.map((mat, i) => (
+                        <div key={i} className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/30 p-3">
+                          <Badge className={cn("text-[10px] shrink-0 mt-0.5", getTypeColor(mat.type))}>{mat.type}</Badge>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-foreground">{mat.title}</p>
+                            <p className="text-xs text-muted-foreground">{mat.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                   <Button
                     onClick={() => toggleComplete(currentLesson.id)}
                     variant={completedLessons.includes(currentLesson.id) ? "default" : "outline"}
-                    className={cn("gap-2", completedLessons.includes(currentLesson.id) && "bg-green-600 hover:bg-green-700")}
+                    className={cn("gap-2", completedLessons.includes(currentLesson.id) && "bg-primary hover:bg-primary/90")}
                   >
                     <CheckCircle2 className="h-4 w-4" />
                     {completedLessons.includes(currentLesson.id) ? "Concluída" : "Marcar como Concluída"}
                   </Button>
 
                   {activeLesson < currentModule.lessons.length - 1 && (
-                    <Button variant="outline" onClick={() => setActiveLesson(activeLesson + 1)} className="gap-2">
+                    <Button variant="outline" onClick={() => { setActiveLesson(activeLesson + 1); setShowVideo(false); }} className="gap-2">
                       Próxima Aula <ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
                   {activeLesson === currentModule.lessons.length - 1 && activeModule < modules.length - 1 && (
-                    <Button variant="outline" onClick={() => { setActiveModule(activeModule + 1); setActiveLesson(0); setExpandedModule(activeModule + 1); }} className="gap-2">
+                    <Button variant="outline" onClick={() => { setActiveModule(activeModule + 1); setActiveLesson(0); setExpandedModule(activeModule + 1); setShowVideo(false); }} className="gap-2">
                       Próximo Módulo <ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </TabsContent>
+
+        {/* Materials Tab */}
+        <TabsContent value="materials">
+          <div className="max-w-4xl mx-auto space-y-6">
+            {modules.map((mod) => (
+              <Card key={mod.id} className="border-border/50">
+                <CardContent className="p-6">
+                  <h3 className="font-serif text-lg font-bold mb-4 flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                    Módulo {mod.id}: {mod.title}
+                  </h3>
+                  <div className="space-y-4">
+                    {mod.lessons.map((les) => (
+                      <div key={les.id}>
+                        <p className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+                          <Video className="h-4 w-4 text-muted-foreground" />
+                          {les.title}
+                        </p>
+
+                        {/* Video link */}
+                        <div className="ml-6 mb-2">
+                          <button
+                            onClick={() => {
+                              const mi = modules.findIndex(m => m.id === mod.id);
+                              const li = mod.lessons.findIndex(l => l.id === les.id);
+                              setActiveModule(mi);
+                              setActiveLesson(li);
+                              setShowVideo(true);
+                              setExpandedModule(mi);
+                              const tabEl = document.querySelector('[data-value="course"]') as HTMLButtonElement | null;
+                              tabEl?.click();
+                            }}
+                            className="text-xs text-primary hover:underline flex items-center gap-1 mb-2"
+                          >
+                            <Play className="h-3 w-3" /> Assistir Vídeo Aula: {les.videoTitle}
+                          </button>
+                        </div>
+
+                        {/* Materials */}
+                        <div className="ml-6 grid gap-2">
+                          {les.materials.map((mat, i) => (
+                            <div key={i} className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/30 p-3">
+                              <Badge className={cn("text-[10px] shrink-0 mt-0.5", getTypeColor(mat.type))}>{mat.type}</Badge>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium text-foreground">{mat.title}</p>
+                                <p className="text-xs text-muted-foreground">{mat.description}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </TabsContent>
 
