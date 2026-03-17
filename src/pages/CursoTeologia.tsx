@@ -23,6 +23,13 @@ const modules = [
       {
         id: "1.1",
         title: "Introdução à Teologia Pentecostal",
+        videoUrl: "https://www.youtube.com/embed/dFSbVen5K9s",
+        videoTitle: "Introdução à Teologia Pentecostal — Aula Completa",
+        materials: [
+          { title: "Apostila: Fundamentos da Teologia Pentecostal", type: "pdf", description: "Material base com os conceitos fundamentais da teologia pentecostal clássica." },
+          { title: "Credo das Assembleias de Deus (CGADB)", type: "doc", description: "Documento oficial com as doutrinas fundamentais da denominação." },
+          { title: "Leitura complementar: O que é Pentecostalismo?", type: "artigo", description: "Artigo da CPAD sobre as raízes e características do movimento pentecostal." },
+        ],
         content: `### O que é Teologia Pentecostal?
 
 A Teologia Pentecostal é o ramo da teologia cristã que enfatiza a **experiência pessoal com o Espírito Santo**, os **dons espirituais** e a **atualidade dos sinais e maravilhas** como elementos centrais da vida cristã e do ministério.
