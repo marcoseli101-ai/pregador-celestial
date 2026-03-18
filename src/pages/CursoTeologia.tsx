@@ -1,27 +1,29 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, Play, FileText, Video } from "lucide-react";
+import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, Play, FileText, Video, Download, ExternalLink, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
+import jsPDF from "jspdf";
 
 /* ══════════════════════════════════════════════════════════════
    GRADE CURRICULAR — Baseada na CGADB / FAECAD / CPAD
    Convenção Geral das Assembleias de Deus no Brasil
    ══════════════════════════════════════════════════════════════ */
 
-type Material = { title: string; type: string; description: string };
+type Material = { title: string; type: string; description: string; content: string };
 type Lesson = {
   id: string;
   title: string;
   content: string;
-  videoUrl: string;
+  videoSearch: string;
   videoTitle: string;
   materials: Material[];
 };
