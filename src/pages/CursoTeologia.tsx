@@ -940,7 +940,7 @@ const CursoTeologia = () => {
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [expandedModule, setExpandedModule] = useState<number | null>(0);
-  const [_showVideo, _setShowVideo] = useState(false);
+  
   const [materialModal, setMaterialModal] = useState<Material | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
