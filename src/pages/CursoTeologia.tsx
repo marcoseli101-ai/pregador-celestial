@@ -940,7 +940,7 @@ const CursoTeologia = () => {
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const [expandedModule, setExpandedModule] = useState<number | null>(0);
-  const [showVideo, setShowVideo] = useState(false);
+  
   const [materialModal, setMaterialModal] = useState<Material | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -999,9 +999,8 @@ const CursoTeologia = () => {
     }
   };
 
-  const getVideoEmbedUrl = (searchQuery: string) => {
-    const encoded = encodeURIComponent(searchQuery);
-    return `https://www.youtube.com/embed?listType=search&list=${encoded}`;
+  const getYouTubeSearchUrl = (searchQuery: string) => {
+    return `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
   };
 
   const sendChat = async () => {
@@ -1136,7 +1135,7 @@ const CursoTeologia = () => {
                             {mod.lessons.map((les, li) => (
                               <button
                                 key={les.id}
-                                onClick={() => { setActiveModule(mi); setActiveLesson(li); setShowVideo(false); }}
+                                onClick={() => { setActiveModule(mi); setActiveLesson(li); }}
                                 className={cn(
                                   "w-full flex items-center gap-2 rounded-md px-3 py-1.5 text-xs transition-colors text-left",
                                   activeModule === mi && activeLesson === li ? "bg-accent/60 text-accent-foreground" : "hover:bg-muted/50 text-muted-foreground"
@@ -1170,33 +1169,24 @@ const CursoTeologia = () => {
 
                 {/* Video Section */}
                 <div className="mb-6">
-                  {showVideo ? (
-                    <div className="rounded-xl overflow-hidden border border-border bg-black aspect-video">
-                      <iframe
-                        src={getVideoEmbedUrl(currentLesson.videoSearch)}
-                        title={currentLesson.videoTitle}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
+                  <a
+                    href={getYouTubeSearchUrl(currentLesson.videoSearch)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full rounded-xl border border-border bg-muted/50 hover:bg-muted transition-colors p-6 flex items-center gap-4 group block"
+                  >
+                    <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center group-hover:bg-destructive/20 transition-colors shrink-0">
+                      <Play className="h-7 w-7 text-destructive ml-0.5" />
                     </div>
-                  ) : (
-                    <button
-                      onClick={() => setShowVideo(true)}
-                      className="w-full rounded-xl border border-border bg-muted/50 hover:bg-muted transition-colors p-6 flex items-center gap-4 group"
-                    >
-                      <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors shrink-0">
-                        <Play className="h-7 w-7 text-primary ml-0.5" />
-                      </div>
-                      <div className="text-left">
-                        <p className="font-semibold text-foreground flex items-center gap-2">
-                          <Video className="h-4 w-4" />
-                          Vídeo Aula
-                        </p>
-                        <p className="text-sm text-muted-foreground">{currentLesson.videoTitle}</p>
-                      </div>
-                    </button>
-                  )}
+                    <div className="text-left">
+                      <p className="font-semibold text-foreground flex items-center gap-2">
+                        <Video className="h-4 w-4" />
+                        Vídeo Aula
+                      </p>
+                      <p className="text-sm text-muted-foreground">{currentLesson.videoTitle}</p>
+                      <p className="text-xs text-primary mt-1">Clique para assistir no YouTube →</p>
+                    </div>
+                  </a>
                 </div>
 
                 {/* Lesson Content */}
@@ -1244,12 +1234,12 @@ const CursoTeologia = () => {
                   </Button>
 
                   {activeLesson < currentModule.lessons.length - 1 && (
-                    <Button variant="outline" onClick={() => { setActiveLesson(activeLesson + 1); setShowVideo(false); }} className="gap-2">
+                    <Button variant="outline" onClick={() => { setActiveLesson(activeLesson + 1); }} className="gap-2">
                       Próxima Aula <ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
                   {activeLesson === currentModule.lessons.length - 1 && activeModule < modules.length - 1 && (
-                    <Button variant="outline" onClick={() => { setActiveModule(activeModule + 1); setActiveLesson(0); setExpandedModule(activeModule + 1); setShowVideo(false); }} className="gap-2">
+                    <Button variant="outline" onClick={() => { setActiveModule(activeModule + 1); setActiveLesson(0); setExpandedModule(activeModule + 1); }} className="gap-2">
                       Próximo Módulo <ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
@@ -1279,21 +1269,14 @@ const CursoTeologia = () => {
 
                         {/* Video link */}
                         <div className="ml-6 mb-2">
-                          <button
-                            onClick={() => {
-                              const mi = modules.findIndex(m => m.id === mod.id);
-                              const li = mod.lessons.findIndex(l => l.id === les.id);
-                              setActiveModule(mi);
-                              setActiveLesson(li);
-                              setShowVideo(true);
-                              setExpandedModule(mi);
-                              const tabEl = document.querySelector('[data-value="course"]') as HTMLButtonElement | null;
-                              tabEl?.click();
-                            }}
+                          <a
+                            href={getYouTubeSearchUrl(les.videoSearch)}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-xs text-primary hover:underline flex items-center gap-1 mb-2"
                           >
-                            <Play className="h-3 w-3" /> Assistir Vídeo Aula: {les.videoTitle}
-                          </button>
+                            <Play className="h-3 w-3" /> Assistir Vídeo Aula: {les.videoTitle} →
+                          </a>
                         </div>
 
                         {/* Materials */}
