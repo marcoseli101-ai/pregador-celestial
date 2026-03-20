@@ -1135,7 +1135,7 @@ const CursoTeologia = () => {
                             {mod.lessons.map((les, li) => (
                               <button
                                 key={les.id}
-                                onClick={() => { setActiveModule(mi); setActiveLesson(li); setShowVideo(false); }}
+                                onClick={() => { setActiveModule(mi); setActiveLesson(li); }}
                                 className={cn(
                                   "w-full flex items-center gap-2 rounded-md px-3 py-1.5 text-xs transition-colors text-left",
                                   activeModule === mi && activeLesson === li ? "bg-accent/60 text-accent-foreground" : "hover:bg-muted/50 text-muted-foreground"
