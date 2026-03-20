@@ -1239,7 +1239,7 @@ const CursoTeologia = () => {
                     </Button>
                   )}
                   {activeLesson === currentModule.lessons.length - 1 && activeModule < modules.length - 1 && (
-                    <Button variant="outline" onClick={() => { setActiveModule(activeModule + 1); setActiveLesson(0); setExpandedModule(activeModule + 1); setShowVideo(false); }} className="gap-2">
+                    <Button variant="outline" onClick={() => { setActiveModule(activeModule + 1); setActiveLesson(0); setExpandedModule(activeModule + 1); }} className="gap-2">
                       Próximo Módulo <ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
