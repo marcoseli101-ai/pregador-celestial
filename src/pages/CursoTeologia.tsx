@@ -1269,21 +1269,14 @@ const CursoTeologia = () => {
 
                         {/* Video link */}
                         <div className="ml-6 mb-2">
-                          <button
-                            onClick={() => {
-                              const mi = modules.findIndex(m => m.id === mod.id);
-                              const li = mod.lessons.findIndex(l => l.id === les.id);
-                              setActiveModule(mi);
-                              setActiveLesson(li);
-                              setShowVideo(true);
-                              setExpandedModule(mi);
-                              const tabEl = document.querySelector('[data-value="course"]') as HTMLButtonElement | null;
-                              tabEl?.click();
-                            }}
+                          <a
+                            href={getYouTubeSearchUrl(les.videoSearch)}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-xs text-primary hover:underline flex items-center gap-1 mb-2"
                           >
-                            <Play className="h-3 w-3" /> Assistir Vídeo Aula: {les.videoTitle}
-                          </button>
+                            <Play className="h-3 w-3" /> Assistir Vídeo Aula: {les.videoTitle} →
+                          </a>
                         </div>
 
                         {/* Materials */}
