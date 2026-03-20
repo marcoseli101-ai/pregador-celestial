@@ -1234,7 +1234,7 @@ const CursoTeologia = () => {
                   </Button>
 
                   {activeLesson < currentModule.lessons.length - 1 && (
-                    <Button variant="outline" onClick={() => { setActiveLesson(activeLesson + 1); setShowVideo(false); }} className="gap-2">
+                    <Button variant="outline" onClick={() => { setActiveLesson(activeLesson + 1); }} className="gap-2">
                       Próxima Aula <ChevronRight className="h-4 w-4" />
                     </Button>
                   )}
