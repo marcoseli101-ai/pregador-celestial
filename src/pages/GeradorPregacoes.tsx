@@ -29,6 +29,9 @@ const GeradorPregacoes = () => {
   const [publico, setPublico] = useState("");
   const [tempo, setTempo] = useState("");
   const [nivel, setNivel] = useState("");
+  const [estrutura, setEstrutura] = useState("");
+  const [ocasiao, setOcasiao] = useState("");
+  const [tom, setTom] = useState("");
   const [result, setResult] = useState(() => localStorage.getItem("lastSermon") || "");
   const [resultTema, setResultTema] = useState(() => localStorage.getItem("lastSermonTema") || "");
   const [loading, setLoading] = useState(false);
