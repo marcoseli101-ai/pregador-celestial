@@ -7,7 +7,7 @@ import {
   HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight
 } from "lucide-react";
 
-import heroBible from "@/assets/hero-bible.jpg";
+
 import bibleLandscape from "@/assets/bible-landscape.jpg";
 import bibleScrolls from "@/assets/bible-scrolls.jpg";
 import bibleCross from "@/assets/bible-cross.jpg";
@@ -46,57 +46,58 @@ const stagger = {
 const Index = () => {
   return (
     <div className="overflow-hidden">
-      {/* Hero Section with Background Image */}
-      <section className="relative min-h-[90vh] flex items-center">
-        <div className="absolute inset-0">
-          <img src={heroBible} alt="Bíblia aberta com luz divina" className="w-full h-full object-cover" loading="eager" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(222,47%,6%)/0.75] via-[hsl(222,47%,6%)/0.6] to-[hsl(222,47%,6%)/0.85]" />
+      {/* Hero Section — Spiritual & Light */}
+      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+        {/* Soft radial glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(240,35%,10%)] via-[hsl(250,30%,14%)] to-[hsl(230,40%,8%)]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[700px] max-h-[700px] rounded-full bg-[radial-gradient(circle,hsl(250,40%,25%/0.45)_0%,transparent_70%)]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] max-w-[420px] max-h-[420px] rounded-full bg-[radial-gradient(circle,hsl(40,70%,55%/0.08)_0%,transparent_70%)]" />
         </div>
 
-        <div className="container relative z-10 py-20">
+        <div className="container relative z-10 py-24">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={stagger}
             className="mx-auto max-w-3xl text-center"
           >
-            <motion.div variants={fadeUp} className="mb-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))/0.4] bg-[hsl(var(--gold))/0.15] px-4 py-1.5 text-sm font-medium text-[hsl(var(--gold-light))]">
+            <motion.div variants={fadeUp} className="mb-5">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))/0.3] bg-[hsl(var(--gold))/0.08] px-5 py-1.5 text-sm font-medium text-[hsl(var(--gold-light))]">
                 <Star className="h-3.5 w-3.5" /> Plataforma para Pregadores do Evangelho
               </span>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="mb-6 font-serif text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl text-[hsl(40,60%,90%)]"
+              className="mb-6 font-serif text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl text-[hsl(220,20%,95%)]"
             >
-              Preparando Pregadores{" "}
-              <span className="text-gradient-gold">Cheios da Palavra</span>{" "}
-              e do Espírito
+              Palavra que fortalece e{" "}
+              <span className="text-gradient-gold">transforma vidas</span>
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="mb-8 text-lg sm:text-xl text-[hsl(40,60%,90%)/0.8]"
+              className="mb-10 text-lg sm:text-xl leading-relaxed text-[hsl(220,20%,85%/0.85)] max-w-2xl mx-auto"
             >
-              Transforme vidas através da pregação do Evangelho com ferramentas
-              poderosas de estudo bíblico, geração de sermões e materiais multimídia.
+              Um espaço de acolhimento e estudo para quem deseja aprofundar‑se
+              na Palavra de Deus e levar esperança a cada coração.
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link to="/gerador-pregacoes">
-                <Button size="lg" className="bg-gradient-gold text-background hover:opacity-90 gap-2 text-base px-8">
-                  <Sparkles className="h-5 w-5" /> Gerar Pregação com IA
+              <Link to="/biblioteca">
+                <Button size="lg" className="bg-gradient-gold text-background hover:opacity-90 gap-2 text-base px-8 shadow-gold">
+                  <BookOpen className="h-5 w-5" /> Explorar pregações
                 </Button>
               </Link>
               <Link to="/estudo-biblico">
-                <Button size="lg" variant="outline" className="gap-2 text-base border-[hsl(40,60%,90%)/0.3] text-[hsl(40,60%,90%)] hover:bg-[hsl(40,60%,90%)/0.1]">
-                  <BookOpen className="h-5 w-5" /> Estudar a Bíblia
+                <Button size="lg" variant="outline" className="gap-2 text-base border-[hsl(220,20%,85%)/0.2] text-[hsl(220,20%,90%)] hover:bg-[hsl(220,20%,90%)/0.08]">
+                  <Sparkles className="h-5 w-5" /> Estudar a Bíblia
                 </Button>
               </Link>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-10 flex items-center justify-center gap-8 text-sm text-[hsl(40,60%,90%)/0.6] flex-wrap">
+            <motion.div variants={fadeUp} className="mt-12 flex items-center justify-center gap-8 text-sm text-[hsl(220,20%,80%)/0.5] flex-wrap">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 <span>+1.000 pregadores</span>
