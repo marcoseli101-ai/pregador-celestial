@@ -61,7 +61,7 @@ const Devocional = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${(await import("@/lib/auth-helpers")).getAuthToken().then ? await (await import("@/lib/auth-helpers")).getAuthToken() : import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({}),
       });

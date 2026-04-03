@@ -21,11 +21,12 @@ async function streamCommentary({
   onDone: () => void;
   onError: (msg: string) => void;
 }) {
+  const token = await getAuthToken();
   const resp = await fetch(COMMENTARY_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ book, theme, description }),
   });
