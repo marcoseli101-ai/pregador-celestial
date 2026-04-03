@@ -7,7 +7,7 @@ import {
   HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight
 } from "lucide-react";
 
-import heroBible from "@/assets/hero-bible.jpg";
+
 import bibleLandscape from "@/assets/bible-landscape.jpg";
 import bibleScrolls from "@/assets/bible-scrolls.jpg";
 import bibleCross from "@/assets/bible-cross.jpg";
