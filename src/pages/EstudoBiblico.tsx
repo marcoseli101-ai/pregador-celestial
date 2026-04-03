@@ -86,6 +86,7 @@ const STUDY_GROUPS_VT = ["Pentateuco", "Históricos", "Poéticos", "Profetas Mai
 const STUDY_GROUPS_NT = ["Evangelhos", "Históricos", "Cartas Paulinas", "Cartas Gerais", "Profético"];
 
 const EstudoBiblico = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { books } = useBibleBooks();
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
@@ -98,6 +99,27 @@ const EstudoBiblico = () => {
   const [expandedThematic, setExpandedThematic] = useState<string | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
+
+  // Handle URL params for deep-linking from verse clicks
+  useEffect(() => {
+    const livro = searchParams.get("livro");
+    const capitulo = searchParams.get("capitulo");
+    if (livro && books.length > 0) {
+      const book = books.find(b => b.name === livro);
+      if (book) {
+        setSelectedBook(book);
+        setActiveTab("biblia");
+        if (capitulo) {
+          const ch = parseInt(capitulo, 10);
+          if (ch >= 1 && ch <= book.chapters) {
+            setSelectedChapter(ch);
+          }
+        }
+        // Clear params after navigating
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, [searchParams, books, setSearchParams]);
 
   // AI commentary state
   const [commentaries, setCommentaries] = useState<Record<string, string>>({});

@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ContentActions } from "@/components/ContentActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BibleTextContent } from "@/components/BibleVerseLink";
 
 interface SavedSermon {
   id: string;
