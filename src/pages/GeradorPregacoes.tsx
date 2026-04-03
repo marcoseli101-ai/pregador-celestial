@@ -339,7 +339,7 @@ const GeradorPregacoes = () => {
                       <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 text-muted-foreground">
                         {msg.role === "user" ? "Você" : "IA Teológica"}
                       </p>
-                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">{msg.content}</div>
+                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap"><BibleTextContent content={msg.content} /></div>
                     </div>
                   ))}
                   {chatLoading && chatMessages[chatMessages.length - 1]?.role !== "assistant" && (

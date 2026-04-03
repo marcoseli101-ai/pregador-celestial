@@ -205,7 +205,7 @@ const Devocional = () => {
               <Heart className="h-5 w-5 text-accent" /> Reflexão
             </h3>
             <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-              {sections.find((s) => s.type === "reflection")!.content}
+              <BibleVerseLink text={sections.find((s) => s.type === "reflection")!.content} />
             </div>
           </div>
         )}
