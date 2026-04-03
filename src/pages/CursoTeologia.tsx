@@ -24,8 +24,6 @@ type Lesson = {
   id: string;
   title: string;
   content: string;
-  videoSearch: string;
-  videoTitle: string;
   materials: Material[];
 };
 
