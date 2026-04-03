@@ -203,21 +203,25 @@ const Index = () => {
       {/* Theme Tags */}
       <section className="py-16 bg-muted/50">
         <div className="container text-center">
-          <h2 className="font-serif text-3xl font-bold mb-4">
-            Pregações por <span className="text-gradient-gold">Temas</span>
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Encontre mensagens prontas organizadas por categorias espirituais.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {themes.map((t) => (
-              <Link key={t} to={`/biblioteca?tema=${t.toLowerCase()}`}>
-                <span className="inline-flex items-center rounded-full border border-[hsl(var(--gold))/0.3] bg-card px-5 py-2 text-sm font-medium text-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:shadow-gold cursor-pointer">
-                  {t}
-                </span>
-              </Link>
-            ))}
-          </div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={stagger}>
+            <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-4">
+              Pregações por <span className="text-gradient-gold">Temas</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-muted-foreground mb-8 max-w-xl mx-auto">
+              Encontre mensagens prontas organizadas por categorias espirituais.
+            </motion.p>
+            <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-3">
+              {themes.map((t, i) => (
+                <motion.div key={t} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.04, duration: 0.4 }}>
+                  <Link to={`/biblioteca?tema=${t.toLowerCase()}`}>
+                    <span className="inline-flex items-center rounded-full border border-[hsl(var(--gold))/0.3] bg-card px-5 py-2 text-sm font-medium text-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:shadow-gold cursor-pointer">
+                      {t}
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
