@@ -52,7 +52,7 @@
   }
 
   .dark {
-    --background: 235 45% 7%;
+    --background: 230 30% 10%;
     --foreground: 220 20% 95%;
 
     --card: 240 35% 11%;
@@ -105,12 +105,6 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 45%, hsl(260 40% 18% / 0.5), transparent),
-      radial-gradient(ellipse 80% 60% at 30% 70%, hsl(230 50% 12% / 0.4), transparent),
-      radial-gradient(ellipse 70% 50% at 75% 30%, hsl(250 35% 15% / 0.35), transparent),
-      linear-gradient(170deg, hsl(230 45% 8%) 0%, hsl(250 40% 12%) 35%, hsl(240 35% 10%) 65%, hsl(225 50% 7%) 100%);
-    background-attachment: fixed;
     min-height: 100vh;
   }
   h1, h2, h3, h4, h5, h6 {
