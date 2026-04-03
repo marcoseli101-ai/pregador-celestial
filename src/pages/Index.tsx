@@ -48,11 +48,17 @@ const Index = () => {
     <div className="overflow-hidden">
       {/* Hero Section — Spiritual & Light */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Soft radial glow */}
+        {/* Layered light gradient */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(240,35%,10%)] via-[hsl(250,30%,14%)] to-[hsl(230,40%,8%)]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[700px] max-h-[700px] rounded-full bg-[radial-gradient(circle,hsl(250,40%,25%/0.45)_0%,transparent_70%)]" />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] max-w-[420px] max-h-[420px] rounded-full bg-[radial-gradient(circle,hsl(40,70%,55%/0.08)_0%,transparent_70%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(235,40%,9%)] via-[hsl(248,32%,13%)] to-[hsl(228,42%,7%)]" />
+          {/* Central divine glow */}
+          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,hsl(250,45%,28%/0.5)_0%,hsl(240,35%,18%/0.2)_40%,transparent_70%)]" />
+          {/* Warm golden halo */}
+          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] max-w-[520px] max-h-[520px] rounded-full bg-[radial-gradient(circle,hsl(40,65%,55%/0.12)_0%,hsl(40,50%,45%/0.04)_50%,transparent_70%)]" />
+          {/* Soft upper light beam */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-[55vh] max-w-[650px] bg-[radial-gradient(ellipse_50%_60%_at_50%_0%,hsl(220,50%,40%/0.15)_0%,transparent_100%)]" />
+          {/* Subtle bottom fade */}
+          <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[hsl(230,42%,7%)] to-transparent" />
         </div>
 
         <div className="container relative z-10 py-24">
