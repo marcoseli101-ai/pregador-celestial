@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
-  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight
+  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText
 } from "lucide-react";
 
 
@@ -198,6 +198,79 @@ const Index = () => {
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/40" />
+      </section>
+
+      {/* Conteúdos em Destaque */}
+      <section className="py-20">
+        <div className="container">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={stagger} className="text-center mb-12">
+            <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold sm:text-4xl">
+              Conteúdos <span className="text-gradient-gold">em Destaque</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+              Materiais prontos para edificar sua vida e fortalecer seu ministério.
+            </motion.p>
+          </motion.div>
+
+          <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+              <Link to="/gerador-pregacoes">
+                <Card className="group h-full border-border/50 hover:border-[hsl(var(--gold))/0.4] transition-all hover:-translate-y-1 hover:shadow-gold">
+                  <CardContent className="p-8 text-center">
+                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10">
+                      <Mic className="h-8 w-8 text-accent" />
+                    </div>
+                    <h3 className="font-serif text-xl font-bold mb-2">Esboços de Pregação</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Sermões completos com introdução, desenvolvimento e aplicação prática, gerados por IA com base bíblica sólida.
+                    </p>
+                    <span className="text-sm font-medium text-accent flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+                      Gerar esboço <ChevronRight className="h-4 w-4" />
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.12 }}>
+              <Link to="/biblioteca">
+                <Card className="group h-full border-border/50 hover:border-[hsl(var(--gold))/0.4] transition-all hover:-translate-y-1 hover:shadow-gold">
+                  <CardContent className="p-8 text-center">
+                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10">
+                      <BookMarked className="h-8 w-8 text-accent" />
+                    </div>
+                    <h3 className="font-serif text-xl font-bold mb-2">Mensagens Bíblicas</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Pregações organizadas por temas como Fé, Avivamento, Santidade e Salvação, prontas para uso no púlpito.
+                    </p>
+                    <span className="text-sm font-medium text-accent flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+                      Ver mensagens <ChevronRight className="h-4 w-4" />
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.24 }}>
+              <Link to="/estudo-biblico">
+                <Card className="group h-full border-border/50 hover:border-[hsl(var(--gold))/0.4] transition-all hover:-translate-y-1 hover:shadow-gold">
+                  <CardContent className="p-8 text-center">
+                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10">
+                      <ScrollText className="h-8 w-8 text-accent" />
+                    </div>
+                    <h3 className="font-serif text-xl font-bold mb-2">Estudos Bíblicos</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      Estudos aprofundados dos 66 livros da Bíblia com esboços, temas centrais e análises temáticas transversais.
+                    </p>
+                    <span className="text-sm font-medium text-accent flex items-center justify-center gap-1 group-hover:gap-2 transition-all">
+                      Explorar estudos <ChevronRight className="h-4 w-4" />
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
       </section>
 
       {/* Theme Tags */}
