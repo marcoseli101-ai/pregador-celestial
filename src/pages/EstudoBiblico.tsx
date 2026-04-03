@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import { getAuthToken } from "@/lib/auth-helpers";
 import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
 import { Button } from "@/components/ui/button";
