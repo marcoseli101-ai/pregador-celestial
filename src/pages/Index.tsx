@@ -102,7 +102,7 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/estudo-biblico">
-                <Button size="lg" variant="outline" className="gap-2 text-base border-[hsl(220,20%,85%)/0.2] text-[hsl(220,20%,90%)] hover:bg-[hsl(220,20%,90%)/0.08]">
+                <Button size="lg" variant="outline" className="gap-2 text-base border-border text-foreground hover:bg-muted">
                   <Sparkles className="h-5 w-5" /> Estudar a Bíblia
                 </Button>
               </Link>
