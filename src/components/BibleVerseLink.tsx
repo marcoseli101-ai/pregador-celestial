@@ -140,7 +140,12 @@ export const BibleVerseLink: React.FC<BibleVerseLinkProps> = ({ text, className 
     e.stopPropagation();
     const parsed = parseVerseRef(ref);
     if (parsed) {
-      navigate(`/estudo-biblico?livro=${encodeURIComponent(parsed.bookName)}&capitulo=${parsed.chapter}`);
+      const params = new URLSearchParams({
+        livro: parsed.bookName,
+        capitulo: String(parsed.chapter),
+        ...(parsed.verse ? { versiculo: String(parsed.verse) } : {}),
+      });
+      navigate(`/estudo-biblico?${params.toString()}`);
     }
   };
 

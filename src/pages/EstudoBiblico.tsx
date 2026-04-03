@@ -200,6 +200,20 @@ const EstudoBiblico = () => {
     }
   }, [selectedBook, selectedChapter, chapterData, markChapterRead]);
 
+  // Auto-scroll to highlighted verse
+  useEffect(() => {
+    if (highlightVerse && chapterData?.verses?.length) {
+      setTimeout(() => {
+        const el = document.getElementById(`verse-${highlightVerse}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Clear highlight after 5 seconds
+          setTimeout(() => setHighlightVerse(null), 5000);
+        }
+      }, 300);
+    }
+  }, [highlightVerse, chapterData]);
+
   // === CHAPTER READING VIEW ===
   if (selectedBook && selectedChapter) {
     const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
