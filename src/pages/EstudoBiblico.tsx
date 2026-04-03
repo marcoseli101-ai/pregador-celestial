@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getAuthToken } from "@/lib/auth-helpers";
 import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
@@ -85,6 +86,7 @@ const STUDY_GROUPS_VT = ["Pentateuco", "Históricos", "Poéticos", "Profetas Mai
 const STUDY_GROUPS_NT = ["Evangelhos", "Históricos", "Cartas Paulinas", "Cartas Gerais", "Profético"];
 
 const EstudoBiblico = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { books } = useBibleBooks();
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
@@ -97,6 +99,27 @@ const EstudoBiblico = () => {
   const [expandedThematic, setExpandedThematic] = useState<string | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
+
+  // Handle URL params for deep-linking from verse clicks
+  useEffect(() => {
+    const livro = searchParams.get("livro");
+    const capitulo = searchParams.get("capitulo");
+    if (livro && books.length > 0) {
+      const book = books.find(b => b.name === livro);
+      if (book) {
+        setSelectedBook(book);
+        setActiveTab("biblia");
+        if (capitulo) {
+          const ch = parseInt(capitulo, 10);
+          if (ch >= 1 && ch <= book.chapters) {
+            setSelectedChapter(ch);
+          }
+        }
+        // Clear params after navigating
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, [searchParams, books, setSearchParams]);
 
   // AI commentary state
   const [commentaries, setCommentaries] = useState<Record<string, string>>({});

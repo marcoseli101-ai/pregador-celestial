@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ContentActions } from "@/components/ContentActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BibleTextContent } from "@/components/BibleVerseLink";
 
 interface SavedSermon {
   id: string;
@@ -296,7 +297,7 @@ const GeradorPregacoes = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-                  {result || <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando pregação com IA...</div>}
+                  {result ? <BibleTextContent content={result} /> : <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando pregação com IA...</div>}
                 </div>
                 {result && !loading && (
                   <div className="flex gap-2 flex-wrap pt-4 border-t border-border">
@@ -338,7 +339,7 @@ const GeradorPregacoes = () => {
                       <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 text-muted-foreground">
                         {msg.role === "user" ? "Você" : "IA Teológica"}
                       </p>
-                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">{msg.content}</div>
+                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap"><BibleTextContent content={msg.content} /></div>
                     </div>
                   ))}
                   {chatLoading && chatMessages[chatMessages.length - 1]?.role !== "assistant" && (

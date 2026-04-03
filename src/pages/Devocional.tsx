@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { ContentActions } from "@/components/ContentActions";
+import { BibleVerseLink } from "@/components/BibleVerseLink";
 
 interface SavedDevotional {
   id: string;
@@ -193,7 +194,7 @@ const Devocional = () => {
             <BookOpen className="h-8 w-8 mx-auto mb-3 text-accent" />
             <p className="text-xs font-semibold text-accent uppercase tracking-widest mb-4">Versículo do Dia</p>
             <div className="text-lg font-serif italic leading-relaxed whitespace-pre-line">
-              {sections.find((s) => s.type === "verse")!.content}
+              <BibleVerseLink text={sections.find((s) => s.type === "verse")!.content} />
             </div>
           </div>
         )}
@@ -204,7 +205,7 @@ const Devocional = () => {
               <Heart className="h-5 w-5 text-accent" /> Reflexão
             </h3>
             <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-              {sections.find((s) => s.type === "reflection")!.content}
+              <BibleVerseLink text={sections.find((s) => s.type === "reflection")!.content} />
             </div>
           </div>
         )}
