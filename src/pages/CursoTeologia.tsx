@@ -1238,21 +1238,9 @@ const CursoTeologia = () => {
                     {mod.lessons.map((les) => (
                       <div key={les.id}>
                         <p className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-                          <Video className="h-4 w-4 text-muted-foreground" />
+                          <FileText className="h-4 w-4 text-muted-foreground" />
                           {les.title}
                         </p>
-
-                        {/* Video link */}
-                        <div className="ml-6 mb-2">
-                          <a
-                            href={getYouTubeSearchUrl(les.videoSearch)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-primary hover:underline flex items-center gap-1 mb-2"
-                          >
-                            <Play className="h-3 w-3" /> Assistir Vídeo Aula: {les.videoTitle} →
-                          </a>
-                        </div>
 
                         {/* Materials */}
                         <div className="ml-6 grid gap-2">
