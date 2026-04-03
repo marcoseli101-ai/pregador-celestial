@@ -267,6 +267,19 @@ const GeradorPregacoes = () => {
                   </SelectContent>
                 </Select>
               </div>
+              <div>
+                <Label>Referências Cruzadas</Label>
+                <Select value={referencias} onValueChange={setReferencias}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione (opcional)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="at_nt">AT ↔ NT (Tipologias e Profecias)</SelectItem>
+                    <SelectItem value="tematicas">Referências Temáticas</SelectItem>
+                    <SelectItem value="paralelas">Passagens Paralelas (Sinóticos)</SelectItem>
+                    <SelectItem value="contextuais">Contextuais (mesmo autor/livro)</SelectItem>
+                    <SelectItem value="completas">Completas (todas as categorias)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Button onClick={handleGenerate} disabled={loading} className="w-full bg-gradient-gold text-background hover:opacity-90 gap-2 text-base" size="lg">
                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
                 {loading ? "Gerando..." : "Gerar Pregação"}
