@@ -998,9 +998,6 @@ const CursoTeologia = () => {
     }
   };
 
-  const getYouTubeSearchUrl = (searchQuery: string) => {
-    return `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
-  };
 
   const sendChat = async () => {
     const text = chatInput.trim();
