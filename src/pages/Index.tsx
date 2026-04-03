@@ -302,7 +302,7 @@ const Index = () => {
         <div className="container relative z-10">
           <div className="mx-auto max-w-2xl text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-2 text-[hsl(40,60%,90%)]">
+              <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-2 text-foreground">
                 Devocional do Dia
               </motion.h2>
               <motion.div variants={fadeUp}>
