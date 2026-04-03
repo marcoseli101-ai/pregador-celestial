@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { Search, Volume2, BookOpen, Loader2, Languages, Sparkles, Clock, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
