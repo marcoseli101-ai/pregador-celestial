@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { getAuthToken } from "@/lib/auth-helpers";
 import { HelpCircle, CheckCircle, XCircle, Trophy, Loader2, Brain, RotateCcw, BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
