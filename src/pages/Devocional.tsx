@@ -388,7 +388,7 @@ const Devocional = () => {
           </div>
         )}
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 

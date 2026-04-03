@@ -355,7 +355,7 @@ const Dicionario = () => {
           })}
         </div>
       )}
-    </div>
+    </AnimatedPage>
   );
 };
 

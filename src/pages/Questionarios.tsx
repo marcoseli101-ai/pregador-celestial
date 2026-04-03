@@ -138,7 +138,7 @@ const Questionarios = () => {
             Perguntas geradas por IA — nunca se repetem!
           </div>
         </div>
-      </div>
+      </AnimatedPage>
     );
   }
 
