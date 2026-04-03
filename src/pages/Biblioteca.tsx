@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { Link, useSearchParams } from "react-router-dom";
 import { FileText, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
