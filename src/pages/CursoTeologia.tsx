@@ -1038,7 +1038,7 @@ const CursoTeologia = () => {
           Curso de <span className="text-gradient-gold">Teologia</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Formação teológica completa na perspectiva pentecostal das Assembleias de Deus, com vídeo aulas e suporte de IA.
+          Formação teológica completa na perspectiva pentecostal das Assembleias de Deus, com material de apoio e suporte de IA.
         </p>
         <div className="mt-4 flex items-center justify-center gap-3">
           <div className="h-2 w-48 rounded-full bg-muted overflow-hidden">
