@@ -89,7 +89,7 @@ const Index = () => {
 
             <motion.p
               variants={fadeUp}
-              className="mb-10 text-lg sm:text-xl leading-relaxed text-[hsl(220,20%,85%/0.85)] max-w-2xl mx-auto"
+              className="mb-10 text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto"
             >
               Um espaço de acolhimento e estudo para quem deseja aprofundar‑se
               na Palavra de Deus e levar esperança a cada coração.
