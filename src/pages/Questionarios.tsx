@@ -36,11 +36,12 @@ const Questionarios = () => {
     setCurrentQuestion(null);
 
     try {
+      const token = await getAuthToken();
       const resp = await fetch(GENERATE_QUIZ_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           nivel: selectedNivel,

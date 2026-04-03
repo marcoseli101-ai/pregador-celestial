@@ -213,11 +213,12 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
     setCurrentSlide(0);
 
     try {
+      const token = await getAuthToken();
       const resp = await fetch(GENERATE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ content }),
       });
