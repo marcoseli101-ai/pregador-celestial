@@ -81,7 +81,7 @@ const Index = () => {
 
             <motion.h1
               variants={fadeUp}
-              className="mb-6 font-serif text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl text-[hsl(220,20%,95%)]"
+              className="mb-6 font-serif text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl text-foreground"
             >
               Palavra que fortalece e{" "}
               <span className="text-gradient-gold">transforma vidas</span>
