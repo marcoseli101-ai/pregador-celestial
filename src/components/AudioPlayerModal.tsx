@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { X, Play, Pause, Square, Volume2, Gauge, Mic } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { X, Play, Pause, Square, Volume2, Gauge, Mic, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AudioPlayerModalProps {
   content: string;
@@ -10,45 +12,25 @@ interface AudioPlayerModalProps {
   onClose: () => void;
 }
 
-type PlayState = "idle" | "playing" | "paused";
+type PlayState = "idle" | "playing" | "paused" | "loading";
+
+const VOICE_OPTIONS = [
+  { id: "feminina-studio", label: "Feminina Studio (HD)" },
+  { id: "masculina-studio", label: "Masculina Studio (HD)" },
+  { id: "feminina-1", label: "Feminina Wavenet" },
+  { id: "masculina-1", label: "Masculina Wavenet" },
+  { id: "feminina-2", label: "Feminina Neural" },
+  { id: "masculina-2", label: "Masculina Neural" },
+  { id: "feminina-3", label: "Feminina Neural 2" },
+];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoiceURI, setSelectedVoiceURI] = useState<string>("");
+  const [selectedVoice, setSelectedVoice] = useState("feminina-studio");
   const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
-  const chunksRef = useRef<string[]>([]);
-  const currentChunkRef = useRef(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const getSynth = useCallback(() => {
-    if (!synthRef.current && typeof window !== "undefined" && window.speechSynthesis) {
-      synthRef.current = window.speechSynthesis;
-    }
-    return synthRef.current;
-  }, []);
-
-  // Load voices
-  useEffect(() => {
-    const synth = getSynth();
-    if (!synth) return;
-
-    const loadVoices = () => {
-      const v = synth.getVoices();
-      const ptVoices = v.filter(voice => voice.lang.startsWith("pt"));
-      const allVoices = ptVoices.length > 0 ? ptVoices : v;
-      setVoices(allVoices);
-      if (allVoices.length > 0 && !selectedVoiceURI) {
-        setSelectedVoiceURI(allVoices[0].voiceURI);
-      }
-    };
-
-    loadVoices();
-    synth.addEventListener("voiceschanged", loadVoices);
-    return () => synth.removeEventListener("voiceschanged", loadVoices);
-  }, [getSynth, selectedVoiceURI]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Clean up on close
   useEffect(() => {
@@ -57,103 +39,101 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     }
   }, [open]);
 
-  // Progress tracker
-  useEffect(() => {
-    if (playState === "playing") {
-      intervalRef.current = setInterval(() => {
-        const total = chunksRef.current.length;
-        if (total > 0) {
-          setProgress(Math.round((currentChunkRef.current / total) * 100));
-        }
-      }, 300);
-    } else {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    }
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [playState]);
-
   const cleanText = (text: string) => text.replace(/[#*_]/g, "").trim();
 
-  const splitIntoChunks = (text: string): string[] => {
-    const chunks: string[] = [];
-    let remaining = text;
-    while (remaining.length > 0) {
-      if (remaining.length <= 200) {
-        chunks.push(remaining);
-        break;
-      }
-      let splitAt = remaining.lastIndexOf(".", 200);
-      if (splitAt === -1 || splitAt < 50) splitAt = remaining.lastIndexOf(" ", 200);
-      if (splitAt === -1) splitAt = 200;
-      chunks.push(remaining.slice(0, splitAt + 1));
-      remaining = remaining.slice(splitAt + 1).trim();
+  const handlePlay = useCallback(async () => {
+    if (playState === "paused" && audioRef.current) {
+      audioRef.current.play();
+      setPlayState("playing");
+      startProgressTracking();
+      return;
     }
-    return chunks;
+
+    setPlayState("loading");
+
+    try {
+      const cleanedText = cleanText(content);
+      
+      const { data, error } = await supabase.functions.invoke("google-tts", {
+        body: { text: cleanedText, voice: selectedVoice, speed: rate },
+      });
+
+      if (error) throw error;
+      if (!data?.audioContent) throw new Error("No audio received");
+
+      // Convert base64 to audio
+      const audioBytes = Uint8Array.from(atob(data.audioContent), c => c.charCodeAt(0));
+      const blob = new Blob([audioBytes], { type: "audio/mp3" });
+      const url = URL.createObjectURL(blob);
+
+      // Stop previous audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        URL.revokeObjectURL(audioRef.current.src);
+      }
+
+      const audio = new Audio(url);
+      audio.playbackRate = 1; // Rate already applied server-side
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setPlayState("idle");
+        setProgress(100);
+        stopProgressTracking();
+      };
+
+      audio.onerror = () => {
+        setPlayState("idle");
+        toast.error("Erro ao reproduzir áudio");
+        stopProgressTracking();
+      };
+
+      await audio.play();
+      setPlayState("playing");
+      startProgressTracking();
+    } catch (err) {
+      console.error("TTS error:", err);
+      setPlayState("idle");
+      toast.error("Erro ao gerar áudio. Verifique sua conexão.");
+    }
+  }, [content, playState, selectedVoice, rate]);
+
+  const startProgressTracking = () => {
+    stopProgressTracking();
+    progressIntervalRef.current = setInterval(() => {
+      if (audioRef.current && audioRef.current.duration) {
+        const pct = Math.round((audioRef.current.currentTime / audioRef.current.duration) * 100);
+        setProgress(pct);
+      }
+    }, 200);
   };
 
-  const speakFrom = useCallback((chunkIndex: number) => {
-    const synth = getSynth();
-    if (!synth) return;
-
-    const chunks = chunksRef.current;
-    if (chunkIndex >= chunks.length) {
-      setPlayState("idle");
-      setProgress(100);
-      return;
+  const stopProgressTracking = () => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
     }
-
-    const voice = voices.find(v => v.voiceURI === selectedVoiceURI) || voices[0];
-    const utterance = new SpeechSynthesisUtterance(chunks[chunkIndex]);
-    utterance.lang = "pt-BR";
-    utterance.rate = rate;
-    if (voice) utterance.voice = voice;
-
-    utterance.onend = () => {
-      currentChunkRef.current = chunkIndex + 1;
-      speakFrom(chunkIndex + 1);
-    };
-    utterance.onerror = () => {
-      setPlayState("idle");
-    };
-
-    synth.speak(utterance);
-  }, [getSynth, voices, selectedVoiceURI, rate]);
-
-  const handlePlay = useCallback(() => {
-    const synth = getSynth();
-    if (!synth) return;
-
-    if (playState === "paused") {
-      synth.resume();
-      setPlayState("playing");
-      return;
-    }
-
-    // Start fresh
-    synth.cancel();
-    const clean = cleanText(content);
-    const chunks = splitIntoChunks(clean);
-    chunksRef.current = chunks;
-    currentChunkRef.current = 0;
-    setProgress(0);
-    setPlayState("playing");
-    speakFrom(0);
-  }, [getSynth, content, playState, speakFrom]);
+  };
 
   const handlePause = useCallback(() => {
-    const synth = getSynth();
-    if (!synth) return;
-    synth.pause();
-    setPlayState("paused");
-  }, [getSynth]);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setPlayState("paused");
+      stopProgressTracking();
+    }
+  }, []);
 
   const handleStop = useCallback(() => {
-    const synth = getSynth();
-    if (synth) synth.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      URL.revokeObjectURL(audioRef.current.src);
+      audioRef.current = null;
+    }
     setPlayState("idle");
     setProgress(0);
-    currentChunkRef.current = 0;
-  }, [getSynth]);
+    stopProgressTracking();
+  }, []);
 
   if (!open) return null;
 
@@ -166,7 +146,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
             <Volume2 className="h-5 w-5 text-primary" />
-            Leitor de Áudio
+            Leitor de Áudio (Google Cloud)
           </h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-5 w-5" />
@@ -180,14 +160,14 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
               <Mic className="h-4 w-4 text-muted-foreground" />
               Voz
             </label>
-            <Select value={selectedVoiceURI} onValueChange={setSelectedVoiceURI} disabled={playState !== "idle"}>
+            <Select value={selectedVoice} onValueChange={setSelectedVoice} disabled={playState !== "idle"}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecione uma voz" />
               </SelectTrigger>
               <SelectContent>
-                {voices.map(v => (
-                  <SelectItem key={v.voiceURI} value={v.voiceURI}>
-                    {v.name} ({v.lang})
+                {VOICE_OPTIONS.map(v => (
+                  <SelectItem key={v.id} value={v.id}>
+                    {v.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -217,7 +197,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           </div>
 
           {/* Progress Bar */}
-          {playState !== "idle" && (
+          {(playState !== "idle" && playState !== "loading") && (
             <div className="space-y-1">
               <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                 <div
@@ -231,7 +211,12 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
           {/* Controls */}
           <div className="flex items-center justify-center gap-4">
-            {playState === "playing" ? (
+            {playState === "loading" ? (
+              <Button variant="default" size="lg" disabled className="gap-2 min-w-[120px]">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Gerando...
+              </Button>
+            ) : playState === "playing" ? (
               <Button variant="outline" size="lg" onClick={handlePause} className="gap-2 min-w-[120px]">
                 <Pause className="h-5 w-5" />
                 Pausar
@@ -242,7 +227,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
                 {playState === "paused" ? "Retomar" : "Ouvir"}
               </Button>
             )}
-            {playState !== "idle" && (
+            {(playState === "playing" || playState === "paused") && (
               <Button variant="destructive" size="lg" onClick={handleStop} className="gap-2 min-w-[120px]">
                 <Square className="h-5 w-5" />
                 Parar
