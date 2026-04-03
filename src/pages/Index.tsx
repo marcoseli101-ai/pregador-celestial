@@ -74,14 +74,14 @@ const Index = () => {
             className="mx-auto max-w-3xl text-center"
           >
             <motion.div variants={fadeUp} className="mb-5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))/0.3] bg-[hsl(var(--gold))/0.08] px-5 py-1.5 text-sm font-medium text-[hsl(var(--gold-light))]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/8 px-5 py-1.5 text-sm font-medium text-accent">
                 <Star className="h-3.5 w-3.5" /> Plataforma para Pregadores do Evangelho
               </span>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="mb-6 font-serif text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl text-[hsl(220,20%,95%)]"
+              className="mb-6 font-serif text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl text-foreground"
             >
               Palavra que fortalece e{" "}
               <span className="text-gradient-gold">transforma vidas</span>
@@ -89,7 +89,7 @@ const Index = () => {
 
             <motion.p
               variants={fadeUp}
-              className="mb-10 text-lg sm:text-xl leading-relaxed text-[hsl(220,20%,85%/0.85)] max-w-2xl mx-auto"
+              className="mb-10 text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto"
             >
               Um espaço de acolhimento e estudo para quem deseja aprofundar‑se
               na Palavra de Deus e levar esperança a cada coração.
@@ -102,13 +102,13 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/estudo-biblico">
-                <Button size="lg" variant="outline" className="gap-2 text-base border-[hsl(220,20%,85%)/0.2] text-[hsl(220,20%,90%)] hover:bg-[hsl(220,20%,90%)/0.08]">
+                <Button size="lg" variant="outline" className="gap-2 text-base border-border text-foreground hover:bg-muted">
                   <Sparkles className="h-5 w-5" /> Estudar a Bíblia
                 </Button>
               </Link>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-12 flex items-center justify-center gap-8 text-sm text-[hsl(220,20%,80%)/0.5] flex-wrap">
+            <motion.div variants={fadeUp} className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground flex-wrap">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 <span>+1.000 pregadores</span>
@@ -297,12 +297,12 @@ const Index = () => {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0">
           <img src={bibleCross} alt="Cruz ao nascer do sol" className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-[hsl(222,47%,6%)/0.7]" />
+          <div className="absolute inset-0 bg-background/75" />
         </div>
         <div className="container relative z-10">
           <div className="mx-auto max-w-2xl text-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-2 text-[hsl(40,60%,90%)]">
+              <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-2 text-foreground">
                 Devocional do Dia
               </motion.h2>
               <motion.div variants={fadeUp}>
