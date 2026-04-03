@@ -70,11 +70,12 @@ export async function streamSermon({
 }: {
   tema: string; publico: string; tempo: string; nivel: string;
 } & SSECallbacks) {
+  const token = await getAuthToken();
   const resp = await fetch(GENERATE_SERMON_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ tema, publico, tempo, nivel }),
   });
