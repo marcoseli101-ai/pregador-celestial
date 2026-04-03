@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { Sparkles, Save, Loader2, MessageCircleQuestion, Send, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -88,11 +89,11 @@ const GeradorPregacoes = () => {
   };
 
   return (
-    <div className="container py-12">
-      <div className="mb-8 text-center">
+    <AnimatedPage className="container py-12">
+      <AnimatedSection className="mb-8 text-center">
         <h1 className="font-serif text-4xl font-bold mb-2">Gerador de Pregações <span className="text-gradient-gold">com IA</span></h1>
         <p className="text-muted-foreground">Gere esboços e sermões completos com inteligência artificial e base bíblica sólida.</p>
-      </div>
+      </AnimatedSection>
 
       <div className="mx-auto max-w-4xl grid gap-8 lg:grid-cols-[400px_1fr]">
         <Card className="shadow-celestial border-celestial/20 h-fit">
@@ -283,7 +284,7 @@ const GeradorPregacoes = () => {
           </div>
         )}
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 

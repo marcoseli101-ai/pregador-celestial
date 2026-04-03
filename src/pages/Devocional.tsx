@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { getAuthToken } from "@/lib/auth-helpers";
 import { Calendar, BookOpen, Heart, Loader2, RefreshCw, Sparkles, Save, History, Trash2, ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -270,13 +271,13 @@ const Devocional = () => {
   }
 
   return (
-    <div className="container py-12">
-      <div className="mb-8 text-center">
+    <AnimatedPage className="container py-12">
+      <AnimatedSection className="mb-8 text-center">
         <h1 className="font-serif text-4xl font-bold mb-2">
           Devocional <span className="text-gradient-gold">Diário</span>
         </h1>
         <p className="text-muted-foreground">Versículo do dia, reflexão espiritual e oração gerados por IA.</p>
-      </div>
+      </AnimatedSection>
 
       <div className="mx-auto max-w-2xl">
         {/* Tab toggle */}
@@ -387,7 +388,7 @@ const Devocional = () => {
           </div>
         )}
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 

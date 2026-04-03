@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { Search, Volume2, BookOpen, Loader2, Languages, Sparkles, Clock, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -141,9 +142,9 @@ const Dicionario = () => {
   };
 
   return (
-    <div className="container py-12">
+    <AnimatedPage className="container py-12">
       {/* Header */}
-      <div className="mb-8 text-center">
+      <AnimatedSection className="mb-8 text-center">
         <h1 className="font-serif text-4xl font-bold mb-2">
           Dicionário <span className="text-gradient-gold">Bíblico com IA</span>
         </h1>
@@ -156,7 +157,7 @@ const Dicionario = () => {
             Powered by IA · Ilimitado · Hebraico · Aramaico · Grego
           </span>
         </div>
-      </div>
+      </AnimatedSection>
 
       {/* Search */}
       <div className="mx-auto max-w-xl mb-6">
@@ -354,7 +355,7 @@ const Dicionario = () => {
           })}
         </div>
       )}
-    </div>
+    </AnimatedPage>
   );
 };
 

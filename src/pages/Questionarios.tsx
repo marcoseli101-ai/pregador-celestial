@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { getAuthToken } from "@/lib/auth-helpers";
 import { HelpCircle, CheckCircle, XCircle, Trophy, Loader2, Brain, RotateCcw, BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -104,15 +105,15 @@ const Questionarios = () => {
   // Menu de seleção de nível
   if (!nivel) {
     return (
-      <div className="container py-12">
-        <div className="mb-10 text-center">
+      <AnimatedPage className="container py-12">
+        <AnimatedSection className="mb-10 text-center">
           <h1 className="font-serif text-4xl font-bold mb-2">
             Questionários <span className="text-gradient-gold">Bíblicos com IA</span>
           </h1>
           <p className="text-muted-foreground max-w-md mx-auto">
             Perguntas geradas por inteligência artificial. Ilimitadas e sempre diferentes!
           </p>
-        </div>
+        </AnimatedSection>
 
         <div className="mx-auto max-w-2xl grid gap-4 sm:grid-cols-3">
           {(Object.keys(nivelConfig) as Nivel[]).map((n) => (
@@ -137,7 +138,7 @@ const Questionarios = () => {
             Perguntas geradas por IA — nunca se repetem!
           </div>
         </div>
-      </div>
+      </AnimatedPage>
     );
   }
 
