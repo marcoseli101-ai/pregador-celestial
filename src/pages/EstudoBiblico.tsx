@@ -91,6 +91,7 @@ const EstudoBiblico = () => {
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
+  const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos" | "tematicos">("biblia");
   const [expandedStudy, setExpandedStudy] = useState<string | null>(null);
@@ -104,6 +105,7 @@ const EstudoBiblico = () => {
   useEffect(() => {
     const livro = searchParams.get("livro");
     const capitulo = searchParams.get("capitulo");
+    const versiculo = searchParams.get("versiculo");
     if (livro && books.length > 0) {
       const book = books.find(b => b.name === livro);
       if (book) {
@@ -114,6 +116,9 @@ const EstudoBiblico = () => {
           if (ch >= 1 && ch <= book.chapters) {
             setSelectedChapter(ch);
           }
+        }
+        if (versiculo) {
+          setHighlightVerse(parseInt(versiculo, 10));
         }
         // Clear params after navigating
         setSearchParams({}, { replace: true });
@@ -195,6 +200,20 @@ const EstudoBiblico = () => {
     }
   }, [selectedBook, selectedChapter, chapterData, markChapterRead]);
 
+  // Auto-scroll to highlighted verse
+  useEffect(() => {
+    if (highlightVerse && chapterData?.verses?.length) {
+      setTimeout(() => {
+        const el = document.getElementById(`verse-${highlightVerse}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Clear highlight after 5 seconds
+          setTimeout(() => setHighlightVerse(null), 5000);
+        }
+      }, 300);
+    }
+  }, [highlightVerse, chapterData]);
+
   // === CHAPTER READING VIEW ===
   if (selectedBook && selectedChapter) {
     const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
@@ -236,12 +255,27 @@ const EstudoBiblico = () => {
           <>
             <Card className="mb-6">
               <CardContent className="p-6 space-y-3">
-                {(chapterData?.verses ?? []).map((v) => (
-                  <p key={v.number} className="leading-relaxed text-sm">
-                    <span className="font-bold text-accent mr-1.5">{v.number}</span>
-                    {v.text}
-                  </p>
-                ))}
+                {(chapterData?.verses ?? []).map((v) => {
+                  const isHighlighted = highlightVerse === v.number;
+                  return (
+                    <p
+                      key={v.number}
+                      id={`verse-${v.number}`}
+                      className={`leading-relaxed text-sm rounded-lg transition-all ${
+                        isHighlighted
+                          ? "bg-accent/15 border-l-4 border-accent px-4 py-3 shadow-sm"
+                          : "px-1 py-0.5"
+                      }`}
+                    >
+                      <span className={`font-bold mr-1.5 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
+                        {v.number}
+                      </span>
+                      <span className={isHighlighted ? "font-medium text-foreground" : ""}>
+                        {v.text}
+                      </span>
+                    </p>
+                  );
+                })}
                 {chapterData?.verses?.length === 0 && (
                   <p className="text-muted-foreground text-center py-4">Nenhum versículo encontrado.</p>
                 )}

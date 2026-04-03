@@ -105,21 +105,20 @@ const VERSE_REGEX = new RegExp(
  * Parse a verse reference like "João 3:16" or "1Co 12:4-11" into
  * { bookName, chapter } for navigation
  */
-function parseVerseRef(ref: string): { bookName: string; chapter: number } | null {
-  // Try to extract book name and chapter
-  const match = ref.match(/^(.+?)\s*(\d+)[:\\.,]/);
+function parseVerseRef(ref: string): { bookName: string; chapter: number; verse?: number } | null {
+  const match = ref.match(/^(.+?)\s*(\d+)[:\\.,](\d+)/);
   if (!match) return null;
 
   let bookPart = match[1].trim();
   const chapter = parseInt(match[2], 10);
+  const verse = parseInt(match[3], 10);
 
-  // Resolve abbreviation
   const resolved = ABBREV_MAP[bookPart] || BOOK_NAMES.find(
     b => b.toLowerCase() === bookPart.toLowerCase()
   );
 
   if (!resolved) return null;
-  return { bookName: resolved, chapter };
+  return { bookName: resolved, chapter, verse };
 }
 
 interface BibleVerseLinkProps {
@@ -141,7 +140,12 @@ export const BibleVerseLink: React.FC<BibleVerseLinkProps> = ({ text, className 
     e.stopPropagation();
     const parsed = parseVerseRef(ref);
     if (parsed) {
-      navigate(`/estudo-biblico?livro=${encodeURIComponent(parsed.bookName)}&capitulo=${parsed.chapter}`);
+      const params = new URLSearchParams({
+        livro: parsed.bookName,
+        capitulo: String(parsed.chapter),
+        ...(parsed.verse ? { versiculo: String(parsed.verse) } : {}),
+      });
+      navigate(`/estudo-biblico?${params.toString()}`);
     }
   };
 
