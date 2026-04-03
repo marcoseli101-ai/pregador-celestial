@@ -83,7 +83,7 @@ const GeradorPregacoes = () => {
     setActiveTab("pregacao");
     let accumulated = "";
     await streamSermon({
-      tema, publico, tempo, nivel,
+      tema, publico, tempo, nivel, estrutura, ocasiao, tom,
       onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
       onDone: () => setLoading(false),
       onError: (msg) => { toast.error(msg); setLoading(false); },
