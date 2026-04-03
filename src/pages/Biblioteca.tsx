@@ -254,7 +254,7 @@ const Biblioteca = () => {
           <SermonCard key={s.title} sermon={s} />
         ))}
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 
