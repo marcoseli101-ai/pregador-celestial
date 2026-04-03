@@ -1163,27 +1163,6 @@ const CursoTeologia = () => {
                 </div>
                 <h2 className="font-serif text-2xl font-bold mb-4">{currentLesson.title}</h2>
 
-                {/* Video Section */}
-                <div className="mb-6">
-                  <a
-                    href={getYouTubeSearchUrl(currentLesson.videoSearch)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full rounded-xl border border-border bg-muted/50 hover:bg-muted transition-colors p-6 flex items-center gap-4 group block"
-                  >
-                    <div className="h-14 w-14 rounded-full bg-destructive/10 flex items-center justify-center group-hover:bg-destructive/20 transition-colors shrink-0">
-                      <Play className="h-7 w-7 text-destructive ml-0.5" />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-semibold text-foreground flex items-center gap-2">
-                        <Video className="h-4 w-4" />
-                        Vídeo Aula
-                      </p>
-                      <p className="text-sm text-muted-foreground">{currentLesson.videoTitle}</p>
-                      <p className="text-xs text-primary mt-1">Clique para assistir no YouTube →</p>
-                    </div>
-                  </a>
-                </div>
 
                 {/* Lesson Content */}
                 <div className="prose prose-sm dark:prose-invert max-w-none">
