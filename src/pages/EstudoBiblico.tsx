@@ -105,6 +105,7 @@ const EstudoBiblico = () => {
   useEffect(() => {
     const livro = searchParams.get("livro");
     const capitulo = searchParams.get("capitulo");
+    const versiculo = searchParams.get("versiculo");
     if (livro && books.length > 0) {
       const book = books.find(b => b.name === livro);
       if (book) {
@@ -115,6 +116,9 @@ const EstudoBiblico = () => {
           if (ch >= 1 && ch <= book.chapters) {
             setSelectedChapter(ch);
           }
+        }
+        if (versiculo) {
+          setHighlightVerse(parseInt(versiculo, 10));
         }
         // Clear params after navigating
         setSearchParams({}, { replace: true });
