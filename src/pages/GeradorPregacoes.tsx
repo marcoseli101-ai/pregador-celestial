@@ -92,7 +92,7 @@ const GeradorPregacoes = () => {
     let accumulated = "";
     const currentTema = tema;
     await streamSermon({
-      tema, publico, tempo, nivel, estrutura, ocasiao, tom,
+      tema, publico, tempo, nivel, estrutura, ocasiao, tom, referencias,
       onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
       onDone: () => { setLoading(false); autoSaveSermon(accumulated, currentTema); },
       onError: (msg) => { toast.error(msg); setLoading(false); },
