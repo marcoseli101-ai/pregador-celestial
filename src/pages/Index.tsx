@@ -74,7 +74,7 @@ const Index = () => {
             className="mx-auto max-w-3xl text-center"
           >
             <motion.div variants={fadeUp} className="mb-5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))/0.3] bg-[hsl(var(--gold))/0.08] px-5 py-1.5 text-sm font-medium text-[hsl(var(--gold-light))]">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/8 px-5 py-1.5 text-sm font-medium text-accent">
                 <Star className="h-3.5 w-3.5" /> Plataforma para Pregadores do Evangelho
               </span>
             </motion.div>
