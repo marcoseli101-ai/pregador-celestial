@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
 import { Sparkles, Save, Loader2, MessageCircleQuestion, Send, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
