@@ -297,7 +297,7 @@ const Index = () => {
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0">
           <img src={bibleCross} alt="Cruz ao nascer do sol" className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-[hsl(222,47%,6%)/0.7]" />
+          <div className="absolute inset-0 bg-background/75" />
         </div>
         <div className="container relative z-10">
           <div className="mx-auto max-w-2xl text-center">
