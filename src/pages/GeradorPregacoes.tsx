@@ -284,7 +284,7 @@ const GeradorPregacoes = () => {
           </div>
         )}
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 
