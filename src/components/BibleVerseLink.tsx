@@ -145,15 +145,15 @@ export const BibleVerseLink: React.FC<BibleVerseLinkProps> = ({ text, className 
     }
   };
 
-  // Split text by verse references
-  const parts = text.split(VERSE_REGEX);
+  // Split text by verse references — create fresh regex each render to avoid lastIndex issues
+  const splitRegex = new RegExp(VERSE_REGEX.source, "gi");
+  const testRegex = new RegExp(VERSE_REGEX.source, "i");
+  const parts = text.split(splitRegex);
 
   return (
     <span className={className}>
       {parts.map((part, i) => {
-        if (VERSE_REGEX.test(part)) {
-          // Reset regex lastIndex
-          VERSE_REGEX.lastIndex = 0;
+        if (testRegex.test(part)) {
           return (
             <button
               key={i}
@@ -166,7 +166,6 @@ export const BibleVerseLink: React.FC<BibleVerseLinkProps> = ({ text, className 
             </button>
           );
         }
-        VERSE_REGEX.lastIndex = 0;
         return <React.Fragment key={i}>{part}</React.Fragment>;
       })}
     </span>
