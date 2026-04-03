@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { ContentActions } from "@/components/ContentActions";
+import { BibleVerseLink } from "@/components/BibleVerseLink";
 
 interface SavedDevotional {
   id: string;
