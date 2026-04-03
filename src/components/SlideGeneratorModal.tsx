@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import { getAuthToken } from "@/lib/auth-helpers";
 import { Presentation, ChevronLeft, ChevronRight, X, FileText, File, Loader2, Sun, Moon, Palette, Maximize, Minimize, Timer, TimerOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -212,11 +213,12 @@ export function SlideGeneratorModal({ content, open, onClose }: SlideGeneratorMo
     setCurrentSlide(0);
 
     try {
+      const token = await getAuthToken();
       const resp = await fetch(GENERATE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ content }),
       });

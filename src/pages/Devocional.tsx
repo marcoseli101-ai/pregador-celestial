@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { getAuthToken } from "@/lib/auth-helpers";
 import { Calendar, BookOpen, Heart, Loader2, RefreshCw, Sparkles, Save, History, Trash2, ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,11 +58,12 @@ const Devocional = () => {
 
     try {
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-devotional`;
+      const token = await getAuthToken();
       const resp = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({}),
       });

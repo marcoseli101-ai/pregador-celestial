@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { getAuthToken } from "@/lib/auth-helpers";
 import { HelpCircle, CheckCircle, XCircle, Trophy, Loader2, Brain, RotateCcw, BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,11 +36,12 @@ const Questionarios = () => {
     setCurrentQuestion(null);
 
     try {
+      const token = await getAuthToken();
       const resp = await fetch(GENERATE_QUIZ_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           nivel: selectedNivel,
