@@ -195,14 +195,63 @@ const GeradorPregacoes = () => {
                 </Select>
               </div>
               <div>
-                <Label>Nível Espiritual</Label>
+                <Label>Estilo da Pregação</Label>
                 <Select value={nivel} onValueChange={setNivel}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="exortacao">Exortação</SelectItem>
                     <SelectItem value="avivamento">Avivamento</SelectItem>
-                    <SelectItem value="ensino">Ensino</SelectItem>
+                    <SelectItem value="ensino">Ensino Expositivo</SelectItem>
                     <SelectItem value="evangelismo">Evangelismo</SelectItem>
+                    <SelectItem value="devocional">Devocional</SelectItem>
+                    <SelectItem value="profetico">Profético</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Estrutura Homilética</Label>
+                <Select value={estrutura} onValueChange={setEstrutura}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="textual">Textual</SelectItem>
+                    <SelectItem value="tematica">Temática</SelectItem>
+                    <SelectItem value="expositiva">Expositiva</SelectItem>
+                    <SelectItem value="narrativa">Narrativa</SelectItem>
+                    <SelectItem value="topica">Tópica</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Ocasião / Evento</Label>
+                <Select value={ocasiao} onValueChange={setOcasiao}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione (opcional)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="culto_domingo">Culto de Domingo</SelectItem>
+                    <SelectItem value="culto_oracao">Culto de Oração</SelectItem>
+                    <SelectItem value="santa_ceia">Santa Ceia</SelectItem>
+                    <SelectItem value="batismo">Batismo</SelectItem>
+                    <SelectItem value="casamento">Casamento</SelectItem>
+                    <SelectItem value="funeral">Funeral / Celebração de Vida</SelectItem>
+                    <SelectItem value="dedicacao">Dedicação de Crianças</SelectItem>
+                    <SelectItem value="vigilia">Vigília</SelectItem>
+                    <SelectItem value="semana_santa">Semana Santa / Páscoa</SelectItem>
+                    <SelectItem value="natal">Natal</SelectItem>
+                    <SelectItem value="ano_novo">Ano Novo</SelectItem>
+                    <SelectItem value="missoes">Conferência de Missões</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Tom Emocional</Label>
+                <Select value={tom} onValueChange={setTom}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione (opcional)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="encorajamento">Encorajamento</SelectItem>
+                    <SelectItem value="consolacao">Consolação</SelectItem>
+                    <SelectItem value="confrontacao">Confrontação Amorosa</SelectItem>
+                    <SelectItem value="celebracao">Celebração / Louvor</SelectItem>
+                    <SelectItem value="urgencia">Urgência Espiritual</SelectItem>
+                    <SelectItem value="reflexao">Reflexão Profunda</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
