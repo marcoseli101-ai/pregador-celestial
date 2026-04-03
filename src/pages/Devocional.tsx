@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { getAuthToken } from "@/lib/auth-helpers";
 import { Calendar, BookOpen, Heart, Loader2, RefreshCw, Sparkles, Save, History, Trash2, ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
