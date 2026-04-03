@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { getAuthToken } from "@/lib/auth-helpers";
 import { motion } from "framer-motion";
 import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, Play, FileText, Video, Download, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
