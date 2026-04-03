@@ -58,11 +58,12 @@ const Devocional = () => {
 
     try {
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-devotional`;
+      const token = await getAuthToken();
       const resp = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${(await import("@/lib/auth-helpers")).getAuthToken().then ? await (await import("@/lib/auth-helpers")).getAuthToken() : import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({}),
       });
