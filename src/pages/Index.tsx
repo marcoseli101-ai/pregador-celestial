@@ -266,45 +266,49 @@ const Index = () => {
       {/* Testimonials */}
       <section className="py-20 bg-gradient-celestial text-primary-foreground">
         <div className="container">
-          <h2 className="font-serif text-3xl font-bold text-center mb-12">
+          <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={fadeUp} className="font-serif text-3xl font-bold text-center mb-12">
             Impacto no <span className="text-gradient-gold">Ministério</span>
-          </h2>
+          </motion.h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <Card key={t.name} className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground backdrop-blur-sm">
-                <CardContent className="p-6">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-[hsl(var(--gold))] text-[hsl(var(--gold))]" />
-                    ))}
-                  </div>
-                  <p className="text-sm italic mb-4 text-primary-foreground/90">"{t.text}"</p>
-                  <div>
-                    <p className="font-serif font-semibold">{t.name}</p>
-                    <p className="text-xs text-primary-foreground/60">{t.role}</p>
-                  </div>
-                </CardContent>
-              </Card>
+            {testimonials.map((t, i) => (
+              <motion.div key={t.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15, duration: 0.6 }}>
+                <Card className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(5)].map((_, j) => (
+                        <Star key={j} className="h-4 w-4 fill-[hsl(var(--gold))] text-[hsl(var(--gold))]" />
+                      ))}
+                    </div>
+                    <p className="text-sm italic mb-4 text-primary-foreground/90">"{t.text}"</p>
+                    <div>
+                      <p className="font-serif font-semibold">{t.name}</p>
+                      <p className="text-xs text-primary-foreground/60">{t.role}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA with subtle background */}
+      {/* CTA */}
       <section className="py-20 bg-background">
-        <div className="container text-center">
-          <h2 className="font-serif text-3xl font-bold mb-4">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={stagger} className="container text-center">
+          <motion.h2 variants={fadeUp} className="font-serif text-3xl font-bold mb-4">
             Comece a Preparar Pregações <span className="text-gradient-gold">Poderosas</span>
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-muted-foreground mb-8 max-w-xl mx-auto">
             Cadastre-se gratuitamente e tenha acesso a todas as ferramentas para fortalecer seu ministério.
-          </p>
-          <Link to="/login">
-            <Button size="lg" className="bg-gradient-gold text-background hover:opacity-90 gap-2 text-base px-10">
-              Começar Agora <ArrowRight className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
+          </motion.p>
+          <motion.div variants={scaleIn}>
+            <Link to="/login">
+              <Button size="lg" className="bg-gradient-gold text-background hover:opacity-90 gap-2 text-base px-10">
+                Começar Agora <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
     </div>
   );
