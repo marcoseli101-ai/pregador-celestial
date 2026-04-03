@@ -194,7 +194,7 @@ const Devocional = () => {
             <BookOpen className="h-8 w-8 mx-auto mb-3 text-accent" />
             <p className="text-xs font-semibold text-accent uppercase tracking-widest mb-4">Versículo do Dia</p>
             <div className="text-lg font-serif italic leading-relaxed whitespace-pre-line">
-              {sections.find((s) => s.type === "verse")!.content}
+              <BibleVerseLink text={sections.find((s) => s.type === "verse")!.content} />
             </div>
           </div>
         )}
