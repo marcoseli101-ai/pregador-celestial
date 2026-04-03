@@ -221,11 +221,11 @@ const Biblioteca = () => {
   const activeTema = searchParams.get("tema") || "todos";
 
   return (
-    <div className="container py-12">
-      <div className="mb-8 text-center">
+    <AnimatedPage className="container py-12">
+      <AnimatedSection className="mb-8 text-center">
         <h1 className="font-serif text-4xl font-bold mb-2">Biblioteca de <span className="text-gradient-gold">Mensagens</span></h1>
         <p className="text-muted-foreground">Pregações organizadas por temas com texto base, esboço e aplicação prática.</p>
-      </div>
+      </AnimatedSection>
 
       <div className="mx-auto max-w-xl mb-8">
         <div className="relative">
