@@ -108,7 +108,7 @@ const Index = () => {
               </Link>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-12 flex items-center justify-center gap-8 text-sm text-[hsl(220,20%,80%)/0.5] flex-wrap">
+            <motion.div variants={fadeUp} className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground flex-wrap">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 <span>+1.000 pregadores</span>
