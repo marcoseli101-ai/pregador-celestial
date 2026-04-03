@@ -91,6 +91,7 @@ const EstudoBiblico = () => {
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
+  const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos" | "tematicos">("biblia");
   const [expandedStudy, setExpandedStudy] = useState<string | null>(null);
