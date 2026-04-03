@@ -74,6 +74,14 @@ const GeradorPregacoes = () => {
     if (user) fetchHistory();
   }, [user, fetchHistory]);
 
+  const autoSaveSermon = useCallback(async (content: string, sermonTema: string) => {
+    if (!user || !content) return;
+    const { error } = await supabase.from("saved_sermons").insert({
+      user_id: user.id, title: sermonTema, tema: sermonTema, publico, tempo, nivel, content,
+    });
+    if (!error) { fetchHistory(); toast.success("Pregação salva automaticamente!"); }
+  }, [user, publico, tempo, nivel, fetchHistory]);
+
   const handleGenerate = async () => {
     if (!tema.trim()) { toast.error("Digite um tema para a pregação"); return; }
     setResult("");
@@ -82,10 +90,11 @@ const GeradorPregacoes = () => {
     setChatMessages([]);
     setActiveTab("pregacao");
     let accumulated = "";
+    const currentTema = tema;
     await streamSermon({
       tema, publico, tempo, nivel, estrutura, ocasiao, tom,
       onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
-      onDone: () => setLoading(false),
+      onDone: () => { setLoading(false); autoSaveSermon(accumulated, currentTema); },
       onError: (msg) => { toast.error(msg); setLoading(false); },
     });
   };
