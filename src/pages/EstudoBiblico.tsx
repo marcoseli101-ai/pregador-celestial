@@ -241,12 +241,27 @@ const EstudoBiblico = () => {
           <>
             <Card className="mb-6">
               <CardContent className="p-6 space-y-3">
-                {(chapterData?.verses ?? []).map((v) => (
-                  <p key={v.number} className="leading-relaxed text-sm">
-                    <span className="font-bold text-accent mr-1.5">{v.number}</span>
-                    {v.text}
-                  </p>
-                ))}
+                {(chapterData?.verses ?? []).map((v) => {
+                  const isHighlighted = highlightVerse === v.number;
+                  return (
+                    <p
+                      key={v.number}
+                      id={`verse-${v.number}`}
+                      className={`leading-relaxed text-sm rounded-lg transition-all ${
+                        isHighlighted
+                          ? "bg-accent/15 border-l-4 border-accent px-4 py-3 shadow-sm"
+                          : "px-1 py-0.5"
+                      }`}
+                    >
+                      <span className={`font-bold mr-1.5 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
+                        {v.number}
+                      </span>
+                      <span className={isHighlighted ? "font-medium text-foreground" : ""}>
+                        {v.text}
+                      </span>
+                    </p>
+                  );
+                })}
                 {chapterData?.verses?.length === 0 && (
                   <p className="text-muted-foreground text-center py-4">Nenhum versículo encontrado.</p>
                 )}
