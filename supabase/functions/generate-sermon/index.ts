@@ -89,7 +89,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Não autorizado" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, publico, tempo, nivel, estrutura, ocasiao, tom, mode, messages: chatMessages } = await req.json();
+    const { tema, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, mode, messages: chatMessages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -154,6 +154,14 @@ serve(async (req) => {
         reflexao: "Reflexão Profunda — levar à introspecção e meditação espiritual",
       };
 
+      const referenciasMap: Record<string, string> = {
+        at_nt: "Referências Cruzadas AT ↔ NT — incluir tipologias, profecias cumpridas e paralelos entre Antigo e Novo Testamento",
+        tematicas: "Referências Temáticas — agrupar versículos por subtemas relacionados ao tema central",
+        paralelas: "Passagens Paralelas (Sinóticos) — incluir textos paralelos dos evangelhos sinóticos e cartas apostólicas",
+        contextuais: "Referências Contextuais — versículos do mesmo autor, livro ou período histórico",
+        completas: "Referências Completas — incluir todas as categorias: tipologias AT/NT, temáticas, paralelas e contextuais",
+      };
+
       let configLines = [
         `- **Tema**: ${tema.trim()}`,
         `- **Público-alvo**: ${publicoMap[publico] || publico || "Culto de Domingo na Igreja"}`,
@@ -163,6 +171,7 @@ serve(async (req) => {
       if (estrutura && estruturaMap[estrutura]) configLines.push(`- **Estrutura Homilética**: ${estruturaMap[estrutura]}`);
       if (ocasiao && ocasiaoMap[ocasiao]) configLines.push(`- **Ocasião/Evento**: ${ocasiaoMap[ocasiao]}`);
       if (tom && tomMap[tom]) configLines.push(`- **Tom Emocional**: ${tomMap[tom]}`);
+      if (referencias && referenciasMap[referencias]) configLines.push(`- **Referências Cruzadas**: ${referenciasMap[referencias]}`);
 
       const userPrompt = `Gere uma pregação completa com as seguintes configurações:\n${configLines.join("\n")}\n\nSiga rigorosamente a estrutura e as diretrizes doutrinais definidas. A pregação deve estar pronta para ser ministrada no púlpito.`;
 

@@ -32,6 +32,7 @@ const GeradorPregacoes = () => {
   const [estrutura, setEstrutura] = useState("");
   const [ocasiao, setOcasiao] = useState("");
   const [tom, setTom] = useState("");
+  const [referencias, setReferencias] = useState("");
   const [result, setResult] = useState(() => localStorage.getItem("lastSermon") || "");
   const [resultTema, setResultTema] = useState(() => localStorage.getItem("lastSermonTema") || "");
   const [loading, setLoading] = useState(false);
@@ -92,7 +93,7 @@ const GeradorPregacoes = () => {
     let accumulated = "";
     const currentTema = tema;
     await streamSermon({
-      tema, publico, tempo, nivel, estrutura, ocasiao, tom,
+      tema, publico, tempo, nivel, estrutura, ocasiao, tom, referencias,
       onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
       onDone: () => { setLoading(false); autoSaveSermon(accumulated, currentTema); },
       onError: (msg) => { toast.error(msg); setLoading(false); },
@@ -264,6 +265,19 @@ const GeradorPregacoes = () => {
                     <SelectItem value="celebracao">Celebração / Louvor</SelectItem>
                     <SelectItem value="urgencia">Urgência Espiritual</SelectItem>
                     <SelectItem value="reflexao">Reflexão Profunda</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Referências Cruzadas</Label>
+                <Select value={referencias} onValueChange={setReferencias}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione (opcional)" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="at_nt">AT ↔ NT (Tipologias e Profecias)</SelectItem>
+                    <SelectItem value="tematicas">Referências Temáticas</SelectItem>
+                    <SelectItem value="paralelas">Passagens Paralelas (Sinóticos)</SelectItem>
+                    <SelectItem value="contextuais">Contextuais (mesmo autor/livro)</SelectItem>
+                    <SelectItem value="completas">Completas (todas as categorias)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
