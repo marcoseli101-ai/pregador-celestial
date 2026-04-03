@@ -89,7 +89,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Não autorizado" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const { tema, publico, tempo, nivel, mode, messages: chatMessages } = await req.json();
+    const { tema, publico, tempo, nivel, estrutura, ocasiao, tom, mode, messages: chatMessages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -116,17 +116,55 @@ serve(async (req) => {
       const nivelMap: Record<string, string> = {
         exortacao: "Exortação — tom de encorajamento e fortalecimento espiritual",
         avivamento: "Avivamento — tom de fogo, mover do Espírito Santo, renovação",
-        ensino: "Ensino — tom didático, aprofundamento teológico, estudo expositivo",
+        ensino: "Ensino Expositivo — tom didático, aprofundamento teológico, estudo expositivo",
         evangelismo: "Evangelismo — tom de salvação, apelo aos não-convertidos",
+        devocional: "Devocional — tom íntimo, meditativo, voltado à comunhão pessoal com Deus",
+        profetico: "Profético — tom de urgência, declaração da vontade de Deus, chamado à santidade",
       };
 
-      const userPrompt = `Gere uma pregação completa com as seguintes configurações:
-- **Tema**: ${tema.trim()}
-- **Público-alvo**: ${publicoMap[publico] || publico || "Culto de Domingo na Igreja"}
-- **Tempo de pregação**: ${tempo || "30"} minutos
-- **Estilo/Abordagem**: ${nivelMap[nivel] || nivel || "Ensino"}
+      const estruturaMap: Record<string, string> = {
+        textual: "Textual — pontos extraídos diretamente do texto bíblico base",
+        tematica: "Temática — organizada ao redor de um tema central com textos de apoio",
+        expositiva: "Expositiva — análise versículo a versículo do texto base",
+        narrativa: "Narrativa — conduz o ouvinte por uma história bíblica com aplicações",
+        topica: "Tópica — aborda um tópico doutrinário com múltiplas referências",
+      };
 
-Siga rigorosamente a estrutura e as diretrizes doutrinais definidas. A pregação deve estar pronta para ser ministrada no púlpito.`;
+      const ocasiaoMap: Record<string, string> = {
+        culto_domingo: "Culto Regular de Domingo",
+        culto_oracao: "Culto de Oração / Meio de Semana",
+        santa_ceia: "Celebração da Santa Ceia",
+        batismo: "Culto de Batismo",
+        casamento: "Cerimônia de Casamento",
+        funeral: "Funeral / Celebração de Vida",
+        dedicacao: "Dedicação de Crianças",
+        vigilia: "Vigília de Oração",
+        semana_santa: "Semana Santa / Páscoa",
+        natal: "Celebração de Natal",
+        ano_novo: "Celebração de Ano Novo / Virada",
+        missoes: "Conferência de Missões",
+      };
+
+      const tomMap: Record<string, string> = {
+        encorajamento: "Encorajamento — fortalecer a fé e dar esperança",
+        consolacao: "Consolação — acolher e consolar os que sofrem",
+        confrontacao: "Confrontação Amorosa — desafiar à mudança com amor",
+        celebracao: "Celebração — louvor, gratidão e alegria no Senhor",
+        urgencia: "Urgência Espiritual — senso de tempo, preparo para a volta de Cristo",
+        reflexao: "Reflexão Profunda — levar à introspecção e meditação espiritual",
+      };
+
+      let configLines = [
+        `- **Tema**: ${tema.trim()}`,
+        `- **Público-alvo**: ${publicoMap[publico] || publico || "Culto de Domingo na Igreja"}`,
+        `- **Tempo de pregação**: ${tempo || "30"} minutos`,
+        `- **Estilo/Abordagem**: ${nivelMap[nivel] || nivel || "Ensino Expositivo"}`,
+      ];
+      if (estrutura && estruturaMap[estrutura]) configLines.push(`- **Estrutura Homilética**: ${estruturaMap[estrutura]}`);
+      if (ocasiao && ocasiaoMap[ocasiao]) configLines.push(`- **Ocasião/Evento**: ${ocasiaoMap[ocasiao]}`);
+      if (tom && tomMap[tom]) configLines.push(`- **Tom Emocional**: ${tomMap[tom]}`);
+
+      const userPrompt = `Gere uma pregação completa com as seguintes configurações:\n${configLines.join("\n")}\n\nSiga rigorosamente a estrutura e as diretrizes doutrinais definidas. A pregação deve estar pronta para ser ministrada no púlpito.`;
 
       messages = [
         { role: "system", content: CGADB_SERMON_SYSTEM },
