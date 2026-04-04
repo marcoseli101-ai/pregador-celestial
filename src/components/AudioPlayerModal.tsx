@@ -3,7 +3,6 @@ import { X, Play, Pause, Square, Volume2, Gauge, Mic, Loader2 } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface AudioPlayerModalProps {
@@ -15,24 +14,28 @@ interface AudioPlayerModalProps {
 type PlayState = "idle" | "playing" | "paused" | "loading";
 
 const VOICE_OPTIONS = [
-  { id: "feminina-studio", label: "Feminina Studio (HD)" },
-  { id: "masculina-studio", label: "Masculina Studio (HD)" },
-  { id: "feminina-1", label: "Feminina Wavenet" },
-  { id: "masculina-1", label: "Masculina Wavenet" },
-  { id: "feminina-2", label: "Feminina Neural" },
-  { id: "masculina-2", label: "Masculina Neural" },
-  { id: "feminina-3", label: "Feminina Neural 2" },
+  { id: "sarah", label: "Sarah (Feminina)" },
+  { id: "laura", label: "Laura (Feminina)" },
+  { id: "alice", label: "Alice (Feminina)" },
+  { id: "jessica", label: "Jessica (Feminina)" },
+  { id: "lily", label: "Lily (Feminina)" },
+  { id: "matilda", label: "Matilda (Feminina)" },
+  { id: "roger", label: "Roger (Masculina)" },
+  { id: "george", label: "George (Masculina)" },
+  { id: "charlie", label: "Charlie (Masculina)" },
+  { id: "daniel", label: "Daniel (Masculina)" },
+  { id: "liam", label: "Liam (Masculina)" },
+  { id: "brian", label: "Brian (Masculina)" },
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [selectedVoice, setSelectedVoice] = useState("feminina-studio");
+  const [selectedVoice, setSelectedVoice] = useState("sarah");
   const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Clean up on close
   useEffect(() => {
     if (!open) {
       handleStop();
@@ -53,18 +56,28 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
     try {
       const cleanedText = cleanText(content);
-      
-      const { data, error } = await supabase.functions.invoke("google-tts", {
-        body: { text: cleanedText, voice: selectedVoice, speed: rate },
-      });
 
-      if (error) throw error;
-      if (!data?.audioContent) throw new Error("No audio received");
+      // Use fetch directly for binary audio response
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text: cleanedText, voice: selectedVoice, speed: rate }),
+        }
+      );
 
-      // Convert base64 to audio
-      const audioBytes = Uint8Array.from(atob(data.audioContent), c => c.charCodeAt(0));
-      const blob = new Blob([audioBytes], { type: "audio/mp3" });
-      const url = URL.createObjectURL(blob);
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(errorData || `Request failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const url = URL.createObjectURL(audioBlob);
 
       // Stop previous audio
       if (audioRef.current) {
@@ -73,7 +86,6 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
       }
 
       const audio = new Audio(url);
-      audio.playbackRate = 1; // Rate already applied server-side
       audioRef.current = audio;
 
       audio.onended = () => {
@@ -146,7 +158,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
             <Volume2 className="h-5 w-5 text-primary" />
-            Leitor de Áudio (Google Cloud)
+            Leitor de Áudio (ElevenLabs)
           </h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-5 w-5" />
@@ -183,16 +195,16 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
             <Slider
               value={[rate]}
               onValueChange={([v]) => setRate(v)}
-              min={0.5}
-              max={2}
+              min={0.7}
+              max={1.2}
               step={0.05}
               disabled={playState !== "idle"}
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>0.5x</span>
+              <span>0.7x</span>
               <span>1x</span>
-              <span>2x</span>
+              <span>1.2x</span>
             </div>
           </div>
 
