@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { X, Play, Pause, Square, Volume2, Gauge, Mic, Loader2 } from "lucide-react";
+import { X, Play, Pause, Square, Volume2, Gauge, Mic, Loader2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,26 +14,27 @@ interface AudioPlayerModalProps {
 type PlayState = "idle" | "playing" | "paused" | "loading";
 
 const VOICE_OPTIONS = [
-  { id: "sarah", label: "Sarah (Feminina)" },
-  { id: "laura", label: "Laura (Feminina)" },
-  { id: "alice", label: "Alice (Feminina)" },
-  { id: "jessica", label: "Jessica (Feminina)" },
-  { id: "lily", label: "Lily (Feminina)" },
-  { id: "matilda", label: "Matilda (Feminina)" },
-  { id: "roger", label: "Roger (Masculina)" },
-  { id: "george", label: "George (Masculina)" },
-  { id: "charlie", label: "Charlie (Masculina)" },
-  { id: "daniel", label: "Daniel (Masculina)" },
-  { id: "liam", label: "Liam (Masculina)" },
-  { id: "brian", label: "Brian (Masculina)" },
+  { id: "sarah", label: "🇧🇷 Sarah — Feminina, suave e natural", category: "Feminina" },
+  { id: "laura", label: "🇧🇷 Laura — Feminina, clara e expressiva", category: "Feminina" },
+  { id: "alice", label: "🇧🇷 Alice — Feminina, jovem e dinâmica", category: "Feminina" },
+  { id: "jessica", label: "🇧🇷 Jessica — Feminina, madura e firme", category: "Feminina" },
+  { id: "lily", label: "🇧🇷 Lily — Feminina, doce e calma", category: "Feminina" },
+  { id: "matilda", label: "🇧🇷 Matilda — Feminina, calorosa e acolhedora", category: "Feminina" },
+  { id: "roger", label: "🇧🇷 Roger — Masculina, grave e autoritária", category: "Masculina" },
+  { id: "george", label: "🇧🇷 George — Masculina, profunda e envolvente", category: "Masculina" },
+  { id: "charlie", label: "🇧🇷 Charlie — Masculina, jovem e energética", category: "Masculina" },
+  { id: "daniel", label: "🇧🇷 Daniel — Masculina, serena e pastoral", category: "Masculina" },
+  { id: "liam", label: "🇧🇷 Liam — Masculina, clara e eloquente", category: "Masculina" },
+  { id: "brian", label: "🇧🇷 Brian — Masculina, narrativa e profissional", category: "Masculina" },
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [selectedVoice, setSelectedVoice] = useState("sarah");
+  const [selectedVoice, setSelectedVoice] = useState("daniel");
   const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioBlobRef = useRef<Blob | null>(null);
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -57,7 +58,6 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     try {
       const cleanedText = cleanText(content);
 
-      // Use fetch directly for binary audio response
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
         {
@@ -77,9 +77,9 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
       }
 
       const audioBlob = await response.blob();
+      audioBlobRef.current = audioBlob;
       const url = URL.createObjectURL(audioBlob);
 
-      // Stop previous audio
       if (audioRef.current) {
         audioRef.current.pause();
         URL.revokeObjectURL(audioRef.current.src);
@@ -147,9 +147,27 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     stopProgressTracking();
   }, []);
 
+  const handleDownload = useCallback(() => {
+    if (!audioBlobRef.current) {
+      toast.error("Gere o áudio primeiro antes de baixar.");
+      return;
+    }
+    const url = URL.createObjectURL(audioBlobRef.current);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `audio-pregacao.mp3`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("Download iniciado!");
+  }, []);
+
   if (!open) return null;
 
   const rateLabel = rate === 1 ? "Normal" : `${rate.toFixed(2)}x`;
+  const selectedVoiceInfo = VOICE_OPTIONS.find(v => v.id === selectedVoice);
+  const hasAudio = audioBlobRef.current !== null || playState !== "idle";
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -158,32 +176,44 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
             <Volume2 className="h-5 w-5 text-primary" />
-            Leitor de Áudio (ElevenLabs)
+            Leitor de Áudio
           </h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-5">
           {/* Voice Selection */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
               <Mic className="h-4 w-4 text-muted-foreground" />
-              Voz
+              Escolha a Voz
             </label>
             <Select value={selectedVoice} onValueChange={setSelectedVoice} disabled={playState !== "idle"}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecione uma voz" />
               </SelectTrigger>
-              <SelectContent>
-                {VOICE_OPTIONS.map(v => (
-                  <SelectItem key={v.id} value={v.id}>
+              <SelectContent className="max-h-[300px]">
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Vozes Femininas</div>
+                {VOICE_OPTIONS.filter(v => v.category === "Feminina").map(v => (
+                  <SelectItem key={v.id} value={v.id} className="text-sm">
+                    {v.label}
+                  </SelectItem>
+                ))}
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-1">Vozes Masculinas</div>
+                {VOICE_OPTIONS.filter(v => v.category === "Masculina").map(v => (
+                  <SelectItem key={v.id} value={v.id} className="text-sm">
                     {v.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {selectedVoiceInfo && (
+              <p className="text-xs text-muted-foreground italic">
+                {selectedVoiceInfo.label.split(" — ")[1]}
+              </p>
+            )}
           </div>
 
           {/* Speed Control */}
@@ -202,9 +232,9 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>0.7x</span>
-              <span>1x</span>
-              <span>1.2x</span>
+              <span>Lenta</span>
+              <span>Normal</span>
+              <span>Rápida</span>
             </div>
           </div>
 
@@ -222,7 +252,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           )}
 
           {/* Controls */}
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-3 flex-wrap">
             {playState === "loading" ? (
               <Button variant="default" size="lg" disabled className="gap-2 min-w-[120px]">
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -243,6 +273,12 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
               <Button variant="destructive" size="lg" onClick={handleStop} className="gap-2 min-w-[120px]">
                 <Square className="h-5 w-5" />
                 Parar
+              </Button>
+            )}
+            {hasAudio && (
+              <Button variant="secondary" size="lg" onClick={handleDownload} className="gap-2 min-w-[120px]">
+                <Download className="h-5 w-5" />
+                Baixar MP3
               </Button>
             )}
           </div>
