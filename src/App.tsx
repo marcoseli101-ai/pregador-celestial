@@ -37,6 +37,7 @@ const App = () => (
             <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route path="/" element={<Index />} />
               <Route path="/estudo-biblico" element={<EstudoBiblico />} />
+              <Route path="/plano-leitura" element={<PlanoLeitura />} />
               <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
               <Route path="/biblioteca" element={<Biblioteca />} />
               <Route path="/curso-teologia" element={<CursoTeologia />} />
@@ -45,7 +46,6 @@ const App = () => (
               <Route path="/devocional" element={<Devocional />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/area-pregador" element={<AreaPregador />} />
-              <Route path="/plano-leitura" element={<PlanoLeitura />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
