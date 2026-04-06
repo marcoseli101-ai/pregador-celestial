@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DayCardProps {
@@ -13,7 +14,7 @@ interface DayCardProps {
   onToggle: () => void;
   onClick: () => void;
   justCompleted: boolean;
-  readProgress?: number; // 0-100
+  readProgress?: number;
 }
 
 export function DayCard({
@@ -32,50 +33,53 @@ export function DayCard({
     <Card
       data-day={day}
       className={cn(
-        "p-3 cursor-pointer transition-all duration-300 border-2",
-        isCompleted && "bg-emerald-950/40 border-emerald-600/50",
-        isToday && !isCompleted && "border-blue-500 shadow-blue-500/20 shadow-md",
-        !isCompleted && !isToday && "border-border/50 hover:border-border",
-        justCompleted && "animate-pulse ring-2 ring-emerald-400"
+        "group p-4 cursor-pointer transition-all duration-300 border rounded-xl hover:shadow-md",
+        isCompleted && "bg-emerald-950/30 border-emerald-600/40 hover:border-emerald-500/60",
+        isToday && !isCompleted && "border-primary/60 shadow-lg shadow-primary/10 ring-1 ring-primary/20",
+        !isCompleted && !isToday && "border-border/40 hover:border-border/80",
+        justCompleted && "animate-pulse ring-2 ring-emerald-400/60"
       )}
       onClick={onClick}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-3">
         <Checkbox
           checked={isCompleted}
-          onCheckedChange={(e) => {
-            e && e.valueOf(); // prevent propagation
-            onToggle();
-          }}
+          onCheckedChange={() => onToggle()}
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            "mt-0.5 shrink-0",
+            "mt-1 shrink-0 h-5 w-5 rounded-md",
             isCompleted && "border-emerald-500 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
           )}
         />
-        <div className="flex-1 min-w-0 space-y-1">
+        <div className="flex-1 min-w-0 space-y-1.5">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-sm">Dia {day}</span>
-            <span className="text-xs text-muted-foreground">{dateLabel}</span>
+            <span className="font-bold text-base tracking-tight">Dia {day}</span>
+            <span className="text-xs text-muted-foreground/80 font-medium">{dateLabel}</span>
             {isToday && (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-blue-600/20 text-blue-400 border-blue-500/30">
+              <Badge className="text-[10px] px-2 py-0.5 bg-primary/15 text-primary border-primary/30 font-bold tracking-wider">
                 HOJE
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground truncate">
-            {references.join(" | ")}
-          </p>
+          
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <BookOpen className="h-3 w-3 shrink-0 opacity-60" />
+            <p className="text-sm leading-relaxed line-clamp-2" style={{ fontFamily: "'Inter', sans-serif", letterSpacing: "0.01em" }}>
+              {references.join("  •  ")}
+            </p>
+          </div>
+
           {readProgress > 0 && !isCompleted && (
-            <div className="w-full bg-muted/50 rounded-full h-1 mt-1">
+            <div className="w-full bg-muted/40 rounded-full h-1.5 mt-1">
               <div
-                className="h-1 rounded-full bg-emerald-500/70 transition-all duration-300"
+                className="h-1.5 rounded-full bg-emerald-500/60 transition-all duration-500"
                 style={{ width: `${readProgress}%` }}
               />
             </div>
           )}
+
           {period && (
-            <Badge variant="outline" className="text-[10px] px-1.5 py-0 mt-0.5">
+            <Badge variant="outline" className="text-[10px] px-2 py-0.5 mt-0.5 font-medium opacity-70">
               {period}
             </Badge>
           )}
