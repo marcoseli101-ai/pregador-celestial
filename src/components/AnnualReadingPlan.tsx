@@ -43,6 +43,21 @@ export default function AnnualReadingPlan() {
 
   const plan = planType === "biblical" ? biblicalPlan : chronologicalPlan;
 
+  // Load read refs for per-day progress
+  const readRefs = useMemo(() => {
+    try {
+      const raw = localStorage.getItem(READ_REFS_KEY);
+      return raw ? new Set<string>(JSON.parse(raw)) : new Set<string>();
+    } catch {
+      return new Set<string>();
+    }
+  }, [modalOpen]); // re-read when modal closes
+
+  const getDayReadProgress = useCallback((entry: DayEntry) => {
+    const count = entry.references.filter(r => readRefs.has(`${entry.day}:${r}`)).length;
+    return Math.round((count / entry.references.length) * 100);
+  }, [readRefs]);
+
   const filtered = useMemo(() => {
     let result = plan;
     if (filter === "done") result = result.filter((e) => completedDays.has(e.day));
