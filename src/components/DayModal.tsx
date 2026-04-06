@@ -101,10 +101,11 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
   }, [readRefs]);
 
   const fetchRef = useCallback(async (ref: string) => {
-    if (refData[ref]?.verses.length) return;
-    
-    setRefData(prev => ({ ...prev, [ref]: { verses: [], loading: true, error: null } }));
-    
+    setRefData(prev => {
+      if (prev[ref]?.verses.length) return prev; // already loaded
+      return { ...prev, [ref]: { verses: [], loading: true, error: null } };
+    });
+
     try {
       const fullRef = expandRef(ref);
       const enRef = translateRefToEn(fullRef);
@@ -122,7 +123,7 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
         [ref]: { verses: [], loading: false, error: e instanceof Error ? e.message : "Erro" },
       }));
     }
-  }, [refData]);
+  }, []);
 
   // Fetch active reference when it changes
   useEffect(() => {
