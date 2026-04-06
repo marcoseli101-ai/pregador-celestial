@@ -13,6 +13,7 @@ interface DayCardProps {
   onToggle: () => void;
   onClick: () => void;
   justCompleted: boolean;
+  readProgress?: number; // 0-100
 }
 
 export function DayCard({
@@ -25,6 +26,7 @@ export function DayCard({
   onToggle,
   onClick,
   justCompleted,
+  readProgress = 0,
 }: DayCardProps) {
   return (
     <Card
@@ -64,6 +66,14 @@ export function DayCard({
           <p className="text-xs text-muted-foreground truncate">
             {references.join(" | ")}
           </p>
+          {readProgress > 0 && !isCompleted && (
+            <div className="w-full bg-muted/50 rounded-full h-1 mt-1">
+              <div
+                className="h-1 rounded-full bg-emerald-500/70 transition-all duration-300"
+                style={{ width: `${readProgress}%` }}
+              />
+            </div>
+          )}
           {period && (
             <Badge variant="outline" className="text-[10px] px-1.5 py-0 mt-0.5">
               {period}
