@@ -10,68 +10,85 @@ export const chronologicalPlan: DayEntry[] = [
     "day": 1,
     "references": [
       "Gn 1",
-      "Gn 2",
-      "Gn 3"
+      "Gn 2"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 2,
     "references": [
-      "Gn 4",
-      "Gn 5",
-      "Gn 6",
-      "Gn 7"
+      "Gn 3",
+      "Gn 4"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 3,
     "references": [
-      "Gn 8",
-      "Gn 9",
-      "Gn 10"
+      "Gn 5",
+      "Gn 6"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 4,
     "references": [
-      "Gn 11",
-      "Jó 1",
-      "Jó 2"
+      "Gn 7",
+      "Gn 8",
+      "Gn 9"
     ],
     "books": [
-      "Gênesis",
-      "Jó"
+      "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 5,
     "references": [
-      "Jó 3",
-      "Jó 4",
-      "Jó 5"
+      "Gn 10",
+      "Gn 11"
     ],
     "books": [
-      "Jó"
+      "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 6,
     "references": [
-      "Jó 6",
+      "Jó 1",
+      "Jó 2",
+      "Jó 3"
+    ],
+    "books": [
+      "Jó"
+    ],
+    "period": "Criação e Início"
+  },
+  {
+    "day": 7,
+    "references": [
+      "Jó 4",
+      "Jó 5",
+      "Jó 6"
+    ],
+    "books": [
+      "Jó"
+    ],
+    "period": "Criação e Início"
+  },
+  {
+    "day": 8,
+    "references": [
       "Jó 7",
       "Jó 8",
       "Jó 9"
@@ -79,10 +96,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
-    "day": 7,
+    "day": 9,
     "references": [
       "Jó 10",
       "Jó 11",
@@ -91,10 +108,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
-    "day": 8,
+    "day": 10,
     "references": [
       "Jó 13",
       "Jó 14",
@@ -103,24 +120,24 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
-    "day": 9,
+    "day": 11,
     "references": [
       "Jó 16",
       "Jó 17",
-      "Jó 18"
+      "Jó 18",
+      "Jó 19"
     ],
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
-    "day": 10,
+    "day": 12,
     "references": [
-      "Jó 19",
       "Jó 20",
       "Jó 21",
       "Jó 22"
@@ -128,98 +145,106 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
-  },
-  {
-    "day": 11,
-    "references": [
-      "Jó 23",
-      "Jó 24",
-      "Jó 25"
-    ],
-    "books": [
-      "Jó"
-    ],
-    "period": "Criação e Patriarcas"
-  },
-  {
-    "day": 12,
-    "references": [
-      "Jó 26",
-      "Jó 27",
-      "Jó 28"
-    ],
-    "books": [
-      "Jó"
-    ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 13,
     "references": [
-      "Jó 29",
-      "Jó 30",
-      "Jó 31"
+      "Jó 23",
+      "Jó 24",
+      "Jó 25",
+      "Jó 26"
     ],
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 14,
     "references": [
-      "Jó 32",
-      "Jó 33",
-      "Jó 34",
-      "Jó 35"
+      "Jó 27",
+      "Jó 28",
+      "Jó 29"
     ],
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Criação e Início"
   },
   {
     "day": 15,
     "references": [
-      "Jó 36",
-      "Jó 37",
-      "Jó 38"
+      "Jó 30",
+      "Jó 31",
+      "Jó 32"
     ],
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
     "day": 16,
     "references": [
-      "Jó 39",
-      "Jó 40",
-      "Jó 41"
+      "Jó 33",
+      "Jó 34"
     ],
     "books": [
       "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
     "day": 17,
     "references": [
-      "Jó 42",
-      "Gn 12",
-      "Gn 13"
+      "Jó 35",
+      "Jó 36",
+      "Jó 37"
     ],
     "books": [
-      "Jó",
-      "Gênesis"
+      "Jó"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
     "day": 18,
     "references": [
-      "Gn 14",
+      "Jó 38",
+      "Jó 39"
+    ],
+    "books": [
+      "Jó"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 19,
+    "references": [
+      "Jó 40",
+      "Jó 41",
+      "Jó 42"
+    ],
+    "books": [
+      "Jó"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 20,
+    "references": [
+      "Gn 12",
+      "Gn 13",
+      "Gn 14"
+    ],
+    "books": [
+      "Gênesis"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 21,
+    "references": [
       "Gn 15",
       "Gn 16",
       "Gn 17"
@@ -227,83 +252,101 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 19,
+    "day": 22,
     "references": [
       "Gn 18",
-      "Gn 19",
-      "Gn 20"
+      "Gn 19"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 20,
+    "day": 23,
     "references": [
+      "Gn 20",
       "Gn 21",
-      "Gn 22",
-      "Gn 23"
+      "Gn 22"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 21,
+    "day": 24,
     "references": [
-      "Gn 24",
+      "Gn 23",
+      "Gn 24"
+    ],
+    "books": [
+      "Gênesis"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 25,
+    "references": [
       "Gn 25",
       "Gn 26"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 22,
+    "day": 26,
     "references": [
       "Gn 27",
       "Gn 28",
-      "Gn 29",
-      "Gn 30"
+      "Gn 29"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 23,
+    "day": 27,
     "references": [
-      "Gn 31",
+      "Gn 30",
+      "Gn 31"
+    ],
+    "books": [
+      "Gênesis"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 28,
+    "references": [
       "Gn 32",
-      "Gn 33"
+      "Gn 33",
+      "Gn 34"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 24,
+    "day": 29,
     "references": [
-      "Gn 34",
       "Gn 35",
       "Gn 36"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 25,
+    "day": 30,
     "references": [
       "Gn 37",
       "Gn 38",
@@ -312,62 +355,79 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 26,
+    "day": 31,
     "references": [
       "Gn 40",
-      "Gn 41",
-      "Gn 42",
-      "Gn 43"
+      "Gn 41"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 27,
+    "day": 32,
     "references": [
-      "Gn 44",
+      "Gn 42",
+      "Gn 43",
+      "Gn 44"
+    ],
+    "books": [
+      "Gênesis"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 33,
+    "references": [
       "Gn 45",
       "Gn 46"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 28,
+    "day": 34,
     "references": [
       "Gn 47",
-      "Gn 48",
-      "Gn 49"
+      "Gn 48"
     ],
     "books": [
       "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 29,
+    "day": 35,
     "references": [
-      "Gn 50",
-      "Ex 1",
-      "Ex 2"
+      "Gn 49",
+      "Gn 50"
     ],
     "books": [
-      "Gênesis",
-      "Êxodo"
+      "Gênesis"
     ],
-    "period": "Criação e Patriarcas"
+    "period": "Patriarcas"
   },
   {
-    "day": 30,
+    "day": 36,
     "references": [
-      "Ex 3",
+      "Ex 1",
+      "Ex 2",
+      "Ex 3"
+    ],
+    "books": [
+      "Êxodo"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 37,
+    "references": [
       "Ex 4",
       "Ex 5",
       "Ex 6"
@@ -375,34 +435,43 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Patriarcas"
   },
   {
-    "day": 31,
+    "day": 38,
     "references": [
       "Ex 7",
-      "Ex 8",
-      "Ex 9"
+      "Ex 8"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Patriarcas"
   },
   {
-    "day": 32,
+    "day": 39,
     "references": [
-      "Ex 10",
+      "Ex 9",
+      "Ex 10"
+    ],
+    "books": [
+      "Êxodo"
+    ],
+    "period": "Patriarcas"
+  },
+  {
+    "day": 40,
+    "references": [
       "Ex 11",
       "Ex 12"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Patriarcas"
   },
   {
-    "day": 33,
+    "day": 41,
     "references": [
       "Ex 13",
       "Ex 14",
@@ -411,159 +480,195 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 34,
+    "day": 42,
     "references": [
       "Ex 16",
       "Ex 17",
-      "Ex 18",
-      "Ex 19"
+      "Ex 18"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 35,
+    "day": 43,
     "references": [
+      "Ex 19",
       "Ex 20",
-      "Ex 21",
-      "Ex 22"
+      "Ex 21"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 36,
+    "day": 44,
     "references": [
+      "Ex 22",
       "Ex 23",
-      "Ex 24",
-      "Ex 25"
+      "Ex 24"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 37,
+    "day": 45,
     "references": [
-      "Ex 26",
+      "Ex 25",
+      "Ex 26"
+    ],
+    "books": [
+      "Êxodo"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 46,
+    "references": [
       "Ex 27",
-      "Ex 28",
-      "Ex 29"
+      "Ex 28"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 38,
+    "day": 47,
     "references": [
-      "Ex 30",
+      "Ex 29",
+      "Ex 30"
+    ],
+    "books": [
+      "Êxodo"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 48,
+    "references": [
       "Ex 31",
-      "Ex 32"
+      "Ex 32",
+      "Ex 33"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 39,
+    "day": 49,
     "references": [
-      "Ex 33",
       "Ex 34",
       "Ex 35"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 40,
+    "day": 50,
     "references": [
       "Ex 36",
-      "Ex 37",
-      "Ex 38"
+      "Ex 37"
     ],
     "books": [
       "Êxodo"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 41,
+    "day": 51,
     "references": [
-      "Ex 39",
+      "Ex 38",
+      "Ex 39"
+    ],
+    "books": [
+      "Êxodo"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 52,
+    "references": [
       "Ex 40",
-      "Lv 1",
-      "Lv 2"
+      "Lv 1"
     ],
     "books": [
       "Êxodo",
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 42,
+    "day": 53,
     "references": [
+      "Lv 2",
       "Lv 3",
-      "Lv 4",
-      "Lv 5"
+      "Lv 4"
     ],
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 43,
+    "day": 54,
     "references": [
+      "Lv 5",
       "Lv 6",
-      "Lv 7",
-      "Lv 8"
+      "Lv 7"
     ],
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 44,
+    "day": 55,
     "references": [
+      "Lv 8",
       "Lv 9",
-      "Lv 10",
-      "Lv 11"
+      "Lv 10"
     ],
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 45,
+    "day": 56,
     "references": [
+      "Lv 11",
       "Lv 12",
-      "Lv 13",
+      "Lv 13"
+    ],
+    "books": [
+      "Levítico"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 57,
+    "references": [
       "Lv 14",
       "Lv 15"
     ],
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 46,
+    "day": 58,
     "references": [
       "Lv 16",
       "Lv 17",
@@ -572,37 +677,55 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 47,
+    "day": 59,
     "references": [
       "Lv 19",
-      "Lv 20",
-      "Lv 21"
+      "Lv 20"
     ],
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 48,
+    "day": 60,
     "references": [
-      "Lv 22",
+      "Lv 21",
+      "Lv 22"
+    ],
+    "books": [
+      "Levítico"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 61,
+    "references": [
       "Lv 23",
       "Lv 24"
     ],
     "books": [
       "Levítico"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 49,
+    "day": 62,
     "references": [
       "Lv 25",
-      "Lv 26",
+      "Lv 26"
+    ],
+    "books": [
+      "Levítico"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 63,
+    "references": [
       "Lv 27",
       "Nm 1"
     ],
@@ -610,34 +733,43 @@ export const chronologicalPlan: DayEntry[] = [
       "Levítico",
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 50,
+    "day": 64,
     "references": [
       "Nm 2",
-      "Nm 3",
-      "Nm 4"
+      "Nm 3"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 51,
+    "day": 65,
     "references": [
-      "Nm 5",
+      "Nm 4",
+      "Nm 5"
+    ],
+    "books": [
+      "Números"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 66,
+    "references": [
       "Nm 6",
       "Nm 7"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 52,
+    "day": 67,
     "references": [
       "Nm 8",
       "Nm 9",
@@ -646,96 +778,114 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 53,
+    "day": 68,
     "references": [
       "Nm 11",
       "Nm 12",
-      "Nm 13",
-      "Nm 14"
+      "Nm 13"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 54,
+    "day": 69,
     "references": [
-      "Nm 15",
+      "Nm 14",
+      "Nm 15"
+    ],
+    "books": [
+      "Números"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 70,
+    "references": [
       "Nm 16",
-      "Nm 17"
+      "Nm 17",
+      "Nm 18"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 55,
+    "day": 71,
     "references": [
-      "Nm 18",
       "Nm 19",
-      "Nm 20"
+      "Nm 20",
+      "Nm 21"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 56,
+    "day": 72,
     "references": [
-      "Nm 21",
       "Nm 22",
-      "Nm 23"
+      "Nm 23",
+      "Nm 24"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 57,
+    "day": 73,
     "references": [
-      "Nm 24",
       "Nm 25",
-      "Nm 26",
-      "Nm 27"
+      "Nm 26"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 58,
+    "day": 74,
     "references": [
+      "Nm 27",
       "Nm 28",
-      "Nm 29",
-      "Nm 30"
+      "Nm 29"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 59,
+    "day": 75,
     "references": [
-      "Nm 31",
+      "Nm 30",
+      "Nm 31"
+    ],
+    "books": [
+      "Números"
+    ],
+    "period": "Êxodo e Deserto"
+  },
+  {
+    "day": 76,
+    "references": [
       "Nm 32",
       "Nm 33"
     ],
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 60,
+    "day": 77,
     "references": [
       "Nm 34",
       "Nm 35",
@@ -744,98 +894,107 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Números"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 61,
+    "day": 78,
     "references": [
       "Dt 1",
       "Dt 2",
-      "Dt 3",
-      "Dt 4"
+      "Dt 3"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 62,
+    "day": 79,
     "references": [
+      "Dt 4",
       "Dt 5",
-      "Dt 6",
-      "Dt 7"
+      "Dt 6"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 63,
+    "day": 80,
     "references": [
+      "Dt 7",
       "Dt 8",
-      "Dt 9",
-      "Dt 10"
+      "Dt 9"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Êxodo e Deserto"
   },
   {
-    "day": 64,
+    "day": 81,
     "references": [
+      "Dt 10",
       "Dt 11",
-      "Dt 12",
-      "Dt 13"
+      "Dt 12"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 65,
+    "day": 82,
     "references": [
+      "Dt 13",
       "Dt 14",
-      "Dt 15",
+      "Dt 15"
+    ],
+    "books": [
+      "Deuteronômio"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 83,
+    "references": [
       "Dt 16",
-      "Dt 17"
+      "Dt 17",
+      "Dt 18"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 66,
+    "day": 84,
     "references": [
-      "Dt 18",
       "Dt 19",
-      "Dt 20"
+      "Dt 20",
+      "Dt 21"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 67,
+    "day": 85,
     "references": [
-      "Dt 21",
       "Dt 22",
-      "Dt 23"
+      "Dt 23",
+      "Dt 24"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 68,
+    "day": 86,
     "references": [
-      "Dt 24",
       "Dt 25",
       "Dt 26",
       "Dt 27"
@@ -843,49 +1002,57 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 69,
+    "day": 87,
     "references": [
       "Dt 28",
-      "Dt 29",
-      "Dt 30"
+      "Dt 29"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 70,
+    "day": 88,
     "references": [
-      "Dt 31",
+      "Dt 30",
+      "Dt 31"
+    ],
+    "books": [
+      "Deuteronômio"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 89,
+    "references": [
       "Dt 32",
-      "Dt 33"
+      "Dt 33",
+      "Dt 34"
     ],
     "books": [
       "Deuteronômio"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 71,
+    "day": 90,
     "references": [
-      "Dt 34",
       "Js 1",
-      "Js 2"
+      "Js 2",
+      "Js 3"
     ],
     "books": [
-      "Deuteronômio",
       "Josué"
     ],
-    "period": "Êxodo e Lei"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 72,
+    "day": 91,
     "references": [
-      "Js 3",
       "Js 4",
       "Js 5",
       "Js 6"
@@ -893,98 +1060,124 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 73,
+    "day": 92,
     "references": [
       "Js 7",
-      "Js 8",
-      "Js 9"
+      "Js 8"
     ],
     "books": [
       "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 74,
+    "day": 93,
     "references": [
-      "Js 10",
+      "Js 9",
+      "Js 10"
+    ],
+    "books": [
+      "Josué"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 94,
+    "references": [
       "Js 11",
-      "Js 12"
+      "Js 12",
+      "Js 13"
     ],
     "books": [
       "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 75,
+    "day": 95,
     "references": [
-      "Js 13",
       "Js 14",
       "Js 15"
     ],
     "books": [
       "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 76,
+    "day": 96,
     "references": [
       "Js 16",
       "Js 17",
-      "Js 18",
-      "Js 19"
+      "Js 18"
     ],
     "books": [
       "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 77,
+    "day": 97,
     "references": [
-      "Js 20",
+      "Js 19",
+      "Js 20"
+    ],
+    "books": [
+      "Josué"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 98,
+    "references": [
       "Js 21",
       "Js 22"
     ],
     "books": [
       "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 78,
+    "day": 99,
     "references": [
       "Js 23",
-      "Js 24",
-      "Jz 1"
+      "Js 24"
     ],
     "books": [
-      "Josué",
-      "Juízes"
+      "Josué"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 79,
+    "day": 100,
     "references": [
+      "Jz 1",
       "Jz 2",
-      "Jz 3",
-      "Jz 4"
+      "Jz 3"
     ],
     "books": [
       "Juízes"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 80,
+    "day": 101,
     "references": [
-      "Jz 5",
+      "Jz 4",
+      "Jz 5"
+    ],
+    "books": [
+      "Juízes"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 102,
+    "references": [
       "Jz 6",
       "Jz 7",
       "Jz 8"
@@ -992,10 +1185,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Juízes"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 81,
+    "day": 103,
     "references": [
       "Jz 9",
       "Jz 10",
@@ -1004,10 +1197,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Juízes"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 82,
+    "day": 104,
     "references": [
       "Jz 12",
       "Jz 13",
@@ -1016,24 +1209,33 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Juízes"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 83,
+    "day": 105,
     "references": [
       "Jz 15",
-      "Jz 16",
-      "Jz 17"
+      "Jz 16"
     ],
     "books": [
       "Juízes"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 84,
+    "day": 106,
     "references": [
-      "Jz 18",
+      "Jz 17",
+      "Jz 18"
+    ],
+    "books": [
+      "Juízes"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 107,
+    "references": [
       "Jz 19",
       "Jz 20",
       "Jz 21"
@@ -1041,49 +1243,58 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Juízes"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 85,
+    "day": 108,
     "references": [
       "Rt 1",
-      "Rt 2",
-      "Rt 3"
+      "Rt 2"
     ],
     "books": [
       "Rute"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 86,
+    "day": 109,
     "references": [
+      "Rt 3",
       "Rt 4",
-      "1Sm 1",
-      "1Sm 2"
+      "1Sm 1"
     ],
     "books": [
       "Rute",
       "1 Samuel"
     ],
-    "period": "Conquista e Juízes"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 87,
+    "day": 110,
     "references": [
-      "1Sm 3",
-      "1Sm 4",
-      "1Sm 5"
+      "1Sm 2",
+      "1Sm 3"
     ],
     "books": [
       "1 Samuel"
     ],
-    "period": "Reino Unido"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 88,
+    "day": 111,
     "references": [
-      "1Sm 6",
+      "1Sm 4",
+      "1Sm 5",
+      "1Sm 6"
+    ],
+    "books": [
+      "1 Samuel"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 112,
+    "references": [
       "1Sm 7",
       "1Sm 8",
       "1Sm 9"
@@ -1091,10 +1302,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "1 Samuel"
     ],
-    "period": "Reino Unido"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 89,
+    "day": 113,
     "references": [
       "1Sm 10",
       "1Sm 11",
@@ -1103,24 +1314,33 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "1 Samuel"
     ],
-    "period": "Reino Unido"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 90,
+    "day": 114,
     "references": [
       "1Sm 13",
-      "1Sm 14",
-      "1Sm 15"
+      "1Sm 14"
     ],
     "books": [
       "1 Samuel"
     ],
-    "period": "Reino Unido"
+    "period": "Lei e Conquista"
   },
   {
-    "day": 91,
+    "day": 115,
     "references": [
-      "1Sm 16",
+      "1Sm 15",
+      "1Sm 16"
+    ],
+    "books": [
+      "1 Samuel"
+    ],
+    "period": "Lei e Conquista"
+  },
+  {
+    "day": 116,
+    "references": [
       "1Sm 17",
       "1Sm 18"
     ],
@@ -1130,12 +1350,10 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 92,
+    "day": 117,
     "references": [
       "1Sm 19",
-      "1Sm 20",
-      "1Sm 21",
-      "1Sm 22"
+      "1Sm 20"
     ],
     "books": [
       "1 Samuel"
@@ -1143,11 +1361,36 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 93,
+    "day": 118,
+    "references": [
+      "1Sm 21",
+      "1Sm 22",
+      "Sl 34"
+    ],
+    "books": [
+      "1 Samuel",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 119,
     "references": [
       "1Sm 23",
       "1Sm 24",
-      "1Sm 25"
+      "Sl 57"
+    ],
+    "books": [
+      "1 Samuel",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 120,
+    "references": [
+      "1Sm 25",
+      "1Sm 26"
     ],
     "books": [
       "1 Samuel"
@@ -1155,11 +1398,11 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 94,
+    "day": 121,
     "references": [
-      "1Sm 26",
       "1Sm 27",
-      "1Sm 28"
+      "1Sm 28",
+      "1Sm 29"
     ],
     "books": [
       "1 Samuel"
@@ -1167,24 +1410,35 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 95,
+    "day": 122,
     "references": [
-      "1Sm 29",
       "1Sm 30",
-      "1Sm 31"
+      "1Sm 31",
+      "1Cr 10"
     ],
     "books": [
-      "1 Samuel"
+      "1 Samuel",
+      "1 Crônicas"
     ],
     "period": "Reino Unido"
   },
   {
-    "day": 96,
+    "day": 123,
     "references": [
       "2Sm 1",
-      "2Sm 2",
+      "2Sm 2"
+    ],
+    "books": [
+      "2 Samuel"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 124,
+    "references": [
       "2Sm 3",
-      "2Sm 4"
+      "2Sm 4",
+      "2Sm 5"
     ],
     "books": [
       "2 Samuel"
@@ -1192,120 +1446,8 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 97,
+    "day": 125,
     "references": [
-      "2Sm 5",
-      "2Sm 6",
-      "2Sm 7"
-    ],
-    "books": [
-      "2 Samuel"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 98,
-    "references": [
-      "2Sm 8",
-      "2Sm 9",
-      "2Sm 10"
-    ],
-    "books": [
-      "2 Samuel"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 99,
-    "references": [
-      "2Sm 11",
-      "2Sm 12",
-      "2Sm 13"
-    ],
-    "books": [
-      "2 Samuel"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 100,
-    "references": [
-      "2Sm 14",
-      "2Sm 15",
-      "2Sm 16",
-      "2Sm 17"
-    ],
-    "books": [
-      "2 Samuel"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 101,
-    "references": [
-      "2Sm 18",
-      "2Sm 19",
-      "2Sm 20"
-    ],
-    "books": [
-      "2 Samuel"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 102,
-    "references": [
-      "2Sm 21",
-      "2Sm 22",
-      "2Sm 23"
-    ],
-    "books": [
-      "2 Samuel"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 103,
-    "references": [
-      "2Sm 24",
-      "1Cr 1",
-      "1Cr 2",
-      "1Cr 3"
-    ],
-    "books": [
-      "2 Samuel",
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 104,
-    "references": [
-      "1Cr 4",
-      "1Cr 5",
-      "1Cr 6"
-    ],
-    "books": [
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 105,
-    "references": [
-      "1Cr 7",
-      "1Cr 8",
-      "1Cr 9"
-    ],
-    "books": [
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 106,
-    "references": [
-      "1Cr 10",
       "1Cr 11",
       "1Cr 12"
     ],
@@ -1315,9 +1457,22 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 107,
+    "day": 126,
     "references": [
+      "2Sm 6",
       "1Cr 13",
+      "Sl 68"
+    ],
+    "books": [
+      "2 Samuel",
+      "1 Crônicas",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 127,
+    "references": [
       "1Cr 14",
       "1Cr 15",
       "1Cr 16"
@@ -1328,60 +1483,12 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 108,
-    "references": [
-      "1Cr 17",
-      "1Cr 18",
-      "1Cr 19"
-    ],
-    "books": [
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 109,
-    "references": [
-      "1Cr 20",
-      "1Cr 21",
-      "1Cr 22"
-    ],
-    "books": [
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 110,
-    "references": [
-      "1Cr 23",
-      "1Cr 24",
-      "1Cr 25"
-    ],
-    "books": [
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 111,
-    "references": [
-      "1Cr 26",
-      "1Cr 27",
-      "1Cr 28",
-      "1Cr 29"
-    ],
-    "books": [
-      "1 Crônicas"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 112,
+    "day": 128,
     "references": [
       "Sl 1",
       "Sl 2",
-      "Sl 3"
+      "Sl 15",
+      "Sl 22"
     ],
     "books": [
       "Salmos"
@@ -1389,8 +1496,63 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 113,
+    "day": 129,
     "references": [
+      "Sl 23",
+      "Sl 24",
+      "Sl 25",
+      "Sl 29"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 130,
+    "references": [
+      "2Sm 7",
+      "1Cr 17",
+      "Sl 27"
+    ],
+    "books": [
+      "2 Samuel",
+      "1 Crônicas",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 131,
+    "references": [
+      "2Sm 8",
+      "2Sm 9",
+      "1Cr 18"
+    ],
+    "books": [
+      "2 Samuel",
+      "1 Crônicas"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 132,
+    "references": [
+      "2Sm 10",
+      "1Cr 19",
+      "Sl 20"
+    ],
+    "books": [
+      "2 Samuel",
+      "1 Crônicas",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 133,
+    "references": [
+      "Sl 3",
       "Sl 4",
       "Sl 5",
       "Sl 6"
@@ -1401,11 +1563,12 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 114,
+    "day": 134,
     "references": [
       "Sl 7",
       "Sl 8",
-      "Sl 9"
+      "Sl 9",
+      "Sl 10"
     ],
     "books": [
       "Salmos"
@@ -1413,12 +1576,12 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 115,
+    "day": 135,
     "references": [
-      "Sl 10",
       "Sl 11",
       "Sl 12",
-      "Sl 13"
+      "Sl 13",
+      "Sl 14"
     ],
     "books": [
       "Salmos"
@@ -1426,22 +1589,10 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 116,
+    "day": 136,
     "references": [
-      "Sl 14",
-      "Sl 15",
-      "Sl 16"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 117,
-    "references": [
+      "Sl 16",
       "Sl 17",
-      "Sl 18",
       "Sl 19"
     ],
     "books": [
@@ -1450,11 +1601,11 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 118,
+    "day": 137,
     "references": [
-      "Sl 20",
       "Sl 21",
-      "Sl 22"
+      "Sl 26",
+      "Sl 28"
     ],
     "books": [
       "Salmos"
@@ -1462,36 +1613,11 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 119,
+    "day": 138,
     "references": [
-      "Sl 23",
-      "Sl 24",
-      "Sl 25",
-      "Sl 26"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 120,
-    "references": [
-      "Sl 27",
-      "Sl 28",
-      "Sl 29"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 121,
-    "references": [
-      "Sl 30",
       "Sl 31",
-      "Sl 32"
+      "Sl 35",
+      "Sl 36"
     ],
     "books": [
       "Salmos"
@@ -1499,21 +1625,8 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 122,
+    "day": 139,
     "references": [
-      "Sl 33",
-      "Sl 34",
-      "Sl 35"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 123,
-    "references": [
-      "Sl 36",
       "Sl 37",
       "Sl 38",
       "Sl 39"
@@ -1524,11 +1637,12 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 124,
+    "day": 140,
     "references": [
       "Sl 40",
       "Sl 41",
-      "Sl 42"
+      "Sl 42",
+      "Sl 43"
     ],
     "books": [
       "Salmos"
@@ -1536,23 +1650,12 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 125,
+    "day": 141,
     "references": [
-      "Sl 43",
       "Sl 44",
-      "Sl 45"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 126,
-    "references": [
+      "Sl 45",
       "Sl 46",
-      "Sl 47",
-      "Sl 48"
+      "Sl 47"
     ],
     "books": [
       "Salmos"
@@ -1560,24 +1663,24 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 127,
+    "day": 142,
     "references": [
+      "Sl 48",
       "Sl 49",
-      "Sl 50",
+      "Sl 50"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 143,
+    "references": [
       "Sl 51",
-      "Sl 52"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 128,
-    "references": [
+      "Sl 52",
       "Sl 53",
-      "Sl 54",
-      "Sl 55"
+      "Sl 54"
     ],
     "books": [
       "Salmos"
@@ -1585,10 +1688,10 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 129,
+    "day": 144,
     "references": [
+      "Sl 55",
       "Sl 56",
-      "Sl 57",
       "Sl 58"
     ],
     "books": [
@@ -1597,11 +1700,12 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 130,
+    "day": 145,
     "references": [
       "Sl 59",
       "Sl 60",
-      "Sl 61"
+      "Sl 61",
+      "Sl 62"
     ],
     "books": [
       "Salmos"
@@ -1609,24 +1713,13 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 131,
+    "day": 146,
     "references": [
-      "Sl 62",
       "Sl 63",
       "Sl 64",
-      "Sl 65"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Reino Unido"
-  },
-  {
-    "day": 132,
-    "references": [
+      "Sl 65",
       "Sl 66",
-      "Sl 67",
-      "Sl 68"
+      "Sl 67"
     ],
     "books": [
       "Salmos"
@@ -1634,7 +1727,127 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 133,
+    "day": 147,
+    "references": [
+      "2Sm 11",
+      "2Sm 12",
+      "Sl 32"
+    ],
+    "books": [
+      "2 Samuel",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 148,
+    "references": [
+      "2Sm 13",
+      "2Sm 14"
+    ],
+    "books": [
+      "2 Samuel"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 149,
+    "references": [
+      "2Sm 15",
+      "2Sm 16",
+      "Sl 63"
+    ],
+    "books": [
+      "2 Samuel",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 150,
+    "references": [
+      "2Sm 17",
+      "2Sm 18"
+    ],
+    "books": [
+      "2 Samuel"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 151,
+    "references": [
+      "2Sm 19",
+      "2Sm 20"
+    ],
+    "books": [
+      "2 Samuel"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 152,
+    "references": [
+      "2Sm 21",
+      "2Sm 22",
+      "Sl 18"
+    ],
+    "books": [
+      "2 Samuel",
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 153,
+    "references": [
+      "2Sm 23",
+      "2Sm 24",
+      "1Cr 21"
+    ],
+    "books": [
+      "2 Samuel",
+      "1 Crônicas"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 154,
+    "references": [
+      "1Cr 22",
+      "1Cr 23",
+      "1Cr 24"
+    ],
+    "books": [
+      "1 Crônicas"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 155,
+    "references": [
+      "1Cr 25",
+      "1Cr 26",
+      "1Cr 27"
+    ],
+    "books": [
+      "1 Crônicas"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 156,
+    "references": [
+      "1Cr 28",
+      "1Cr 29"
+    ],
+    "books": [
+      "1 Crônicas"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 157,
     "references": [
       "Sl 69",
       "Sl 70",
@@ -1646,12 +1859,11 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 134,
+    "day": 158,
     "references": [
       "Sl 72",
       "Sl 73",
-      "Sl 74",
-      "Sl 75"
+      "Sl 74"
     ],
     "books": [
       "Salmos"
@@ -1659,302 +1871,162 @@ export const chronologicalPlan: DayEntry[] = [
     "period": "Reino Unido"
   },
   {
-    "day": 135,
+    "day": 159,
     "references": [
+      "Sl 75",
       "Sl 76",
-      "Sl 77",
+      "Sl 77"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Unido"
+  },
+  {
+    "day": 160,
+    "references": [
       "Sl 78"
     ],
     "books": [
       "Salmos"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 136,
+    "day": 161,
     "references": [
       "Sl 79",
       "Sl 80",
-      "Sl 81"
+      "Sl 81",
+      "Sl 82"
     ],
     "books": [
       "Salmos"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 137,
+    "day": 162,
     "references": [
-      "Sl 82",
       "Sl 83",
-      "Sl 84"
+      "Sl 84",
+      "Sl 85"
     ],
     "books": [
       "Salmos"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 138,
+    "day": 163,
     "references": [
-      "Sl 85",
       "Sl 86",
       "Sl 87",
-      "Sl 88"
+      "Sl 88",
+      "Sl 89"
     ],
     "books": [
       "Salmos"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 139,
+    "day": 164,
     "references": [
-      "Sl 89",
-      "Sl 90",
-      "Sl 91"
+      "1Rs 1",
+      "1Rs 2"
     ],
     "books": [
-      "Salmos"
+      "1 Reis"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 140,
+    "day": 165,
     "references": [
-      "Sl 92",
-      "Sl 93",
-      "Sl 94"
+      "1Rs 3",
+      "2Cr 1"
     ],
     "books": [
-      "Salmos"
+      "1 Reis",
+      "2 Crônicas"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 141,
+    "day": 166,
     "references": [
-      "Sl 95",
-      "Sl 96",
-      "Sl 97"
+      "1Rs 4",
+      "1Rs 5",
+      "2Cr 2"
     ],
     "books": [
-      "Salmos"
+      "1 Reis",
+      "2 Crônicas"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 142,
+    "day": 167,
     "references": [
-      "Sl 98",
-      "Sl 99",
-      "Sl 100",
-      "Sl 101"
+      "1Rs 6",
+      "2Cr 3"
     ],
     "books": [
-      "Salmos"
+      "1 Reis",
+      "2 Crônicas"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 143,
+    "day": 168,
     "references": [
-      "Sl 102",
-      "Sl 103",
-      "Sl 104"
+      "1Rs 7",
+      "2Cr 4"
     ],
     "books": [
-      "Salmos"
+      "1 Reis",
+      "2 Crônicas"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 144,
+    "day": 169,
     "references": [
-      "Sl 105",
-      "Sl 106",
-      "Sl 107"
+      "1Rs 8",
+      "2Cr 5"
     ],
     "books": [
-      "Salmos"
+      "1 Reis",
+      "2 Crônicas"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 145,
+    "day": 170,
     "references": [
-      "Sl 108",
-      "Sl 109",
-      "Sl 110"
+      "2Cr 6",
+      "2Cr 7"
     ],
     "books": [
-      "Salmos"
+      "2 Crônicas"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 146,
+    "day": 171,
     "references": [
-      "Sl 111",
-      "Sl 112",
-      "Sl 113",
-      "Sl 114"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 147,
-    "references": [
-      "Sl 115",
-      "Sl 116",
-      "Sl 117"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 148,
-    "references": [
-      "Sl 118",
-      "Sl 119",
-      "Sl 120"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 149,
-    "references": [
-      "Sl 121",
-      "Sl 122",
-      "Sl 123"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 150,
-    "references": [
-      "Sl 124",
-      "Sl 125",
-      "Sl 126",
-      "Sl 127"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 151,
-    "references": [
-      "Sl 128",
-      "Sl 129",
-      "Sl 130"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 152,
-    "references": [
-      "Sl 131",
-      "Sl 132",
-      "Sl 133"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 153,
-    "references": [
-      "Sl 134",
-      "Sl 135",
-      "Sl 136"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 154,
-    "references": [
-      "Sl 137",
-      "Sl 138",
-      "Sl 139",
-      "Sl 140"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 155,
-    "references": [
-      "Sl 141",
-      "Sl 142",
-      "Sl 143"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 156,
-    "references": [
-      "Sl 144",
-      "Sl 145",
-      "Sl 146"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 157,
-    "references": [
-      "Sl 147",
-      "Sl 148",
-      "Sl 149"
-    ],
-    "books": [
-      "Salmos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 158,
-    "references": [
-      "Sl 150",
       "Pv 1",
       "Pv 2",
       "Pv 3"
     ],
     "books": [
-      "Salmos",
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 159,
+    "day": 172,
     "references": [
       "Pv 4",
       "Pv 5",
@@ -1963,10 +2035,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 160,
+    "day": 173,
     "references": [
       "Pv 7",
       "Pv 8",
@@ -1975,10 +2047,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 161,
+    "day": 174,
     "references": [
       "Pv 10",
       "Pv 11",
@@ -1987,1276 +2059,430 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 162,
+    "day": 175,
     "references": [
       "Pv 13",
       "Pv 14",
-      "Pv 15",
-      "Pv 16"
+      "Pv 15"
     ],
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Reino Unido"
   },
   {
-    "day": 163,
+    "day": 176,
     "references": [
+      "Pv 16",
       "Pv 17",
-      "Pv 18",
-      "Pv 19"
+      "Pv 18"
     ],
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Sabedoria de Salomão"
   },
   {
-    "day": 164,
+    "day": 177,
     "references": [
+      "Pv 19",
       "Pv 20",
-      "Pv 21",
-      "Pv 22"
+      "Pv 21"
     ],
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Sabedoria de Salomão"
   },
   {
-    "day": 165,
+    "day": 178,
     "references": [
+      "Pv 22",
       "Pv 23",
-      "Pv 24",
-      "Pv 25"
+      "Pv 24"
     ],
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
+    "period": "Sabedoria de Salomão"
   },
   {
-    "day": 166,
+    "day": 179,
     "references": [
+      "Pv 25",
       "Pv 26",
-      "Pv 27",
+      "Pv 27"
+    ],
+    "books": [
+      "Provérbios"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 180,
+    "references": [
       "Pv 28",
       "Pv 29"
     ],
     "books": [
       "Provérbios"
     ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 167,
-    "references": [
-      "Pv 30",
-      "Pv 31",
-      "Ec 1"
-    ],
-    "books": [
-      "Provérbios",
-      "Eclesiastes"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 168,
-    "references": [
-      "Ec 2",
-      "Ec 3",
-      "Ec 4"
-    ],
-    "books": [
-      "Eclesiastes"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 169,
-    "references": [
-      "Ec 5",
-      "Ec 6",
-      "Ec 7",
-      "Ec 8"
-    ],
-    "books": [
-      "Eclesiastes"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 170,
-    "references": [
-      "Ec 9",
-      "Ec 10",
-      "Ec 11"
-    ],
-    "books": [
-      "Eclesiastes"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 171,
-    "references": [
-      "Ec 12",
-      "Ct 1",
-      "Ct 2"
-    ],
-    "books": [
-      "Eclesiastes",
-      "Cânticos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 172,
-    "references": [
-      "Ct 3",
-      "Ct 4",
-      "Ct 5"
-    ],
-    "books": [
-      "Cânticos"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 173,
-    "references": [
-      "Ct 6",
-      "Ct 7",
-      "Ct 8",
-      "1Rs 1"
-    ],
-    "books": [
-      "Cânticos",
-      "1 Reis"
-    ],
-    "period": "Sabedoria e Poesia"
-  },
-  {
-    "day": 174,
-    "references": [
-      "1Rs 2",
-      "1Rs 3",
-      "1Rs 4"
-    ],
-    "books": [
-      "1 Reis"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 175,
-    "references": [
-      "1Rs 5",
-      "1Rs 6",
-      "1Rs 7"
-    ],
-    "books": [
-      "1 Reis"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 176,
-    "references": [
-      "1Rs 8",
-      "1Rs 9",
-      "1Rs 10"
-    ],
-    "books": [
-      "1 Reis"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 177,
-    "references": [
-      "1Rs 11",
-      "1Rs 12",
-      "1Rs 13",
-      "1Rs 14"
-    ],
-    "books": [
-      "1 Reis"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 178,
-    "references": [
-      "1Rs 15",
-      "1Rs 16",
-      "1Rs 17"
-    ],
-    "books": [
-      "1 Reis"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 179,
-    "references": [
-      "1Rs 18",
-      "1Rs 19",
-      "1Rs 20"
-    ],
-    "books": [
-      "1 Reis"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 180,
-    "references": [
-      "1Rs 21",
-      "1Rs 22",
-      "2Rs 1"
-    ],
-    "books": [
-      "1 Reis",
-      "2 Reis"
-    ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 181,
     "references": [
-      "2Rs 2",
-      "2Rs 3",
-      "2Rs 4",
-      "2Rs 5"
+      "Pv 30",
+      "Pv 31"
     ],
     "books": [
-      "2 Reis"
+      "Provérbios"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 182,
     "references": [
-      "2Rs 6",
-      "2Rs 7",
-      "2Rs 8"
+      "Ec 1",
+      "Ec 2",
+      "Ec 3"
     ],
     "books": [
-      "2 Reis"
+      "Eclesiastes"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 183,
     "references": [
-      "2Rs 9",
-      "2Rs 10",
-      "2Rs 11"
+      "Ec 4",
+      "Ec 5",
+      "Ec 6"
     ],
     "books": [
-      "2 Reis"
+      "Eclesiastes"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 184,
     "references": [
-      "2Rs 12",
-      "2Rs 13",
-      "2Rs 14"
+      "Ec 7",
+      "Ec 8",
+      "Ec 9"
     ],
     "books": [
-      "2 Reis"
+      "Eclesiastes"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 185,
     "references": [
-      "2Rs 15",
-      "2Rs 16",
-      "2Rs 17",
-      "2Rs 18"
+      "Ec 10",
+      "Ec 11",
+      "Ec 12"
     ],
     "books": [
-      "2 Reis"
+      "Eclesiastes"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 186,
     "references": [
-      "2Rs 19",
-      "2Rs 20",
-      "2Rs 21"
+      "Ct 1",
+      "Ct 2",
+      "Ct 3"
     ],
     "books": [
-      "2 Reis"
+      "Cânticos"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 187,
     "references": [
-      "2Rs 22",
-      "2Rs 23",
-      "2Rs 24"
+      "Ct 4",
+      "Ct 5",
+      "Ct 6"
     ],
     "books": [
-      "2 Reis"
+      "Cânticos"
     ],
-    "period": "Reino Dividido"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 188,
     "references": [
-      "2Rs 25",
-      "2Cr 1",
-      "2Cr 2"
+      "Ct 7",
+      "Ct 8"
+    ],
+    "books": [
+      "Cânticos"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 189,
+    "references": [
+      "1Rs 9",
+      "2Cr 8"
+    ],
+    "books": [
+      "1 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 190,
+    "references": [
+      "1Rs 10",
+      "1Rs 11",
+      "2Cr 9"
+    ],
+    "books": [
+      "1 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 191,
+    "references": [
+      "1Rs 12",
+      "2Cr 10",
+      "2Cr 11"
+    ],
+    "books": [
+      "1 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 192,
+    "references": [
+      "1Rs 13",
+      "1Rs 14",
+      "2Cr 12"
+    ],
+    "books": [
+      "1 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 193,
+    "references": [
+      "1Rs 15",
+      "2Cr 13",
+      "2Cr 14"
+    ],
+    "books": [
+      "1 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 194,
+    "references": [
+      "2Cr 15",
+      "2Cr 16",
+      "1Rs 16"
+    ],
+    "books": [
+      "2 Crônicas",
+      "1 Reis"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 195,
+    "references": [
+      "1Rs 17",
+      "1Rs 18",
+      "1Rs 19"
+    ],
+    "books": [
+      "1 Reis"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 196,
+    "references": [
+      "1Rs 20",
+      "1Rs 21"
+    ],
+    "books": [
+      "1 Reis"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 197,
+    "references": [
+      "1Rs 22",
+      "2Cr 18"
+    ],
+    "books": [
+      "1 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 198,
+    "references": [
+      "2Cr 19",
+      "2Cr 20"
+    ],
+    "books": [
+      "2 Crônicas"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 199,
+    "references": [
+      "2Rs 1",
+      "2Rs 2"
+    ],
+    "books": [
+      "2 Reis"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 200,
+    "references": [
+      "2Rs 3",
+      "2Rs 4"
+    ],
+    "books": [
+      "2 Reis"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 201,
+    "references": [
+      "2Rs 5",
+      "2Rs 6"
+    ],
+    "books": [
+      "2 Reis"
+    ],
+    "period": "Sabedoria de Salomão"
+  },
+  {
+    "day": 202,
+    "references": [
+      "2Rs 7",
+      "2Rs 8",
+      "2Cr 21"
     ],
     "books": [
       "2 Reis",
       "2 Crônicas"
     ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 189,
-    "references": [
-      "2Cr 3",
-      "2Cr 4",
-      "2Cr 5",
-      "2Cr 6"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 190,
-    "references": [
-      "2Cr 7",
-      "2Cr 8",
-      "2Cr 9"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 191,
-    "references": [
-      "2Cr 10",
-      "2Cr 11",
-      "2Cr 12"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 192,
-    "references": [
-      "2Cr 13",
-      "2Cr 14",
-      "2Cr 15"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 193,
-    "references": [
-      "2Cr 16",
-      "2Cr 17",
-      "2Cr 18",
-      "2Cr 19"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 194,
-    "references": [
-      "2Cr 20",
-      "2Cr 21",
-      "2Cr 22"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 195,
-    "references": [
-      "2Cr 23",
-      "2Cr 24",
-      "2Cr 25"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 196,
-    "references": [
-      "2Cr 26",
-      "2Cr 27",
-      "2Cr 28"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 197,
-    "references": [
-      "2Cr 29",
-      "2Cr 30",
-      "2Cr 31",
-      "2Cr 32"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 198,
-    "references": [
-      "2Cr 33",
-      "2Cr 34",
-      "2Cr 35"
-    ],
-    "books": [
-      "2 Crônicas"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 199,
-    "references": [
-      "2Cr 36",
-      "Is 1",
-      "Is 2"
-    ],
-    "books": [
-      "2 Crônicas",
-      "Isaías"
-    ],
-    "period": "Reino Dividido"
-  },
-  {
-    "day": 200,
-    "references": [
-      "Is 3",
-      "Is 4",
-      "Is 5",
-      "Is 6"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 201,
-    "references": [
-      "Is 7",
-      "Is 8",
-      "Is 9"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 202,
-    "references": [
-      "Is 10",
-      "Is 11",
-      "Is 12"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 203,
     "references": [
-      "Is 13",
-      "Is 14",
-      "Is 15"
+      "2Rs 9",
+      "2Rs 10"
     ],
     "books": [
-      "Isaías"
+      "2 Reis"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 204,
     "references": [
-      "Is 16",
-      "Is 17",
-      "Is 18",
-      "Is 19"
+      "2Rs 11",
+      "2Cr 22",
+      "2Cr 23"
     ],
     "books": [
-      "Isaías"
+      "2 Reis",
+      "2 Crônicas"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 205,
     "references": [
-      "Is 20",
-      "Is 21",
-      "Is 22"
+      "2Rs 12",
+      "2Cr 24"
     ],
     "books": [
-      "Isaías"
+      "2 Reis",
+      "2 Crônicas"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 206,
     "references": [
-      "Is 23",
-      "Is 24",
-      "Is 25"
+      "Jl 1",
+      "Jl 2",
+      "Jl 3"
     ],
     "books": [
-      "Isaías"
+      "Joel"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 207,
     "references": [
-      "Is 26",
-      "Is 27",
-      "Is 28"
+      "Am 1",
+      "Am 2",
+      "Am 3"
     ],
     "books": [
-      "Isaías"
+      "Amós"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 208,
     "references": [
-      "Is 29",
-      "Is 30",
-      "Is 31",
-      "Is 32"
+      "Am 4",
+      "Am 5",
+      "Am 6"
     ],
     "books": [
-      "Isaías"
+      "Amós"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 209,
     "references": [
-      "Is 33",
-      "Is 34",
-      "Is 35"
+      "Am 7",
+      "Am 8",
+      "Am 9"
     ],
     "books": [
-      "Isaías"
+      "Amós"
     ],
-    "period": "Profetas Maiores"
+    "period": "Sabedoria de Salomão"
   },
   {
     "day": 210,
     "references": [
-      "Is 36",
-      "Is 37",
-      "Is 38"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 211,
-    "references": [
-      "Is 39",
-      "Is 40",
-      "Is 41"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 212,
-    "references": [
-      "Is 42",
-      "Is 43",
-      "Is 44",
-      "Is 45"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 213,
-    "references": [
-      "Is 46",
-      "Is 47",
-      "Is 48"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 214,
-    "references": [
-      "Is 49",
-      "Is 50",
-      "Is 51"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 215,
-    "references": [
-      "Is 52",
-      "Is 53",
-      "Is 54"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 216,
-    "references": [
-      "Is 55",
-      "Is 56",
-      "Is 57",
-      "Is 58"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 217,
-    "references": [
-      "Is 59",
-      "Is 60",
-      "Is 61"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 218,
-    "references": [
-      "Is 62",
-      "Is 63",
-      "Is 64"
-    ],
-    "books": [
-      "Isaías"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 219,
-    "references": [
-      "Is 65",
-      "Is 66",
-      "Jr 1"
-    ],
-    "books": [
-      "Isaías",
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 220,
-    "references": [
-      "Jr 2",
-      "Jr 3",
-      "Jr 4",
-      "Jr 5"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 221,
-    "references": [
-      "Jr 6",
-      "Jr 7",
-      "Jr 8"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 222,
-    "references": [
-      "Jr 9",
-      "Jr 10",
-      "Jr 11"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 223,
-    "references": [
-      "Jr 12",
-      "Jr 13",
-      "Jr 14"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 224,
-    "references": [
-      "Jr 15",
-      "Jr 16",
-      "Jr 17",
-      "Jr 18"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 225,
-    "references": [
-      "Jr 19",
-      "Jr 20",
-      "Jr 21"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 226,
-    "references": [
-      "Jr 22",
-      "Jr 23",
-      "Jr 24"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 227,
-    "references": [
-      "Jr 25",
-      "Jr 26",
-      "Jr 27"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 228,
-    "references": [
-      "Jr 28",
-      "Jr 29",
-      "Jr 30",
-      "Jr 31"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 229,
-    "references": [
-      "Jr 32",
-      "Jr 33",
-      "Jr 34"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 230,
-    "references": [
-      "Jr 35",
-      "Jr 36",
-      "Jr 37"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 231,
-    "references": [
-      "Jr 38",
-      "Jr 39",
-      "Jr 40"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 232,
-    "references": [
-      "Jr 41",
-      "Jr 42",
-      "Jr 43",
-      "Jr 44"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 233,
-    "references": [
-      "Jr 45",
-      "Jr 46",
-      "Jr 47"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 234,
-    "references": [
-      "Jr 48",
-      "Jr 49",
-      "Jr 50"
-    ],
-    "books": [
-      "Jeremias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 235,
-    "references": [
-      "Jr 51",
-      "Jr 52",
-      "Lm 1",
-      "Lm 2"
-    ],
-    "books": [
-      "Jeremias",
-      "Lamentações"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 236,
-    "references": [
-      "Lm 3",
-      "Lm 4",
-      "Lm 5"
-    ],
-    "books": [
-      "Lamentações"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 237,
-    "references": [
-      "Ez 1",
-      "Ez 2",
-      "Ez 3"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 238,
-    "references": [
-      "Ez 4",
-      "Ez 5",
-      "Ez 6"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 239,
-    "references": [
-      "Ez 7",
-      "Ez 8",
-      "Ez 9",
-      "Ez 10"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 240,
-    "references": [
-      "Ez 11",
-      "Ez 12",
-      "Ez 13"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 241,
-    "references": [
-      "Ez 14",
-      "Ez 15",
-      "Ez 16"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 242,
-    "references": [
-      "Ez 17",
-      "Ez 18",
-      "Ez 19"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 243,
-    "references": [
-      "Ez 20",
-      "Ez 21",
-      "Ez 22",
-      "Ez 23"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 244,
-    "references": [
-      "Ez 24",
-      "Ez 25",
-      "Ez 26"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 245,
-    "references": [
-      "Ez 27",
-      "Ez 28",
-      "Ez 29"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 246,
-    "references": [
-      "Ez 30",
-      "Ez 31",
-      "Ez 32"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 247,
-    "references": [
-      "Ez 33",
-      "Ez 34",
-      "Ez 35",
-      "Ez 36"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 248,
-    "references": [
-      "Ez 37",
-      "Ez 38",
-      "Ez 39"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 249,
-    "references": [
-      "Ez 40",
-      "Ez 41",
-      "Ez 42"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 250,
-    "references": [
-      "Ez 43",
-      "Ez 44",
-      "Ez 45"
-    ],
-    "books": [
-      "Ezequiel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 251,
-    "references": [
-      "Ez 46",
-      "Ez 47",
-      "Ez 48",
-      "Dn 1"
-    ],
-    "books": [
-      "Ezequiel",
-      "Daniel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 252,
-    "references": [
-      "Dn 2",
-      "Dn 3",
-      "Dn 4"
-    ],
-    "books": [
-      "Daniel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 253,
-    "references": [
-      "Dn 5",
-      "Dn 6",
-      "Dn 7"
-    ],
-    "books": [
-      "Daniel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 254,
-    "references": [
-      "Dn 8",
-      "Dn 9",
-      "Dn 10"
-    ],
-    "books": [
-      "Daniel"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 255,
-    "references": [
-      "Dn 11",
-      "Dn 12",
-      "Os 1",
-      "Os 2"
-    ],
-    "books": [
-      "Daniel",
-      "Oséias"
-    ],
-    "period": "Profetas Maiores"
-  },
-  {
-    "day": 256,
-    "references": [
-      "Os 3",
-      "Os 4",
-      "Os 5"
-    ],
-    "books": [
-      "Oséias"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 257,
-    "references": [
-      "Os 6",
-      "Os 7",
-      "Os 8"
-    ],
-    "books": [
-      "Oséias"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 258,
-    "references": [
-      "Os 9",
-      "Os 10",
-      "Os 11"
-    ],
-    "books": [
-      "Oséias"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 259,
-    "references": [
-      "Os 12",
-      "Os 13",
-      "Os 14",
-      "Jl 1"
-    ],
-    "books": [
-      "Oséias",
-      "Joel"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 260,
-    "references": [
-      "Jl 2",
-      "Jl 3",
-      "Am 1"
-    ],
-    "books": [
-      "Joel",
-      "Amós"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 261,
-    "references": [
-      "Am 2",
-      "Am 3",
-      "Am 4"
-    ],
-    "books": [
-      "Amós"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 262,
-    "references": [
-      "Am 5",
-      "Am 6",
-      "Am 7"
-    ],
-    "books": [
-      "Amós"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 263,
-    "references": [
-      "Am 8",
-      "Am 9",
-      "Ob 1",
-      "Jn 1"
-    ],
-    "books": [
-      "Amós",
-      "Obadias",
-      "Jonas"
-    ],
-    "period": "Profetas Menores"
-  },
-  {
-    "day": 264,
-    "references": [
+      "Jn 1",
       "Jn 2",
       "Jn 3",
       "Jn 4"
@@ -3264,10 +2490,110 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Jonas"
     ],
-    "period": "Profetas Menores"
+    "period": "Sabedoria de Salomão"
   },
   {
-    "day": 265,
+    "day": 211,
+    "references": [
+      "2Rs 13",
+      "2Rs 14",
+      "2Cr 25"
+    ],
+    "books": [
+      "2 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 212,
+    "references": [
+      "Os 1",
+      "Os 2",
+      "Os 3",
+      "Os 4"
+    ],
+    "books": [
+      "Oséias"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 213,
+    "references": [
+      "Os 5",
+      "Os 6",
+      "Os 7"
+    ],
+    "books": [
+      "Oséias"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 214,
+    "references": [
+      "Os 8",
+      "Os 9",
+      "Os 10"
+    ],
+    "books": [
+      "Oséias"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 215,
+    "references": [
+      "Os 11",
+      "Os 12",
+      "Os 13",
+      "Os 14"
+    ],
+    "books": [
+      "Oséias"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 216,
+    "references": [
+      "2Rs 15",
+      "2Cr 26",
+      "2Cr 27"
+    ],
+    "books": [
+      "2 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 217,
+    "references": [
+      "Is 1",
+      "Is 2",
+      "Is 3"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 218,
+    "references": [
+      "Is 4",
+      "Is 5",
+      "Is 6"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 219,
     "references": [
       "Mq 1",
       "Mq 2",
@@ -3276,10 +2602,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Miquéias"
     ],
-    "period": "Profetas Menores"
+    "period": "Reino Dividido e Profetas"
   },
   {
-    "day": 266,
+    "day": 220,
     "references": [
       "Mq 4",
       "Mq 5",
@@ -3289,10 +2615,426 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Miquéias"
     ],
-    "period": "Profetas Menores"
+    "period": "Reino Dividido e Profetas"
   },
   {
-    "day": 267,
+    "day": 221,
+    "references": [
+      "Is 7",
+      "Is 8",
+      "Is 9"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 222,
+    "references": [
+      "Is 10",
+      "Is 11",
+      "Is 12"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 223,
+    "references": [
+      "Is 13",
+      "Is 14",
+      "Is 15"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 224,
+    "references": [
+      "Is 16",
+      "Is 17",
+      "Is 18"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 225,
+    "references": [
+      "Is 19",
+      "Is 20",
+      "Is 21"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 226,
+    "references": [
+      "Is 22",
+      "Is 23",
+      "Is 24"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 227,
+    "references": [
+      "Is 25",
+      "Is 26",
+      "Is 27"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 228,
+    "references": [
+      "Is 28",
+      "Is 29"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 229,
+    "references": [
+      "Is 30",
+      "Is 31",
+      "Is 32"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 230,
+    "references": [
+      "Is 33",
+      "Is 34",
+      "Is 35"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 231,
+    "references": [
+      "2Rs 16",
+      "2Cr 28"
+    ],
+    "books": [
+      "2 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 232,
+    "references": [
+      "2Rs 17",
+      "2Rs 18"
+    ],
+    "books": [
+      "2 Reis"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 233,
+    "references": [
+      "2Cr 29",
+      "2Cr 30",
+      "2Cr 31"
+    ],
+    "books": [
+      "2 Crônicas"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 234,
+    "references": [
+      "Is 36",
+      "Is 37",
+      "2Rs 19"
+    ],
+    "books": [
+      "Isaías",
+      "2 Reis"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 235,
+    "references": [
+      "Is 38",
+      "Is 39",
+      "2Rs 20"
+    ],
+    "books": [
+      "Isaías",
+      "2 Reis"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 236,
+    "references": [
+      "Sl 90",
+      "Sl 91",
+      "Sl 92"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 237,
+    "references": [
+      "Sl 93",
+      "Sl 94",
+      "Sl 95",
+      "Sl 96"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 238,
+    "references": [
+      "Sl 97",
+      "Sl 98",
+      "Sl 99",
+      "Sl 100"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 239,
+    "references": [
+      "Sl 101",
+      "Sl 102",
+      "Sl 103"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 240,
+    "references": [
+      "Sl 104",
+      "Sl 105"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 241,
+    "references": [
+      "Sl 106",
+      "Sl 107"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 242,
+    "references": [
+      "Sl 108",
+      "Sl 109",
+      "Sl 110"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 243,
+    "references": [
+      "Sl 111",
+      "Sl 112",
+      "Sl 113",
+      "Sl 114",
+      "Sl 115"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 244,
+    "references": [
+      "Sl 116",
+      "Sl 117",
+      "Sl 118"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 245,
+    "references": [
+      "Sl 119:1-88"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 246,
+    "references": [
+      "Sl 119:89-176"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 247,
+    "references": [
+      "Sl 120",
+      "Sl 121",
+      "Sl 122",
+      "Sl 123",
+      "Sl 124",
+      "Sl 125"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 248,
+    "references": [
+      "Sl 126",
+      "Sl 127",
+      "Sl 128",
+      "Sl 129",
+      "Sl 130",
+      "Sl 131"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 249,
+    "references": [
+      "Sl 132",
+      "Sl 133",
+      "Sl 134",
+      "Sl 135",
+      "Sl 136"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 250,
+    "references": [
+      "Sl 137",
+      "Sl 138",
+      "Sl 139"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 251,
+    "references": [
+      "Sl 140",
+      "Sl 141",
+      "Sl 142",
+      "Sl 143"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 252,
+    "references": [
+      "Sl 144",
+      "Sl 145",
+      "Sl 146"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 253,
+    "references": [
+      "Sl 147",
+      "Sl 148",
+      "Sl 149",
+      "Sl 150"
+    ],
+    "books": [
+      "Salmos"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 254,
+    "references": [
+      "2Rs 21",
+      "2Cr 33"
+    ],
+    "books": [
+      "2 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Reino Dividido e Profetas"
+  },
+  {
+    "day": 255,
     "references": [
       "Na 1",
       "Na 2",
@@ -3301,22 +3043,34 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Naum"
     ],
-    "period": "Profetas Menores"
+    "period": "Reino Dividido e Profetas"
   },
   {
-    "day": 268,
+    "day": 256,
     "references": [
-      "Hc 1",
-      "Hc 2",
-      "Hc 3"
+      "2Rs 22",
+      "2Cr 34"
     ],
     "books": [
-      "Habacuque"
+      "2 Reis",
+      "2 Crônicas"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
-    "day": 269,
+    "day": 257,
+    "references": [
+      "2Rs 23",
+      "2Cr 35"
+    ],
+    "books": [
+      "2 Reis",
+      "2 Crônicas"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 258,
     "references": [
       "Sf 1",
       "Sf 2",
@@ -3325,112 +3079,739 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Sofonias"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 259,
+    "references": [
+      "Hc 1",
+      "Hc 2",
+      "Hc 3"
+    ],
+    "books": [
+      "Habacuque"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 260,
+    "references": [
+      "Jr 1",
+      "Jr 2"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 261,
+    "references": [
+      "Jr 3",
+      "Jr 4"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 262,
+    "references": [
+      "Jr 5",
+      "Jr 6"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 263,
+    "references": [
+      "Jr 7",
+      "Jr 8",
+      "Jr 9"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 264,
+    "references": [
+      "Jr 10",
+      "Jr 11",
+      "Jr 12"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 265,
+    "references": [
+      "Jr 13",
+      "Jr 14",
+      "Jr 15"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 266,
+    "references": [
+      "Jr 16",
+      "Jr 17",
+      "Jr 18"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 267,
+    "references": [
+      "Jr 19",
+      "Jr 20",
+      "Jr 21"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 268,
+    "references": [
+      "Jr 22",
+      "Jr 23"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 269,
+    "references": [
+      "Jr 24",
+      "Jr 25",
+      "Jr 26"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
   },
   {
     "day": 270,
     "references": [
-      "Ag 1",
-      "Ag 2",
-      "Zc 1",
-      "Zc 2"
+      "Jr 27",
+      "Jr 28",
+      "Jr 29"
     ],
     "books": [
-      "Ageu",
-      "Zacarias"
+      "Jeremias"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 271,
     "references": [
-      "Zc 3",
-      "Zc 4",
-      "Zc 5"
+      "Jr 30",
+      "Jr 31"
     ],
     "books": [
-      "Zacarias"
+      "Jeremias"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 272,
     "references": [
-      "Zc 6",
-      "Zc 7",
-      "Zc 8"
+      "Jr 32",
+      "Jr 33"
     ],
     "books": [
-      "Zacarias"
+      "Jeremias"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 273,
     "references": [
-      "Zc 9",
-      "Zc 10",
-      "Zc 11"
+      "Jr 34",
+      "Jr 35",
+      "Jr 36"
     ],
     "books": [
-      "Zacarias"
+      "Jeremias"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 274,
     "references": [
-      "Zc 12",
-      "Zc 13",
-      "Zc 14",
-      "Ml 1"
+      "Jr 37",
+      "Jr 38"
     ],
     "books": [
-      "Zacarias",
-      "Malaquias"
+      "Jeremias"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 275,
     "references": [
-      "Ml 2",
-      "Ml 3",
-      "Ml 4"
+      "2Rs 24",
+      "2Cr 36"
     ],
     "books": [
-      "Malaquias"
+      "2 Reis",
+      "2 Crônicas"
     ],
-    "period": "Profetas Menores"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 276,
     "references": [
-      "Ed 1",
-      "Ed 2",
-      "Ed 3"
+      "Jr 39",
+      "Jr 40",
+      "Jr 41"
     ],
     "books": [
-      "Esdras"
+      "Jeremias"
     ],
-    "period": "Restauração"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 277,
     "references": [
-      "Ed 4",
-      "Ed 5",
-      "Ed 6"
+      "Jr 42",
+      "Jr 43",
+      "Jr 44"
     ],
     "books": [
-      "Esdras"
+      "Jeremias"
     ],
-    "period": "Restauração"
+    "period": "Profetas e Exílio"
   },
   {
     "day": 278,
     "references": [
-      "Ed 7",
+      "Jr 45",
+      "Jr 46",
+      "Jr 47"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 279,
+    "references": [
+      "Jr 48",
+      "Jr 49"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 280,
+    "references": [
+      "Jr 50",
+      "Jr 51"
+    ],
+    "books": [
+      "Jeremias"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 281,
+    "references": [
+      "Jr 52",
+      "Lm 1"
+    ],
+    "books": [
+      "Jeremias",
+      "Lamentações"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 282,
+    "references": [
+      "Lm 2",
+      "Lm 3"
+    ],
+    "books": [
+      "Lamentações"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 283,
+    "references": [
+      "Lm 4",
+      "Lm 5"
+    ],
+    "books": [
+      "Lamentações"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 284,
+    "references": [
+      "Ob 1",
+      "2Rs 25"
+    ],
+    "books": [
+      "Obadias",
+      "2 Reis"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 285,
+    "references": [
+      "Ez 1",
+      "Ez 2",
+      "Ez 3"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 286,
+    "references": [
+      "Ez 4",
+      "Ez 5",
+      "Ez 6"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 287,
+    "references": [
+      "Ez 7",
+      "Ez 8",
+      "Ez 9"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 288,
+    "references": [
+      "Ez 10",
+      "Ez 11",
+      "Ez 12"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 289,
+    "references": [
+      "Ez 13",
+      "Ez 14",
+      "Ez 15"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 290,
+    "references": [
+      "Ez 16",
+      "Ez 17"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 291,
+    "references": [
+      "Ez 18",
+      "Ez 19",
+      "Ez 20"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 292,
+    "references": [
+      "Ez 21",
+      "Ez 22"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 293,
+    "references": [
+      "Ez 23",
+      "Ez 24"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 294,
+    "references": [
+      "Ez 25",
+      "Ez 26",
+      "Ez 27"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 295,
+    "references": [
+      "Ez 28",
+      "Ez 29",
+      "Ez 30"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 296,
+    "references": [
+      "Ez 31",
+      "Ez 32"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 297,
+    "references": [
+      "Ez 33",
+      "Ez 34"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 298,
+    "references": [
+      "Ez 35",
+      "Ez 36"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 299,
+    "references": [
+      "Ez 37",
+      "Ez 38",
+      "Ez 39"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 300,
+    "references": [
+      "Ez 40",
+      "Ez 41"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Profetas e Exílio"
+  },
+  {
+    "day": 301,
+    "references": [
+      "Ez 42",
+      "Ez 43",
+      "Ez 44"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 302,
+    "references": [
+      "Ez 45",
+      "Ez 46",
+      "Ez 47",
+      "Ez 48"
+    ],
+    "books": [
+      "Ezequiel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 303,
+    "references": [
+      "Dn 1",
+      "Dn 2"
+    ],
+    "books": [
+      "Daniel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 304,
+    "references": [
+      "Dn 3",
+      "Dn 4"
+    ],
+    "books": [
+      "Daniel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 305,
+    "references": [
+      "Dn 5",
+      "Dn 6"
+    ],
+    "books": [
+      "Daniel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 306,
+    "references": [
+      "Dn 7",
+      "Dn 8"
+    ],
+    "books": [
+      "Daniel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 307,
+    "references": [
+      "Dn 9",
+      "Dn 10"
+    ],
+    "books": [
+      "Daniel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 308,
+    "references": [
+      "Dn 11",
+      "Dn 12"
+    ],
+    "books": [
+      "Daniel"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 309,
+    "references": [
+      "Is 40",
+      "Is 41"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 310,
+    "references": [
+      "Is 42",
+      "Is 43"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 311,
+    "references": [
+      "Is 44",
+      "Is 45"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 312,
+    "references": [
+      "Is 46",
+      "Is 47",
+      "Is 48"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 313,
+    "references": [
+      "Is 49",
+      "Is 50",
+      "Is 51"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 314,
+    "references": [
+      "Is 52",
+      "Is 53",
+      "Is 54"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 315,
+    "references": [
+      "Is 55",
+      "Is 56",
+      "Is 57"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 316,
+    "references": [
+      "Is 58",
+      "Is 59",
+      "Is 60"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 317,
+    "references": [
+      "Is 61",
+      "Is 62",
+      "Is 63"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 318,
+    "references": [
+      "Is 64",
+      "Is 65",
+      "Is 66"
+    ],
+    "books": [
+      "Isaías"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 319,
+    "references": [
+      "Ed 1",
+      "Ed 2"
+    ],
+    "books": [
+      "Esdras"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 320,
+    "references": [
+      "Ed 3",
+      "Ed 4",
+      "Ed 5"
+    ],
+    "books": [
+      "Esdras"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 321,
+    "references": [
+      "Ed 6",
+      "Ed 7"
+    ],
+    "books": [
+      "Esdras"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 322,
+    "references": [
       "Ed 8",
       "Ed 9",
       "Ed 10"
@@ -3438,59 +3819,10 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Esdras"
     ],
-    "period": "Restauração"
+    "period": "Exílio e Restauração"
   },
   {
-    "day": 279,
-    "references": [
-      "Ne 1",
-      "Ne 2",
-      "Ne 3"
-    ],
-    "books": [
-      "Neemias"
-    ],
-    "period": "Restauração"
-  },
-  {
-    "day": 280,
-    "references": [
-      "Ne 4",
-      "Ne 5",
-      "Ne 6"
-    ],
-    "books": [
-      "Neemias"
-    ],
-    "period": "Restauração"
-  },
-  {
-    "day": 281,
-    "references": [
-      "Ne 7",
-      "Ne 8",
-      "Ne 9"
-    ],
-    "books": [
-      "Neemias"
-    ],
-    "period": "Restauração"
-  },
-  {
-    "day": 282,
-    "references": [
-      "Ne 10",
-      "Ne 11",
-      "Ne 12",
-      "Ne 13"
-    ],
-    "books": [
-      "Neemias"
-    ],
-    "period": "Restauração"
-  },
-  {
-    "day": 283,
+    "day": 323,
     "references": [
       "Et 1",
       "Et 2",
@@ -3499,72 +3831,287 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Ester"
     ],
-    "period": "Restauração"
+    "period": "Exílio e Restauração"
   },
   {
-    "day": 284,
+    "day": 324,
     "references": [
       "Et 4",
       "Et 5",
-      "Et 6"
+      "Et 6",
+      "Et 7"
     ],
     "books": [
       "Ester"
     ],
-    "period": "Restauração"
+    "period": "Exílio e Restauração"
   },
   {
-    "day": 285,
+    "day": 325,
     "references": [
-      "Et 7",
       "Et 8",
-      "Et 9"
+      "Et 9",
+      "Et 10"
     ],
     "books": [
       "Ester"
     ],
-    "period": "Restauração"
+    "period": "Exílio e Restauração"
   },
   {
-    "day": 286,
+    "day": 326,
     "references": [
-      "Et 10",
+      "Ne 1",
+      "Ne 2",
+      "Ne 3"
+    ],
+    "books": [
+      "Neemias"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 327,
+    "references": [
+      "Ne 4",
+      "Ne 5",
+      "Ne 6"
+    ],
+    "books": [
+      "Neemias"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 328,
+    "references": [
+      "Ne 7",
+      "Ne 8"
+    ],
+    "books": [
+      "Neemias"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 329,
+    "references": [
+      "Ne 9",
+      "Ne 10"
+    ],
+    "books": [
+      "Neemias"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 330,
+    "references": [
+      "Ne 11",
+      "Ne 12",
+      "Ne 13"
+    ],
+    "books": [
+      "Neemias"
+    ],
+    "period": "Exílio e Restauração"
+  },
+  {
+    "day": 331,
+    "references": [
+      "Ag 1",
+      "Ag 2"
+    ],
+    "books": [
+      "Ageu"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 332,
+    "references": [
+      "Zc 1",
+      "Zc 2",
+      "Zc 3"
+    ],
+    "books": [
+      "Zacarias"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 333,
+    "references": [
+      "Zc 4",
+      "Zc 5",
+      "Zc 6"
+    ],
+    "books": [
+      "Zacarias"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 334,
+    "references": [
+      "Zc 7",
+      "Zc 8",
+      "Zc 9"
+    ],
+    "books": [
+      "Zacarias"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 335,
+    "references": [
+      "Zc 10",
+      "Zc 11",
+      "Zc 12"
+    ],
+    "books": [
+      "Zacarias"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 336,
+    "references": [
+      "Zc 13",
+      "Zc 14"
+    ],
+    "books": [
+      "Zacarias"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 337,
+    "references": [
+      "Ml 1",
+      "Ml 2",
+      "Ml 3",
+      "Ml 4"
+    ],
+    "books": [
+      "Malaquias"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 338,
+    "references": [
       "Mt 1",
       "Mt 2",
-      "Mt 3"
+      "Lc 1"
     ],
     "books": [
-      "Ester",
-      "Mateus"
+      "Mateus",
+      "Lucas"
     ],
-    "period": "Restauração"
+    "period": "Profetas Pós-Exílio"
   },
   {
-    "day": 287,
+    "day": 339,
+    "references": [
+      "Lc 2",
+      "Mt 3",
+      "Mc 1"
+    ],
+    "books": [
+      "Lucas",
+      "Mateus",
+      "Marcos"
+    ],
+    "period": "Profetas Pós-Exílio"
+  },
+  {
+    "day": 340,
     "references": [
       "Mt 4",
-      "Mt 5",
-      "Mt 6"
+      "Lc 3",
+      "Lc 4"
     ],
     "books": [
-      "Mateus"
+      "Mateus",
+      "Lucas"
     ],
-    "period": "Evangelhos"
+    "period": "Profetas Pós-Exílio"
   },
   {
-    "day": 288,
+    "day": 341,
     "references": [
-      "Mt 7",
-      "Mt 8",
-      "Mt 9"
+      "Jo 1",
+      "Jo 2"
+    ],
+    "books": [
+      "João"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 342,
+    "references": [
+      "Jo 3",
+      "Jo 4"
+    ],
+    "books": [
+      "João"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 343,
+    "references": [
+      "Mt 5",
+      "Mt 6",
+      "Mt 7"
     ],
     "books": [
       "Mateus"
     ],
-    "period": "Evangelhos"
+    "period": "Vida de Jesus"
   },
   {
-    "day": 289,
+    "day": 344,
+    "references": [
+      "Mt 8",
+      "Mt 9",
+      "Mc 2"
+    ],
+    "books": [
+      "Mateus",
+      "Marcos"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 345,
+    "references": [
+      "Mc 3",
+      "Mc 4",
+      "Lc 5"
+    ],
+    "books": [
+      "Marcos",
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 346,
+    "references": [
+      "Lc 6",
+      "Lc 7"
+    ],
+    "books": [
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 347,
     "references": [
       "Mt 10",
       "Mt 11",
@@ -3573,956 +4120,440 @@ export const chronologicalPlan: DayEntry[] = [
     "books": [
       "Mateus"
     ],
-    "period": "Evangelhos"
+    "period": "Vida de Jesus"
   },
   {
-    "day": 290,
+    "day": 348,
+    "references": [
+      "Mc 5",
+      "Mc 6",
+      "Lc 8"
+    ],
+    "books": [
+      "Marcos",
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 349,
     "references": [
       "Mt 13",
       "Mt 14",
-      "Mt 15",
-      "Mt 16"
+      "Mc 7"
     ],
     "books": [
-      "Mateus"
+      "Mateus",
+      "Marcos"
     ],
-    "period": "Evangelhos"
+    "period": "Vida de Jesus"
   },
   {
-    "day": 291,
+    "day": 350,
+    "references": [
+      "Mt 15",
+      "Mt 16",
+      "Mc 8"
+    ],
+    "books": [
+      "Mateus",
+      "Marcos"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 351,
     "references": [
       "Mt 17",
+      "Mc 9",
+      "Lc 9"
+    ],
+    "books": [
+      "Mateus",
+      "Marcos",
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 352,
+    "references": [
       "Mt 18",
-      "Mt 19"
+      "Jo 5",
+      "Jo 6"
     ],
     "books": [
-      "Mateus"
+      "Mateus",
+      "João"
     ],
-    "period": "Evangelhos"
+    "period": "Vida de Jesus"
   },
   {
-    "day": 292,
+    "day": 353,
     "references": [
+      "Jo 7",
+      "Jo 8"
+    ],
+    "books": [
+      "João"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 354,
+    "references": [
+      "Jo 9",
+      "Jo 10",
+      "Lc 10"
+    ],
+    "books": [
+      "João",
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 355,
+    "references": [
+      "Lc 11",
+      "Lc 12",
+      "Lc 13"
+    ],
+    "books": [
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 356,
+    "references": [
+      "Lc 14",
+      "Lc 15",
+      "Lc 16"
+    ],
+    "books": [
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 357,
+    "references": [
+      "Lc 17",
+      "Lc 18",
+      "Jo 11"
+    ],
+    "books": [
+      "Lucas",
+      "João"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 358,
+    "references": [
+      "Mt 19",
       "Mt 20",
-      "Mt 21",
-      "Mt 22"
+      "Mc 10"
     ],
     "books": [
-      "Mateus"
+      "Mateus",
+      "Marcos"
     ],
-    "period": "Evangelhos"
+    "period": "Vida de Jesus"
   },
   {
-    "day": 293,
+    "day": 359,
     "references": [
+      "Lc 19",
+      "Lc 20",
+      "Mt 21"
+    ],
+    "books": [
+      "Lucas",
+      "Mateus"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 360,
+    "references": [
+      "Mt 22",
       "Mt 23",
+      "Mc 11"
+    ],
+    "books": [
+      "Mateus",
+      "Marcos"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 361,
+    "references": [
+      "Mc 12",
+      "Mc 13",
+      "Lc 21"
+    ],
+    "books": [
+      "Marcos",
+      "Lucas"
+    ],
+    "period": "Vida de Jesus"
+  },
+  {
+    "day": 362,
+    "references": [
       "Mt 24",
       "Mt 25"
     ],
     "books": [
       "Mateus"
     ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 294,
-    "references": [
-      "Mt 26",
-      "Mt 27",
-      "Mt 28",
-      "Mc 1"
-    ],
-    "books": [
-      "Mateus",
-      "Marcos"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 295,
-    "references": [
-      "Mc 2",
-      "Mc 3",
-      "Mc 4"
-    ],
-    "books": [
-      "Marcos"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 296,
-    "references": [
-      "Mc 5",
-      "Mc 6",
-      "Mc 7"
-    ],
-    "books": [
-      "Marcos"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 297,
-    "references": [
-      "Mc 8",
-      "Mc 9",
-      "Mc 10"
-    ],
-    "books": [
-      "Marcos"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 298,
-    "references": [
-      "Mc 11",
-      "Mc 12",
-      "Mc 13",
-      "Mc 14"
-    ],
-    "books": [
-      "Marcos"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 299,
-    "references": [
-      "Mc 15",
-      "Mc 16",
-      "Lc 1"
-    ],
-    "books": [
-      "Marcos",
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 300,
-    "references": [
-      "Lc 2",
-      "Lc 3",
-      "Lc 4"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 301,
-    "references": [
-      "Lc 5",
-      "Lc 6",
-      "Lc 7",
-      "Lc 8"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 302,
-    "references": [
-      "Lc 9",
-      "Lc 10",
-      "Lc 11"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 303,
-    "references": [
-      "Lc 12",
-      "Lc 13",
-      "Lc 14"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 304,
-    "references": [
-      "Lc 15",
-      "Lc 16",
-      "Lc 17"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 305,
-    "references": [
-      "Lc 18",
-      "Lc 19",
-      "Lc 20",
-      "Lc 21"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 306,
-    "references": [
-      "Lc 22",
-      "Lc 23",
-      "Lc 24"
-    ],
-    "books": [
-      "Lucas"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 307,
-    "references": [
-      "Jo 1",
-      "Jo 2",
-      "Jo 3"
-    ],
-    "books": [
-      "João"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 308,
-    "references": [
-      "Jo 4",
-      "Jo 5",
-      "Jo 6"
-    ],
-    "books": [
-      "João"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 309,
-    "references": [
-      "Jo 7",
-      "Jo 8",
-      "Jo 9",
-      "Jo 10"
-    ],
-    "books": [
-      "João"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 310,
-    "references": [
-      "Jo 11",
-      "Jo 12",
-      "Jo 13"
-    ],
-    "books": [
-      "João"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 311,
-    "references": [
-      "Jo 14",
-      "Jo 15",
-      "Jo 16"
-    ],
-    "books": [
-      "João"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 312,
-    "references": [
-      "Jo 17",
-      "Jo 18",
-      "Jo 19"
-    ],
-    "books": [
-      "João"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 313,
-    "references": [
-      "Jo 20",
-      "Jo 21",
-      "At 1",
-      "At 2"
-    ],
-    "books": [
-      "João",
-      "Atos"
-    ],
-    "period": "Evangelhos"
-  },
-  {
-    "day": 314,
-    "references": [
-      "At 3",
-      "At 4",
-      "At 5"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 315,
-    "references": [
-      "At 6",
-      "At 7",
-      "At 8"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 316,
-    "references": [
-      "At 9",
-      "At 10",
-      "At 11"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 317,
-    "references": [
-      "At 12",
-      "At 13",
-      "At 14",
-      "At 15"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 318,
-    "references": [
-      "At 16",
-      "At 17",
-      "At 18"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 319,
-    "references": [
-      "At 19",
-      "At 20",
-      "At 21"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 320,
-    "references": [
-      "At 22",
-      "At 23",
-      "At 24"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 321,
-    "references": [
-      "At 25",
-      "At 26",
-      "At 27",
-      "At 28"
-    ],
-    "books": [
-      "Atos"
-    ],
-    "period": "Igreja Primitiva"
-  },
-  {
-    "day": 322,
-    "references": [
-      "Rm 1",
-      "Rm 2",
-      "Rm 3"
-    ],
-    "books": [
-      "Romanos"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 323,
-    "references": [
-      "Rm 4",
-      "Rm 5",
-      "Rm 6"
-    ],
-    "books": [
-      "Romanos"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 324,
-    "references": [
-      "Rm 7",
-      "Rm 8",
-      "Rm 9"
-    ],
-    "books": [
-      "Romanos"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 325,
-    "references": [
-      "Rm 10",
-      "Rm 11",
-      "Rm 12",
-      "Rm 13"
-    ],
-    "books": [
-      "Romanos"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 326,
-    "references": [
-      "Rm 14",
-      "Rm 15",
-      "Rm 16"
-    ],
-    "books": [
-      "Romanos"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 327,
-    "references": [
-      "1Co 1",
-      "1Co 2",
-      "1Co 3"
-    ],
-    "books": [
-      "1 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 328,
-    "references": [
-      "1Co 4",
-      "1Co 5",
-      "1Co 6"
-    ],
-    "books": [
-      "1 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 329,
-    "references": [
-      "1Co 7",
-      "1Co 8",
-      "1Co 9",
-      "1Co 10"
-    ],
-    "books": [
-      "1 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 330,
-    "references": [
-      "1Co 11",
-      "1Co 12",
-      "1Co 13"
-    ],
-    "books": [
-      "1 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 331,
-    "references": [
-      "1Co 14",
-      "1Co 15",
-      "1Co 16"
-    ],
-    "books": [
-      "1 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 332,
-    "references": [
-      "2Co 1",
-      "2Co 2",
-      "2Co 3",
-      "2Co 4"
-    ],
-    "books": [
-      "2 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 333,
-    "references": [
-      "2Co 5",
-      "2Co 6",
-      "2Co 7"
-    ],
-    "books": [
-      "2 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 334,
-    "references": [
-      "2Co 8",
-      "2Co 9",
-      "2Co 10"
-    ],
-    "books": [
-      "2 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 335,
-    "references": [
-      "2Co 11",
-      "2Co 12",
-      "2Co 13"
-    ],
-    "books": [
-      "2 Coríntios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 336,
-    "references": [
-      "Gl 1",
-      "Gl 2",
-      "Gl 3",
-      "Gl 4"
-    ],
-    "books": [
-      "Gálatas"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 337,
-    "references": [
-      "Gl 5",
-      "Gl 6",
-      "Ef 1"
-    ],
-    "books": [
-      "Gálatas",
-      "Efésios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 338,
-    "references": [
-      "Ef 2",
-      "Ef 3",
-      "Ef 4"
-    ],
-    "books": [
-      "Efésios"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 339,
-    "references": [
-      "Ef 5",
-      "Ef 6",
-      "Fp 1"
-    ],
-    "books": [
-      "Efésios",
-      "Filipenses"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 340,
-    "references": [
-      "Fp 2",
-      "Fp 3",
-      "Fp 4",
-      "Cl 1"
-    ],
-    "books": [
-      "Filipenses",
-      "Colossenses"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 341,
-    "references": [
-      "Cl 2",
-      "Cl 3",
-      "Cl 4"
-    ],
-    "books": [
-      "Colossenses"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 342,
-    "references": [
-      "1Ts 1",
-      "1Ts 2",
-      "1Ts 3"
-    ],
-    "books": [
-      "1 Tessalonicenses"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 343,
-    "references": [
-      "1Ts 4",
-      "1Ts 5",
-      "2Ts 1"
-    ],
-    "books": [
-      "1 Tessalonicenses",
-      "2 Tessalonicenses"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 344,
-    "references": [
-      "2Ts 2",
-      "2Ts 3",
-      "1Tm 1",
-      "1Tm 2"
-    ],
-    "books": [
-      "2 Tessalonicenses",
-      "1 Timóteo"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 345,
-    "references": [
-      "1Tm 3",
-      "1Tm 4",
-      "1Tm 5"
-    ],
-    "books": [
-      "1 Timóteo"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 346,
-    "references": [
-      "1Tm 6",
-      "2Tm 1",
-      "2Tm 2"
-    ],
-    "books": [
-      "1 Timóteo",
-      "2 Timóteo"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 347,
-    "references": [
-      "2Tm 3",
-      "2Tm 4",
-      "Tt 1"
-    ],
-    "books": [
-      "2 Timóteo",
-      "Tito"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 348,
-    "references": [
-      "Tt 2",
-      "Tt 3",
-      "Fm 1",
-      "Hb 1"
-    ],
-    "books": [
-      "Tito",
-      "Filemom",
-      "Hebreus"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 349,
-    "references": [
-      "Hb 2",
-      "Hb 3",
-      "Hb 4"
-    ],
-    "books": [
-      "Hebreus"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 350,
-    "references": [
-      "Hb 5",
-      "Hb 6",
-      "Hb 7"
-    ],
-    "books": [
-      "Hebreus"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 351,
-    "references": [
-      "Hb 8",
-      "Hb 9",
-      "Hb 10"
-    ],
-    "books": [
-      "Hebreus"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 352,
-    "references": [
-      "Hb 11",
-      "Hb 12",
-      "Hb 13",
-      "Tg 1"
-    ],
-    "books": [
-      "Hebreus",
-      "Tiago"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 353,
-    "references": [
-      "Tg 2",
-      "Tg 3",
-      "Tg 4"
-    ],
-    "books": [
-      "Tiago"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 354,
-    "references": [
-      "Tg 5",
-      "1Pe 1",
-      "1Pe 2"
-    ],
-    "books": [
-      "Tiago",
-      "1 Pedro"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 355,
-    "references": [
-      "1Pe 3",
-      "1Pe 4",
-      "1Pe 5"
-    ],
-    "books": [
-      "1 Pedro"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 356,
-    "references": [
-      "2Pe 1",
-      "2Pe 2",
-      "2Pe 3",
-      "1Jo 1"
-    ],
-    "books": [
-      "2 Pedro",
-      "1 João"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 357,
-    "references": [
-      "1Jo 2",
-      "1Jo 3",
-      "1Jo 4"
-    ],
-    "books": [
-      "1 João"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 358,
-    "references": [
-      "1Jo 5",
-      "2Jo 1",
-      "3Jo 1"
-    ],
-    "books": [
-      "1 João",
-      "2 João",
-      "3 João"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 359,
-    "references": [
-      "Jd 1",
-      "Ap 1",
-      "Ap 2"
-    ],
-    "books": [
-      "Judas",
-      "Apocalipse"
-    ],
-    "period": "Epístolas"
-  },
-  {
-    "day": 360,
-    "references": [
-      "Ap 3",
-      "Ap 4",
-      "Ap 5",
-      "Ap 6"
-    ],
-    "books": [
-      "Apocalipse"
-    ],
-    "period": "Apocalipse"
-  },
-  {
-    "day": 361,
-    "references": [
-      "Ap 7",
-      "Ap 8",
-      "Ap 9"
-    ],
-    "books": [
-      "Apocalipse"
-    ],
-    "period": "Apocalipse"
-  },
-  {
-    "day": 362,
-    "references": [
-      "Ap 10",
-      "Ap 11",
-      "Ap 12"
-    ],
-    "books": [
-      "Apocalipse"
-    ],
-    "period": "Apocalipse"
+    "period": "Vida de Jesus"
   },
   {
     "day": 363,
     "references": [
-      "Ap 13",
-      "Ap 14",
-      "Ap 15"
+      "Mt 26",
+      "Mc 14",
+      "Jo 12"
     ],
     "books": [
-      "Apocalipse"
+      "Mateus",
+      "Marcos",
+      "João"
     ],
-    "period": "Apocalipse"
+    "period": "Morte e Ressurreição"
   },
   {
     "day": 364,
     "references": [
-      "Ap 16",
-      "Ap 17",
-      "Ap 18",
-      "Ap 19"
+      "Jo 13",
+      "Jo 14",
+      "Jo 15"
     ],
     "books": [
-      "Apocalipse"
+      "João"
     ],
-    "period": "Apocalipse"
+    "period": "Morte e Ressurreição"
   },
   {
     "day": 365,
     "references": [
+      "Jo 16",
+      "Jo 17",
+      "Mt 27",
+      "Mc 15",
+      "Mc 16",
+      "Lc 22",
+      "Lc 23",
+      "Lc 24",
+      "Jo 18",
+      "Jo 19",
+      "Jo 20",
+      "Jo 21",
+      "At 1",
+      "At 2",
+      "At 3",
+      "At 4",
+      "At 5",
+      "At 6",
+      "At 7",
+      "At 8",
+      "At 9",
+      "At 10",
+      "At 11",
+      "At 12",
+      "At 13",
+      "At 14",
+      "At 15",
+      "Tg 1",
+      "Tg 2",
+      "Tg 3",
+      "Tg 4",
+      "Tg 5",
+      "Gl 1",
+      "Gl 2",
+      "Gl 3",
+      "Gl 4",
+      "Gl 5",
+      "Gl 6",
+      "At 16",
+      "At 17",
+      "At 18",
+      "1Ts 1",
+      "1Ts 2",
+      "1Ts 3",
+      "1Ts 4",
+      "1Ts 5",
+      "2Ts 1",
+      "2Ts 2",
+      "2Ts 3",
+      "At 19",
+      "1Co 1",
+      "1Co 2",
+      "1Co 3",
+      "1Co 4",
+      "1Co 5",
+      "1Co 6",
+      "1Co 7",
+      "1Co 8",
+      "1Co 9",
+      "1Co 10",
+      "1Co 11",
+      "1Co 12",
+      "1Co 13",
+      "1Co 14",
+      "1Co 15",
+      "1Co 16",
+      "2Co 1",
+      "2Co 2",
+      "2Co 3",
+      "2Co 4",
+      "2Co 5",
+      "2Co 6",
+      "2Co 7",
+      "2Co 8",
+      "2Co 9",
+      "2Co 10",
+      "2Co 11",
+      "2Co 12",
+      "2Co 13",
+      "At 20",
+      "Rm 1",
+      "Rm 2",
+      "Rm 3",
+      "Rm 4",
+      "Rm 5",
+      "Rm 6",
+      "Rm 7",
+      "Rm 8",
+      "Rm 9",
+      "Rm 10",
+      "Rm 11",
+      "Rm 12",
+      "Rm 13",
+      "Rm 14",
+      "Rm 15",
+      "Rm 16",
+      "At 21",
+      "At 22",
+      "At 23",
+      "At 24",
+      "At 25",
+      "At 26",
+      "At 27",
+      "At 28",
+      "Ef 1",
+      "Ef 2",
+      "Ef 3",
+      "Ef 4",
+      "Ef 5",
+      "Ef 6",
+      "Fp 1",
+      "Fp 2",
+      "Fp 3",
+      "Fp 4",
+      "Cl 1",
+      "Cl 2",
+      "Cl 3",
+      "Cl 4",
+      "Fm 1",
+      "1Tm 1",
+      "1Tm 2",
+      "1Tm 3",
+      "1Tm 4",
+      "1Tm 5",
+      "1Tm 6",
+      "Tt 1",
+      "Tt 2",
+      "Tt 3",
+      "2Tm 1",
+      "2Tm 2",
+      "2Tm 3",
+      "2Tm 4",
+      "1Pe 1",
+      "1Pe 2",
+      "1Pe 3",
+      "1Pe 4",
+      "1Pe 5",
+      "2Pe 1",
+      "2Pe 2",
+      "2Pe 3",
+      "Hb 1",
+      "Hb 2",
+      "Hb 3",
+      "Hb 4",
+      "Hb 5",
+      "Hb 6",
+      "Hb 7",
+      "Hb 8",
+      "Hb 9",
+      "Hb 10",
+      "Hb 11",
+      "Hb 12",
+      "Hb 13",
+      "Jd 1",
+      "1Jo 1",
+      "1Jo 2",
+      "1Jo 3",
+      "1Jo 4",
+      "1Jo 5",
+      "2Jo 1",
+      "3Jo 1",
+      "Ap 1",
+      "Ap 2",
+      "Ap 3",
+      "Ap 4",
+      "Ap 5",
+      "Ap 6",
+      "Ap 7",
+      "Ap 8",
+      "Ap 9",
+      "Ap 10",
+      "Ap 11",
+      "Ap 12",
+      "Ap 13",
+      "Ap 14",
+      "Ap 15",
+      "Ap 16",
+      "Ap 17",
+      "Ap 18",
+      "Ap 19",
       "Ap 20",
       "Ap 21",
       "Ap 22"
     ],
     "books": [
+      "João",
+      "Mateus",
+      "Marcos",
+      "Lucas",
+      "Atos",
+      "Tiago",
+      "Gálatas",
+      "1 Tessalonicenses",
+      "2 Tessalonicenses",
+      "1 Coríntios",
+      "2 Coríntios",
+      "Romanos",
+      "Efésios",
+      "Filipenses",
+      "Colossenses",
+      "Filemom",
+      "1 Timóteo",
+      "Tito",
+      "2 Timóteo",
+      "1 Pedro",
+      "2 Pedro",
+      "Hebreus",
+      "Judas",
+      "1 João",
+      "2 João",
+      "3 João",
       "Apocalipse"
     ],
-    "period": "Apocalipse"
+    "period": "Morte e Ressurreição"
   }
 ];
