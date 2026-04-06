@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -94,6 +94,7 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
   useEffect(() => {
     setActiveRefIndex(0);
     setRefData({});
+    fetchedRefsRef.current = new Set();
   }, [entry?.day]);
 
   // Save read refs
@@ -101,11 +102,13 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
     saveReadRefs(readRefs);
   }, [readRefs]);
 
+  const fetchedRefsRef = useRef<Set<string>>(new Set());
+
   const fetchRef = useCallback(async (ref: string) => {
-    setRefData(prev => {
-      if (prev[ref]?.verses.length) return prev; // already loaded
-      return { ...prev, [ref]: { verses: [], loading: true, error: null } };
-    });
+    if (fetchedRefsRef.current.has(ref)) return;
+    fetchedRefsRef.current.add(ref);
+
+    setRefData(prev => ({ ...prev, [ref]: { verses: [], loading: true, error: null } }));
 
     try {
       const fullRef = expandRef(ref);
@@ -119,6 +122,7 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
       }));
       setRefData(prev => ({ ...prev, [ref]: { verses, loading: false, error: null } }));
     } catch (e) {
+      fetchedRefsRef.current.delete(ref); // allow retry
       setRefData(prev => ({
         ...prev,
         [ref]: { verses: [], loading: false, error: e instanceof Error ? e.message : "Erro" },
