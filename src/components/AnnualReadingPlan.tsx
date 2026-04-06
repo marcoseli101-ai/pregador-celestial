@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, List, CalendarDays } from "lucide-react";
+import { Search, List, CalendarDays, BookOpen } from "lucide-react";
 import { biblicalPlan } from "@/data/biblicalPlan";
 import { chronologicalPlan } from "@/data/chronologicalPlan";
 import { useAnnualReadingProgress } from "@/hooks/useAnnualReadingProgress";
@@ -43,15 +43,12 @@ export default function AnnualReadingPlan() {
 
   const plan = planType === "biblical" ? biblicalPlan : chronologicalPlan;
 
-  // Load read refs for per-day progress
   const readRefs = useMemo(() => {
     try {
       const raw = localStorage.getItem(READ_REFS_KEY);
       return raw ? new Set<string>(JSON.parse(raw)) : new Set<string>();
-    } catch {
-      return new Set<string>();
-    }
-  }, [modalOpen]); // re-read when modal closes
+    } catch { return new Set<string>(); }
+  }, [modalOpen]);
 
   const getDayReadProgress = useCallback((entry: DayEntry) => {
     const count = entry.references.filter(r => readRefs.has(`${entry.day}:${r}`)).length;
@@ -74,7 +71,6 @@ export default function AnnualReadingPlan() {
     return result;
   }, [plan, filter, search, completedDays, todayDayNumber]);
 
-  // Scroll to today on mount
   useEffect(() => {
     const timer = setTimeout(() => {
       const el = document.querySelector(`[data-day="${todayDayNumber}"]`);
@@ -100,25 +96,35 @@ export default function AnnualReadingPlan() {
     setModalOpen(true);
   };
 
-  const filters: { key: FilterType; label: string }[] = [
-    { key: "all", label: "Todos" },
-    { key: "done", label: "Concluídos" },
-    { key: "pending", label: "Pendentes" },
+  const filters: { key: FilterType; label: string; count?: number }[] = [
+    { key: "all", label: "Todos", count: plan.length },
+    { key: "done", label: "Concluídos", count: completedDays.size },
+    { key: "pending", label: "Pendentes", count: plan.length - completedDays.size },
     { key: "today", label: "Hoje" },
   ];
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto px-4 py-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl md:text-3xl font-bold">Plano de Leitura Anual</h1>
-        <p className="text-muted-foreground text-sm">Leia a Bíblia inteira em 365 dias</p>
+    <div className="space-y-8 max-w-4xl mx-auto px-4 py-8">
+      {/* Hero header */}
+      <div className="text-center space-y-3 pb-2">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-2">
+          <BookOpen className="h-7 w-7 text-primary" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Plano de Leitura Anual</h1>
+        <p className="text-muted-foreground text-base max-w-md mx-auto leading-relaxed">
+          Leia a Bíblia inteira em 365 dias com acompanhamento diário
+        </p>
       </div>
 
       {/* Plan Selector */}
       <Tabs value={planType} onValueChange={(v) => setPlanType(v as PlanType)}>
-        <TabsList className="w-full">
-          <TabsTrigger value="biblical" className="flex-1">Ordem Bíblica</TabsTrigger>
-          <TabsTrigger value="chronological" className="flex-1">Ordem Cronológica</TabsTrigger>
+        <TabsList className="w-full h-12 rounded-xl bg-muted/50 p-1">
+          <TabsTrigger value="biblical" className="flex-1 rounded-lg text-sm font-semibold data-[state=active]:shadow-sm">
+            📖 Ordem Bíblica
+          </TabsTrigger>
+          <TabsTrigger value="chronological" className="flex-1 rounded-lg text-sm font-semibold data-[state=active]:shadow-sm">
+            📅 Ordem Cronológica
+          </TabsTrigger>
         </TabsList>
       </Tabs>
 
@@ -132,26 +138,28 @@ export default function AnnualReadingPlan() {
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar por livro... (ex: Salmos)"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-10 h-11 rounded-xl border-border/40 bg-card/60 text-sm"
           />
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1.5 bg-muted/30 rounded-xl p-1">
           <Button
-            variant={view === "list" ? "default" : "outline"}
+            variant={view === "list" ? "default" : "ghost"}
             size="icon"
             onClick={() => setView("list")}
+            className="h-9 w-9 rounded-lg"
           >
             <List className="h-4 w-4" />
           </Button>
           <Button
-            variant={view === "calendar" ? "default" : "outline"}
+            variant={view === "calendar" ? "default" : "ghost"}
             size="icon"
             onClick={() => setView("calendar")}
+            className="h-9 w-9 rounded-lg"
           >
             <CalendarDays className="h-4 w-4" />
           </Button>
@@ -161,14 +169,20 @@ export default function AnnualReadingPlan() {
       {/* Filters */}
       <div className="flex gap-2 flex-wrap">
         {filters.map((f) => (
-          <Badge
+          <button
             key={f.key}
-            variant={filter === f.key ? "default" : "outline"}
-            className="cursor-pointer px-3 py-1"
             onClick={() => setFilter(f.key)}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all border ${
+              filter === f.key
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-card/60 border-border/40 text-muted-foreground hover:border-border hover:bg-muted/40"
+            }`}
           >
             {f.label}
-          </Badge>
+            {f.count !== undefined && (
+              <span className="ml-1.5 opacity-70">({f.count})</span>
+            )}
+          </button>
         ))}
       </div>
 
@@ -176,8 +190,8 @@ export default function AnnualReadingPlan() {
       <div
         className={
           view === "calendar"
-            ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2"
-            : "flex flex-col gap-2"
+            ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5"
+            : "flex flex-col gap-2.5"
         }
       >
         {filtered.map((entry) => (
@@ -199,7 +213,10 @@ export default function AnnualReadingPlan() {
       </div>
 
       {filtered.length === 0 && (
-        <p className="text-center text-muted-foreground py-8">Nenhum dia encontrado.</p>
+        <div className="text-center py-12 space-y-2">
+          <p className="text-muted-foreground text-lg">Nenhum dia encontrado.</p>
+          <p className="text-muted-foreground/60 text-sm">Tente ajustar os filtros ou a busca.</p>
+        </div>
       )}
 
       {/* Modal */}

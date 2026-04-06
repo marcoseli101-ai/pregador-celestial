@@ -9,12 +9,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { BookOpen, CheckCircle2, Loader2, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { translateRefToEn } from "@/hooks/useBibleAPI";
 import type { DayEntry } from "@/data/biblicalPlan";
 
-// Map abbreviations to full Portuguese names for the API
 const ABBREV_TO_PT: Record<string, string> = {
   "Gn": "Gênesis", "Ex": "Êxodo", "Lv": "Levítico", "Nm": "Números",
   "Dt": "Deuteronômio", "Js": "Josué", "Jz": "Juízes", "Rt": "Rute",
@@ -41,8 +39,7 @@ const ABBREV_TO_PT: Record<string, string> = {
 };
 
 function expandRef(abbrevRef: string): string {
-  // "Gn 1" → "Gênesis 1"
-  const match = abbrevRef.match(/^(\d?\s*\w+)\s+(.+)$/);
+  const match = abbrevRef.match(/^(.+?)\s+(\d.*)$/u);
   if (!match) return abbrevRef;
   const abbr = match[1].trim();
   const rest = match[2];
@@ -50,16 +47,8 @@ function expandRef(abbrevRef: string): string {
   return fullName ? `${fullName} ${rest}` : abbrevRef;
 }
 
-interface Verse {
-  number: number;
-  text: string;
-}
-
-interface RefData {
-  verses: Verse[];
-  loading: boolean;
-  error: string | null;
-}
+interface Verse { number: number; text: string; }
+interface RefData { verses: Verse[]; loading: boolean; error: string | null; }
 
 interface DayModalProps {
   entry: DayEntry | null;
@@ -76,9 +65,7 @@ function loadReadRefs(): Set<string> {
   try {
     const raw = localStorage.getItem(READ_REFS_KEY);
     return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch {
-    return new Set();
-  }
+  } catch { return new Set(); }
 }
 
 function saveReadRefs(refs: Set<string>) {
@@ -90,26 +77,20 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
   const [refData, setRefData] = useState<Record<string, RefData>>({});
   const [readRefs, setReadRefs] = useState<Set<string>>(loadReadRefs);
 
-  // Reset when entry changes
   useEffect(() => {
     setActiveRefIndex(0);
     setRefData({});
     fetchedRefsRef.current = new Set();
   }, [entry?.day]);
 
-  // Save read refs
-  useEffect(() => {
-    saveReadRefs(readRefs);
-  }, [readRefs]);
+  useEffect(() => { saveReadRefs(readRefs); }, [readRefs]);
 
   const fetchedRefsRef = useRef<Set<string>>(new Set());
 
   const fetchRef = useCallback(async (ref: string) => {
     if (fetchedRefsRef.current.has(ref)) return;
     fetchedRefsRef.current.add(ref);
-
     setRefData(prev => ({ ...prev, [ref]: { verses: [], loading: true, error: null } }));
-
     try {
       const fullRef = expandRef(ref);
       const enRef = translateRefToEn(fullRef);
@@ -117,12 +98,11 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
       if (!res.ok) throw new Error("Falha ao carregar");
       const json = await res.json();
       const verses: Verse[] = (json.verses || []).map((v: { verse: number; text: string }) => ({
-        number: v.verse,
-        text: v.text,
+        number: v.verse, text: v.text,
       }));
       setRefData(prev => ({ ...prev, [ref]: { verses, loading: false, error: null } }));
     } catch (e) {
-      fetchedRefsRef.current.delete(ref); // allow retry
+      fetchedRefsRef.current.delete(ref);
       setRefData(prev => ({
         ...prev,
         [ref]: { verses: [], loading: false, error: e instanceof Error ? e.message : "Erro" },
@@ -130,7 +110,6 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
     }
   }, []);
 
-  // Fetch active reference when it changes
   useEffect(() => {
     if (!entry || !open) return;
     const ref = entry.references[activeRefIndex];
@@ -139,11 +118,7 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
 
   const markRefRead = useCallback((ref: string, dayNum: number) => {
     const key = `${dayNum}:${ref}`;
-    setReadRefs(prev => {
-      const next = new Set(prev);
-      next.add(key);
-      return next;
-    });
+    setReadRefs(prev => { const next = new Set(prev); next.add(key); return next; });
   }, []);
 
   if (!entry) return null;
@@ -157,47 +132,50 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0 rounded-2xl border-border/40 overflow-hidden">
         {/* Header */}
-        <div className="p-4 pb-3 border-b border-border/50 space-y-3">
+        <div className="p-5 pb-4 border-b border-border/30 space-y-3 bg-card/90 backdrop-blur-sm">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              Dia {entry.day} — {dateLabel}
+            <DialogTitle className="flex items-center gap-2.5 text-xl tracking-tight">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <BookOpen className="h-4 w-4 text-primary" />
+              </div>
+              <span>Dia {entry.day}</span>
+              <span className="text-muted-foreground font-normal text-base">— {dateLabel}</span>
             </DialogTitle>
             <DialogDescription className="sr-only">Leituras do dia {entry.day}</DialogDescription>
           </DialogHeader>
 
           {entry.period && (
-            <Badge variant="outline" className="w-fit text-xs">{entry.period}</Badge>
+            <Badge variant="outline" className="w-fit text-xs font-medium opacity-70">{entry.period}</Badge>
           )}
 
-          {/* Day progress bar */}
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs text-muted-foreground">
+          {/* Progress */}
+          <div className="space-y-2 bg-muted/30 rounded-xl p-3">
+            <div className="flex justify-between text-xs text-muted-foreground font-medium">
               <span>{readCount} de {refs.length} leituras concluídas</span>
-              <span>{dayProgress}%</span>
+              <span className="text-primary font-bold">{dayProgress}%</span>
             </div>
             <Progress value={dayProgress} className="h-2" />
           </div>
 
           {/* Reference tabs */}
-          <div className="flex gap-1.5 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             {refs.map((ref, i) => {
               const isRead = readRefs.has(`${entry.day}:${ref}`);
               return (
                 <button
                   key={ref}
                   onClick={() => setActiveRefIndex(i)}
-                  className={`text-xs px-2.5 py-1.5 rounded-md border transition-all flex items-center gap-1 ${
+                  className={`text-xs px-3 py-2 rounded-lg border transition-all flex items-center gap-1.5 font-medium ${
                     i === activeRefIndex
-                      ? "bg-primary text-primary-foreground border-primary"
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
                       : isRead
-                      ? "bg-emerald-950/40 border-emerald-600/50 text-emerald-400"
-                      : "bg-muted/50 border-border/50 text-muted-foreground hover:border-border"
+                      ? "bg-emerald-950/30 border-emerald-600/40 text-emerald-400"
+                      : "bg-muted/40 border-border/40 text-muted-foreground hover:border-border hover:bg-muted/60"
                   }`}
                 >
-                  {isRead && <CheckCircle2 className="h-3 w-3" />}
+                  {isRead && <CheckCircle2 className="h-3.5 w-3.5" />}
                   {expandRef(ref)}
                 </button>
               );
@@ -205,25 +183,24 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
           </div>
         </div>
 
-        {/* Bible text content */}
-        <ScrollArea className="flex-1 min-h-0 max-h-[50vh]">
-          <div className="p-4 space-y-1">
+        {/* Bible text */}
+        <div
+          className="flex-1 min-h-0 max-h-[50vh] overflow-y-auto"
+          style={{ scrollbarGutter: "stable" }}
+        >
+          <div className="p-6 space-y-0.5">
             {currentData?.loading && (
-              <div className="flex items-center justify-center py-12 gap-2 text-muted-foreground">
-                <Loader2 className="h-5 w-5 animate-spin" />
-                <span>Carregando {expandRef(activeRef)}...</span>
+              <div className="flex flex-col items-center justify-center py-16 gap-3 text-muted-foreground">
+                <Loader2 className="h-6 w-6 animate-spin text-primary/60" />
+                <span className="text-sm">Carregando {expandRef(activeRef)}...</span>
               </div>
             )}
 
             {currentData?.error && (
-              <div className="text-center py-12 text-destructive">
-                <p>Não foi possível carregar o texto.</p>
-                <Button variant="outline" size="sm" className="mt-2" onClick={() => {
-                  setRefData(prev => {
-                    const next = { ...prev };
-                    delete next[activeRef];
-                    return next;
-                  });
+              <div className="text-center py-16 space-y-3">
+                <p className="text-destructive font-medium">Não foi possível carregar o texto.</p>
+                <Button variant="outline" size="sm" onClick={() => {
+                  setRefData(prev => { const next = { ...prev }; delete next[activeRef]; return next; });
                   fetchRef(activeRef);
                 }}>
                   Tentar novamente
@@ -232,16 +209,24 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
             )}
 
             {currentData?.verses.map((verse) => (
-              <p key={verse.number} className="text-sm leading-relaxed">
-                <sup className="text-xs font-bold text-primary mr-1">{verse.number}</sup>
+              <p
+                key={verse.number}
+                className="text-[15px] leading-[1.9] text-foreground/90"
+                style={{
+                  fontFamily: "'Inter', 'Georgia', serif",
+                  letterSpacing: "0.015em",
+                  wordSpacing: "0.05em",
+                }}
+              >
+                <sup className="text-xs font-bold text-primary/70 mr-1.5 select-none">{verse.number}</sup>
                 {verse.text}
               </p>
             ))}
           </div>
-        </ScrollArea>
+        </div>
 
-        {/* Footer actions */}
-        <div className="p-4 pt-3 border-t border-border/50 flex flex-col gap-2">
+        {/* Footer */}
+        <div className="p-4 pt-3 border-t border-border/30 bg-card/90 backdrop-blur-sm flex flex-col gap-2.5">
           {/* Navigation */}
           <div className="flex items-center justify-between">
             <Button
@@ -249,20 +234,20 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
               size="sm"
               disabled={activeRefIndex === 0}
               onClick={() => setActiveRefIndex(i => i - 1)}
+              className="text-xs"
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Anterior
             </Button>
-
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground font-medium tabular-nums">
               {activeRefIndex + 1} / {refs.length}
             </span>
-
             <Button
               variant="ghost"
               size="sm"
               disabled={activeRefIndex === refs.length - 1}
               onClick={() => setActiveRefIndex(i => i + 1)}
+              className="text-xs"
             >
               Próximo
               <ChevronRight className="h-4 w-4 ml-1" />
@@ -270,31 +255,27 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
           </div>
 
           <div className="flex gap-2">
-            {/* Mark ref as read */}
             <Button
               variant={isActiveRead ? "outline" : "secondary"}
               size="sm"
-              className={`flex-1 ${isActiveRead ? "border-emerald-600 text-emerald-400" : ""}`}
+              className={`flex-1 text-xs font-semibold ${isActiveRead ? "border-emerald-600/50 text-emerald-400" : ""}`}
               onClick={() => {
                 markRefRead(activeRef, entry.day);
-                // Auto-advance to next unread
                 if (!isActiveRead && activeRefIndex < refs.length - 1) {
                   setActiveRefIndex(i => i + 1);
                 }
               }}
             >
-              <Eye className="h-4 w-4 mr-1" />
+              <Eye className="h-4 w-4 mr-1.5" />
               {isActiveRead ? "Leitura concluída ✓" : "Marcar como lido"}
             </Button>
-
-            {/* Mark entire day */}
             <Button
               onClick={onToggle}
               variant={isCompleted ? "outline" : "default"}
               size="sm"
-              className={`flex-1 ${isCompleted ? "border-emerald-600 text-emerald-400" : "bg-emerald-600 hover:bg-emerald-700"}`}
+              className={`flex-1 text-xs font-semibold ${isCompleted ? "border-emerald-600/50 text-emerald-400" : "bg-emerald-600 hover:bg-emerald-700"}`}
             >
-              <CheckCircle2 className="h-4 w-4 mr-1" />
+              <CheckCircle2 className="h-4 w-4 mr-1.5" />
               {isCompleted ? "Dia concluído ✓" : "Concluir dia"}
             </Button>
           </div>
