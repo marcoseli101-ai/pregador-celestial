@@ -17,6 +17,7 @@ import Devocional from "./pages/Devocional";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import AreaPregador from "./pages/AreaPregador";
+import AnnualReadingPlan from "./components/AnnualReadingPlan";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
