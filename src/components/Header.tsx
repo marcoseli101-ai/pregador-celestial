@@ -16,6 +16,7 @@ const navItems = [
   { label: "Questionários", path: "/questionarios" },
   { label: "Devocional", path: "/devocional" },
   { label: "Área do Pregador", path: "/area-pregador" },
+  { label: "Plano de Leitura", path: "/plano-leitura" },
 ];
 
 export function Header() {
