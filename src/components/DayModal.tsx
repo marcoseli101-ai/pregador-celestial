@@ -90,9 +90,10 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
   const [refData, setRefData] = useState<Record<string, RefData>>({});
   const [readRefs, setReadRefs] = useState<Set<string>>(loadReadRefs);
 
-  // Reset active index when entry changes
+  // Reset when entry changes
   useEffect(() => {
     setActiveRefIndex(0);
+    setRefData({});
   }, [entry?.day]);
 
   // Save read refs
