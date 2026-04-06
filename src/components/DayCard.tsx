@@ -26,6 +26,7 @@ export function DayCard({
   onToggle,
   onClick,
   justCompleted,
+  readProgress = 0,
 }: DayCardProps) {
   return (
     <Card
