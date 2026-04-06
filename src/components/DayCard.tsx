@@ -13,6 +13,7 @@ interface DayCardProps {
   onToggle: () => void;
   onClick: () => void;
   justCompleted: boolean;
+  readProgress?: number; // 0-100
 }
 
 export function DayCard({
