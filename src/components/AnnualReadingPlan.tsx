@@ -192,6 +192,7 @@ export default function AnnualReadingPlan() {
               onToggle={() => handleToggle(entry.day)}
               onClick={() => openModal(entry)}
               justCompleted={justCompleted === entry.day}
+              readProgress={getDayReadProgress(entry)}
             />
           </div>
         ))}
