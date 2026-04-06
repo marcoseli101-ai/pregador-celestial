@@ -94,6 +94,7 @@ export function DayModal({ entry, dateLabel, isCompleted, open, onOpenChange, on
   useEffect(() => {
     setActiveRefIndex(0);
     setRefData({});
+    fetchedRefsRef.current = new Set();
   }, [entry?.day]);
 
   // Save read refs
