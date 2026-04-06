@@ -20,6 +20,7 @@ import AreaPregador from "./pages/AreaPregador";
 import PlanoLeitura from "./pages/PlanoLeitura";
 import NotFound from "./pages/NotFound";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (
