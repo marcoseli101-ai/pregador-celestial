@@ -12,6 +12,8 @@ import { DayCard } from "@/components/DayCard";
 import { DayModal } from "@/components/DayModal";
 import type { DayEntry } from "@/data/biblicalPlan";
 
+const READ_REFS_KEY = "reading-plan-read-refs";
+
 const MONTHS_PT = [
   "janeiro","fevereiro","março","abril","maio","junho",
   "julho","agosto","setembro","outubro","novembro","dezembro",
