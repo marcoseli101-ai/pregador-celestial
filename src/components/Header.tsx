@@ -9,6 +9,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 const navItems = [
   { label: "Início", path: "/" },
   { label: "Estudo Bíblico", path: "/estudo-biblico" },
+  { label: "Plano de Leitura", path: "/plano-leitura" },
   { label: "Gerador de Pregações", path: "/gerador-pregacoes" },
   { label: "Biblioteca", path: "/biblioteca" },
   { label: "Curso de Teologia", path: "/curso-teologia" },
@@ -16,7 +17,6 @@ const navItems = [
   { label: "Questionários", path: "/questionarios" },
   { label: "Devocional", path: "/devocional" },
   { label: "Área do Pregador", path: "/area-pregador" },
-  { label: "Plano de Leitura", path: "/plano-leitura" },
 ];
 
 export function Header() {
