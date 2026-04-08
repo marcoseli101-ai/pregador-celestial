@@ -30,8 +30,8 @@ const BROWSER_VOICES = [
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [engine, setEngine] = useState<TTSEngine>("google");
-  const [selectedVoice, setSelectedVoice] = useState("feminina-1");
+  const [engine, setEngine] = useState<TTSEngine>("browser");
+  const [selectedVoice, setSelectedVoice] = useState("browser-female");
   const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
