@@ -12,16 +12,21 @@ interface AudioPlayerModalProps {
 }
 
 type PlayState = "idle" | "playing" | "paused" | "loading";
-type TTSEngine = "google" | "browser";
+type TTSEngine = "pollinations" | "browser";
 
-const GOOGLE_VOICES = [
-  { id: "feminina-1", label: "🇧🇷 Wavenet Feminina — Suave e natural", category: "Feminina" },
-  { id: "feminina-2", label: "🇧🇷 Neural Feminina — Clara e expressiva", category: "Feminina" },
-  { id: "feminina-3", label: "🇧🇷 Neural Feminina 2 — Calorosa", category: "Feminina" },
-  { id: "feminina-studio", label: "🇧🇷 Studio Feminina — Alta qualidade", category: "Feminina" },
-  { id: "masculina-1", label: "🇧🇷 Wavenet Masculina — Profunda", category: "Masculina" },
-  { id: "masculina-2", label: "🇧🇷 Neural Masculina — Firme e clara", category: "Masculina" },
-  { id: "masculina-studio", label: "🇧🇷 Studio Masculina — Profissional", category: "Masculina" },
+const POLLINATIONS_VOICES = [
+  { id: "daniel", label: "🇧🇷 Daniel — Masculina, serena e pastoral", category: "Masculina" },
+  { id: "roger", label: "🇧🇷 Roger — Masculina, grave e autoritária", category: "Masculina" },
+  { id: "george", label: "🇧🇷 George — Masculina, profunda e envolvente", category: "Masculina" },
+  { id: "charlie", label: "🇧🇷 Charlie — Masculina, jovem e energética", category: "Masculina" },
+  { id: "liam", label: "🇧🇷 Liam — Masculina, clara e eloquente", category: "Masculina" },
+  { id: "brian", label: "🇧🇷 Brian — Masculina, narrativa e profissional", category: "Masculina" },
+  { id: "sarah", label: "🇧🇷 Sarah — Feminina, suave e natural", category: "Feminina" },
+  { id: "laura", label: "🇧🇷 Laura — Feminina, clara e expressiva", category: "Feminina" },
+  { id: "alice", label: "🇧🇷 Alice — Feminina, jovem e dinâmica", category: "Feminina" },
+  { id: "jessica", label: "🇧🇷 Jessica — Feminina, madura e firme", category: "Feminina" },
+  { id: "lily", label: "🇧🇷 Lily — Feminina, doce e calma", category: "Feminina" },
+  { id: "matilda", label: "🇧🇷 Matilda — Feminina, calorosa e acolhedora", category: "Feminina" },
 ];
 
 const BROWSER_VOICES = [
@@ -30,9 +35,9 @@ const BROWSER_VOICES = [
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [engine, setEngine] = useState<TTSEngine>("browser");
-  const [selectedVoice, setSelectedVoice] = useState("browser-female");
-  const [rate, setRate] = useState(1);
+  const [engine, setEngine] = useState<TTSEngine>("pollinations");
+  const [selectedVoice, setSelectedVoice] = useState("daniel");
+  const [rate, setRate] = useState(0.95);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -45,10 +50,10 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   }, [open]);
 
   useEffect(() => {
-    setSelectedVoice(engine === "google" ? "feminina-1" : "browser-female");
+    setSelectedVoice(engine === "pollinations" ? "daniel" : "browser-male");
   }, [engine]);
 
-  const voiceOptions = engine === "google" ? GOOGLE_VOICES : BROWSER_VOICES;
+  const voiceOptions = engine === "pollinations" ? POLLINATIONS_VOICES : BROWSER_VOICES;
   const cleanText = (text: string) => text.replace(/[#*_`]/g, "").replace(/\n{2,}/g, ". ").trim();
 
   const getBrowserVoice = (voiceId: string): SpeechSynthesisVoice | null => {
@@ -84,9 +89,9 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     });
   }, [rate, selectedVoice]);
 
-  const playWithGoogle = useCallback(async (text: string) => {
+  const playWithPollinations = useCallback(async (text: string) => {
     const response = await fetch(
-      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/google-tts`,
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
       {
         method: "POST",
         headers: {
@@ -100,29 +105,19 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Google TTS error: ${response.status} - ${errorText}`);
+      throw new Error(`Pollinations TTS error: ${response.status} - ${errorText}`);
     }
 
-    const data = await response.json();
-    if (!data.audioContent) throw new Error("No audio content received");
-
-    const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
-    
-    // Create blob for download
-    const byteCharacters = atob(data.audioContent);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    audioBlobRef.current = new Blob([byteArray], { type: "audio/mpeg" });
+    const audioBlob = await response.blob();
+    audioBlobRef.current = audioBlob;
+    const url = URL.createObjectURL(audioBlob);
 
     if (audioRef.current) {
       audioRef.current.pause();
       URL.revokeObjectURL(audioRef.current.src);
     }
 
-    const audio = new Audio(audioUrl);
+    const audio = new Audio(url);
     audioRef.current = audio;
 
     audio.onended = () => { setPlayState("idle"); setProgress(100); stopProgressTracking(); };
@@ -145,17 +140,17 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         setPlayState("playing");
         await playWithBrowser(cleanedText);
       } else {
-        await playWithGoogle(cleanedText);
+        await playWithPollinations(cleanedText);
         setPlayState("playing");
       }
     } catch (err) {
       console.error("TTS error:", err);
       setPlayState("idle");
-      toast.error(engine === "google"
-        ? "Erro no Google TTS. Tente o motor 'Navegador'."
+      toast.error(engine === "pollinations"
+        ? "Erro no Pollinations TTS. Tente o motor 'Navegador'."
         : "Erro ao gerar áudio.");
     }
-  }, [content, playState, engine, playWithBrowser, playWithGoogle]);
+  }, [content, playState, engine, playWithBrowser, playWithPollinations]);
 
   const startProgressTracking = () => {
     stopProgressTracking();
@@ -186,7 +181,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   }, []);
 
   const handleDownload = useCallback(() => {
-    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use Google Cloud."); return; }
+    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use Pollinations."); return; }
     if (!audioBlobRef.current) { toast.error("Gere o áudio primeiro antes de baixar."); return; }
     const url = URL.createObjectURL(audioBlobRef.current);
     const a = document.createElement("a");
@@ -203,7 +198,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
   const rateLabel = rate === 1 ? "Normal" : `${rate.toFixed(2)}x`;
   const selectedVoiceInfo = voiceOptions.find(v => v.id === selectedVoice);
-  const hasAudio = engine === "google" && (audioBlobRef.current !== null || playState !== "idle");
+  const hasAudio = engine === "pollinations" && (audioBlobRef.current !== null || playState !== "idle");
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -222,15 +217,15 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Motor de Áudio</label>
             <div className="flex gap-2">
-              <Button variant={engine === "google" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("google"); }} disabled={playState !== "idle"} className="flex-1">
-                ☁️ Google Cloud
+              <Button variant={engine === "pollinations" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("pollinations"); }} disabled={playState !== "idle"} className="flex-1">
+                🎙️ Pollinations AI
               </Button>
               <Button variant={engine === "browser" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("browser"); }} disabled={playState !== "idle"} className="flex-1">
                 🖥️ Navegador
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              {engine === "google" ? "Vozes neurais profissionais pt-BR com download." : "Gratuito e offline. Usa as vozes do seu dispositivo."}
+              {engine === "pollinations" ? "Vozes ElevenLabs via Pollinations AI. Alta qualidade com download." : "Gratuito e offline. Usa as vozes do seu dispositivo."}
             </p>
           </div>
 
@@ -242,12 +237,12 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
             <Select value={selectedVoice} onValueChange={setSelectedVoice} disabled={playState !== "idle"}>
               <SelectTrigger className="w-full"><SelectValue placeholder="Selecione uma voz" /></SelectTrigger>
               <SelectContent className="max-h-[300px]">
-                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Vozes Femininas</div>
-                {voiceOptions.filter(v => v.category === "Feminina").map(v => (
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Vozes Masculinas</div>
+                {voiceOptions.filter(v => v.category === "Masculina").map(v => (
                   <SelectItem key={v.id} value={v.id} className="text-sm">{v.label}</SelectItem>
                 ))}
-                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-1">Vozes Masculinas</div>
-                {voiceOptions.filter(v => v.category === "Masculina").map(v => (
+                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-1">Vozes Femininas</div>
+                {voiceOptions.filter(v => v.category === "Feminina").map(v => (
                   <SelectItem key={v.id} value={v.id} className="text-sm">{v.label}</SelectItem>
                 ))}
               </SelectContent>
@@ -260,7 +255,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
             <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
               <Gauge className="h-4 w-4 text-muted-foreground" /> Velocidade: <span className="text-primary font-semibold">{rateLabel}</span>
             </label>
-            <Slider value={[rate]} onValueChange={([v]) => setRate(v)} min={0.5} max={2} step={0.1} disabled={playState !== "idle"} className="w-full" />
+            <Slider value={[rate]} onValueChange={([v]) => setRate(v)} min={0.5} max={2} step={0.05} disabled={playState !== "idle"} className="w-full" />
             <div className="flex justify-between text-xs text-muted-foreground"><span>Lenta</span><span>Normal</span><span>Rápida</span></div>
           </div>
 
