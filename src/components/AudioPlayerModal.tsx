@@ -12,25 +12,26 @@ interface AudioPlayerModalProps {
 }
 
 type PlayState = "idle" | "playing" | "paused" | "loading";
-type TTSEngine = "browser" | "pollinations";
+type TTSEngine = "google" | "browser";
 
-const BROWSER_VOICES = [
-  { id: "browser-female-1", label: "🇧🇷 Voz Feminina — Padrão do sistema", category: "Feminina" },
-  { id: "browser-male-1", label: "🇧🇷 Voz Masculina — Padrão do sistema", category: "Masculina" },
+const GOOGLE_VOICES = [
+  { id: "feminina-1", label: "🇧🇷 Wavenet Feminina — Suave e natural", category: "Feminina" },
+  { id: "feminina-2", label: "🇧🇷 Neural Feminina — Clara e expressiva", category: "Feminina" },
+  { id: "feminina-3", label: "🇧🇷 Neural Feminina 2 — Calorosa", category: "Feminina" },
+  { id: "feminina-studio", label: "🇧🇷 Studio Feminina — Alta qualidade", category: "Feminina" },
+  { id: "masculina-1", label: "🇧🇷 Wavenet Masculina — Profunda", category: "Masculina" },
+  { id: "masculina-2", label: "🇧🇷 Neural Masculina — Firme e clara", category: "Masculina" },
+  { id: "masculina-studio", label: "🇧🇷 Studio Masculina — Profissional", category: "Masculina" },
 ];
 
-const POLLINATIONS_VOICES = [
-  { id: "alloy", label: "🌐 Alloy — Neutra, profissional", category: "Feminina" },
-  { id: "nova", label: "🌐 Nova — Brilhante, amigável", category: "Feminina" },
-  { id: "shimmer", label: "🌐 Shimmer — Suave, melódica", category: "Feminina" },
-  { id: "fable", label: "🌐 Fable — Narrativa, calorosa", category: "Feminina" },
-  { id: "echo", label: "🌐 Echo — Profunda, ressonante", category: "Masculina" },
-  { id: "onyx", label: "🌐 Onyx — Rica, envolvente", category: "Masculina" },
+const BROWSER_VOICES = [
+  { id: "browser-female", label: "🖥️ Voz Feminina — Padrão do sistema", category: "Feminina" },
+  { id: "browser-male", label: "🖥️ Voz Masculina — Padrão do sistema", category: "Masculina" },
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
   const [engine, setEngine] = useState<TTSEngine>("browser");
-  const [selectedVoice, setSelectedVoice] = useState("browser-female-1");
+  const [selectedVoice, setSelectedVoice] = useState("browser-female");
   const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
@@ -44,20 +45,17 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   }, [open]);
 
   useEffect(() => {
-    setSelectedVoice(engine === "browser" ? "browser-female-1" : "alloy");
+    setSelectedVoice(engine === "google" ? "feminina-1" : "browser-female");
   }, [engine]);
 
-  const voiceOptions = engine === "browser" ? BROWSER_VOICES : POLLINATIONS_VOICES;
-
+  const voiceOptions = engine === "google" ? GOOGLE_VOICES : BROWSER_VOICES;
   const cleanText = (text: string) => text.replace(/[#*_`]/g, "").replace(/\n{2,}/g, ". ").trim();
 
   const getBrowserVoice = (voiceId: string): SpeechSynthesisVoice | null => {
     const voices = window.speechSynthesis.getVoices();
     const isFemale = voiceId.includes("female");
     const ptVoices = voices.filter(v => v.lang.startsWith("pt"));
-    if (ptVoices.length > 0) {
-      return isFemale ? ptVoices[0] : ptVoices[Math.min(1, ptVoices.length - 1)];
-    }
+    if (ptVoices.length > 0) return isFemale ? ptVoices[0] : ptVoices[Math.min(1, ptVoices.length - 1)];
     return voices.length > 0 ? voices[isFemale ? 0 : Math.min(1, voices.length - 1)] : null;
   };
 
@@ -71,15 +69,8 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
       if (voice) utterance.voice = voice;
       utteranceRef.current = utterance;
 
-      utterance.onend = () => {
-        setPlayState("idle");
-        setProgress(100);
-        stopProgressTracking();
-        resolve();
-      };
-      utterance.onerror = (e) => {
-        if (e.error !== "canceled") reject(new Error(e.error));
-      };
+      utterance.onend = () => { setPlayState("idle"); setProgress(100); stopProgressTracking(); resolve(); };
+      utterance.onerror = (e) => { if (e.error !== "canceled") reject(new Error(e.error)); };
 
       const estimatedDuration = (text.length / 15) / rate;
       const startTime = Date.now();
@@ -93,25 +84,45 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     });
   }, [rate, selectedVoice]);
 
-  const playWithPollinations = useCallback(async (text: string) => {
-    const truncated = text.slice(0, 2000);
-    const encodedText = encodeURIComponent(truncated);
-    const url = `https://text.pollinations.ai/${encodedText}?model=openai-audio&voice=${selectedVoice}`;
+  const playWithGoogle = useCallback(async (text: string) => {
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/google-tts`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ text, voice: selectedVoice, speed: rate }),
+      }
+    );
 
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Pollinations API error: ${response.status}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Google TTS error: ${response.status} - ${errorText}`);
+    }
 
-    const audioBlob = await response.blob();
-    audioBlobRef.current = audioBlob;
-    const blobUrl = URL.createObjectURL(audioBlob);
+    const data = await response.json();
+    if (!data.audioContent) throw new Error("No audio content received");
+
+    const audioUrl = `data:audio/mpeg;base64,${data.audioContent}`;
+    
+    // Create blob for download
+    const byteCharacters = atob(data.audioContent);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    audioBlobRef.current = new Blob([byteArray], { type: "audio/mpeg" });
 
     if (audioRef.current) {
       audioRef.current.pause();
       URL.revokeObjectURL(audioRef.current.src);
     }
 
-    const audio = new Audio(blobUrl);
-    audio.playbackRate = rate;
+    const audio = new Audio(audioUrl);
     audioRef.current = audio;
 
     audio.onended = () => { setPlayState("idle"); setProgress(100); stopProgressTracking(); };
@@ -134,17 +145,17 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         setPlayState("playing");
         await playWithBrowser(cleanedText);
       } else {
-        await playWithPollinations(cleanedText);
+        await playWithGoogle(cleanedText);
         setPlayState("playing");
       }
     } catch (err) {
       console.error("TTS error:", err);
       setPlayState("idle");
-      toast.error(engine === "pollinations"
-        ? "Erro na API Pollinations. Tente o motor 'Navegador'."
+      toast.error(engine === "google"
+        ? "Erro no Google TTS. Tente o motor 'Navegador'."
         : "Erro ao gerar áudio.");
     }
-  }, [content, playState, engine, playWithBrowser, playWithPollinations]);
+  }, [content, playState, engine, playWithBrowser, playWithGoogle]);
 
   const startProgressTracking = () => {
     stopProgressTracking();
@@ -160,7 +171,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   };
 
   const handlePause = useCallback(() => {
-    if (engine === "browser") { window.speechSynthesis.pause(); }
+    if (engine === "browser") window.speechSynthesis.pause();
     else if (audioRef.current) { audioRef.current.pause(); stopProgressTracking(); }
     setPlayState("paused");
   }, [engine]);
@@ -175,7 +186,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   }, []);
 
   const handleDownload = useCallback(() => {
-    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use Pollinations."); return; }
+    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use Google Cloud."); return; }
     if (!audioBlobRef.current) { toast.error("Gere o áudio primeiro antes de baixar."); return; }
     const url = URL.createObjectURL(audioBlobRef.current);
     const a = document.createElement("a");
@@ -192,15 +203,14 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
   const rateLabel = rate === 1 ? "Normal" : `${rate.toFixed(2)}x`;
   const selectedVoiceInfo = voiceOptions.find(v => v.id === selectedVoice);
-  const hasAudio = engine === "pollinations" && (audioBlobRef.current !== null || playState !== "idle");
+  const hasAudio = engine === "google" && (audioBlobRef.current !== null || playState !== "idle");
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-md bg-card rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-            <Volume2 className="h-5 w-5 text-primary" />
-            Leitor de Áudio
+            <Volume2 className="h-5 w-5 text-primary" /> Leitor de Áudio
           </h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-5 w-5" />
@@ -208,23 +218,23 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         </div>
 
         <div className="p-6 space-y-5">
-          {/* Engine Selection */}
+          {/* Engine */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Motor de Áudio</label>
             <div className="flex gap-2">
+              <Button variant={engine === "google" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("google"); }} disabled={playState !== "idle"} className="flex-1">
+                ☁️ Google Cloud
+              </Button>
               <Button variant={engine === "browser" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("browser"); }} disabled={playState !== "idle"} className="flex-1">
                 🖥️ Navegador
               </Button>
-              <Button variant={engine === "pollinations" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("pollinations"); }} disabled={playState !== "idle"} className="flex-1">
-                🌐 Pollinations AI
-              </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              {engine === "browser" ? "Gratuito e offline. Usa as vozes do seu dispositivo." : "Vozes IA de alta qualidade (pode ser instável). Requer internet."}
+              {engine === "google" ? "Vozes neurais profissionais pt-BR com download." : "Gratuito e offline. Usa as vozes do seu dispositivo."}
             </p>
           </div>
 
-          {/* Voice Selection */}
+          {/* Voice */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
               <Mic className="h-4 w-4 text-muted-foreground" /> Escolha a Voz
