@@ -53,22 +53,22 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     try {
       const cleanedText = cleanText(content);
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ text: cleanedText, voice: selectedVoice, speed: rate }),
-        }
-      );
+      const response = await fetch("https://text.pollinations.ai/openai/audio/speech", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openai-audio",
+          input: cleanedText,
+          voice: selectedVoice,
+          response_format: "mp3",
+          speed: rate,
+        }),
+      });
 
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || `Request failed: ${response.status}`);
+        throw new Error(`Request failed: ${response.status}`);
       }
 
       const audioBlob = await response.blob();
