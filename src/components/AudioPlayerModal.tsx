@@ -14,18 +14,13 @@ interface AudioPlayerModalProps {
 type PlayState = "idle" | "playing" | "paused" | "loading";
 
 const VOICE_OPTIONS = [
-  { id: "sarah", label: "🇧🇷 Sarah — Feminina, suave e natural", category: "Feminina" },
-  { id: "laura", label: "🇧🇷 Laura — Feminina, clara e expressiva", category: "Feminina" },
-  { id: "alice", label: "🇧🇷 Alice — Feminina, jovem e dinâmica", category: "Feminina" },
-  { id: "jessica", label: "🇧🇷 Jessica — Feminina, madura e firme", category: "Feminina" },
-  { id: "lily", label: "🇧🇷 Lily — Feminina, doce e calma", category: "Feminina" },
-  { id: "matilda", label: "🇧🇷 Matilda — Feminina, calorosa e acolhedora", category: "Feminina" },
-  { id: "roger", label: "🇧🇷 Roger — Masculina, grave e autoritária", category: "Masculina" },
-  { id: "george", label: "🇧🇷 George — Masculina, profunda e envolvente", category: "Masculina" },
-  { id: "charlie", label: "🇧🇷 Charlie — Masculina, jovem e energética", category: "Masculina" },
+  { id: "alloy", label: "🇧🇷 Alloy — Feminina, suave e natural", category: "Feminina" },
+  { id: "nova", label: "🇧🇷 Nova — Feminina, clara e expressiva", category: "Feminina" },
+  { id: "shimmer", label: "🇧🇷 Shimmer — Feminina, jovem e dinâmica", category: "Feminina" },
+  { id: "fable", label: "🇧🇷 Fable — Feminina, calorosa e narrativa", category: "Feminina" },
   { id: "daniel", label: "🇧🇷 Daniel — Masculina, serena e pastoral", category: "Masculina" },
-  { id: "liam", label: "🇧🇷 Liam — Masculina, clara e eloquente", category: "Masculina" },
-  { id: "brian", label: "🇧🇷 Brian — Masculina, narrativa e profissional", category: "Masculina" },
+  { id: "echo", label: "🇧🇷 Echo — Masculina, grave e profunda", category: "Masculina" },
+  { id: "onyx", label: "🇧🇷 Onyx — Masculina, profissional e firme", category: "Masculina" },
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
@@ -58,22 +53,22 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     try {
       const cleanedText = cleanText(content);
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ text: cleanedText, voice: selectedVoice, speed: rate }),
-        }
-      );
+      const response = await fetch("https://text.pollinations.ai/openai/audio/speech", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openai-audio",
+          input: cleanedText,
+          voice: selectedVoice,
+          response_format: "mp3",
+          speed: rate,
+        }),
+      });
 
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || `Request failed: ${response.status}`);
+        throw new Error(`Request failed: ${response.status}`);
       }
 
       const audioBlob = await response.blob();
