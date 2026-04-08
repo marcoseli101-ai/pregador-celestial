@@ -12,162 +12,191 @@ interface AudioPlayerModalProps {
 }
 
 type PlayState = "idle" | "playing" | "paused" | "loading";
+type TTSEngine = "browser" | "pollinations";
 
-const VOICE_OPTIONS = [
-  { id: "alloy", label: "🇧🇷 Alloy — Feminina, suave e natural", category: "Feminina" },
-  { id: "nova", label: "🇧🇷 Nova — Feminina, clara e expressiva", category: "Feminina" },
-  { id: "shimmer", label: "🇧🇷 Shimmer — Feminina, jovem e dinâmica", category: "Feminina" },
-  { id: "fable", label: "🇧🇷 Fable — Feminina, calorosa e narrativa", category: "Feminina" },
-  { id: "daniel", label: "🇧🇷 Daniel — Masculina, serena e pastoral", category: "Masculina" },
-  { id: "echo", label: "🇧🇷 Echo — Masculina, grave e profunda", category: "Masculina" },
-  { id: "onyx", label: "🇧🇷 Onyx — Masculina, profissional e firme", category: "Masculina" },
+const BROWSER_VOICES = [
+  { id: "browser-female-1", label: "🇧🇷 Voz Feminina — Padrão do sistema", category: "Feminina" },
+  { id: "browser-male-1", label: "🇧🇷 Voz Masculina — Padrão do sistema", category: "Masculina" },
+];
+
+const POLLINATIONS_VOICES = [
+  { id: "alloy", label: "🌐 Alloy — Neutra, profissional", category: "Feminina" },
+  { id: "nova", label: "🌐 Nova — Brilhante, amigável", category: "Feminina" },
+  { id: "shimmer", label: "🌐 Shimmer — Suave, melódica", category: "Feminina" },
+  { id: "fable", label: "🌐 Fable — Narrativa, calorosa", category: "Feminina" },
+  { id: "echo", label: "🌐 Echo — Profunda, ressonante", category: "Masculina" },
+  { id: "onyx", label: "🌐 Onyx — Rica, envolvente", category: "Masculina" },
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [selectedVoice, setSelectedVoice] = useState("daniel");
+  const [engine, setEngine] = useState<TTSEngine>("browser");
+  const [selectedVoice, setSelectedVoice] = useState("browser-female-1");
   const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioBlobRef = useRef<Blob | null>(null);
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
-    if (!open) {
-      handleStop();
-    }
+    if (!open) handleStop();
   }, [open]);
 
-  const cleanText = (text: string) => text.replace(/[#*_]/g, "").trim();
+  useEffect(() => {
+    setSelectedVoice(engine === "browser" ? "browser-female-1" : "alloy");
+  }, [engine]);
 
-  const handlePlay = useCallback(async () => {
-    if (playState === "paused" && audioRef.current) {
-      audioRef.current.play();
-      setPlayState("playing");
-      startProgressTracking();
-      return;
+  const voiceOptions = engine === "browser" ? BROWSER_VOICES : POLLINATIONS_VOICES;
+
+  const cleanText = (text: string) => text.replace(/[#*_`]/g, "").replace(/\n{2,}/g, ". ").trim();
+
+  const getBrowserVoice = (voiceId: string): SpeechSynthesisVoice | null => {
+    const voices = window.speechSynthesis.getVoices();
+    const isFemale = voiceId.includes("female");
+    const ptVoices = voices.filter(v => v.lang.startsWith("pt"));
+    if (ptVoices.length > 0) {
+      return isFemale ? ptVoices[0] : ptVoices[Math.min(1, ptVoices.length - 1)];
     }
+    return voices.length > 0 ? voices[isFemale ? 0 : Math.min(1, voices.length - 1)] : null;
+  };
 
-    setPlayState("loading");
+  const playWithBrowser = useCallback((text: string) => {
+    return new Promise<void>((resolve, reject) => {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = rate;
+      utterance.lang = "pt-BR";
+      const voice = getBrowserVoice(selectedVoice);
+      if (voice) utterance.voice = voice;
+      utteranceRef.current = utterance;
 
-    try {
-      const cleanedText = cleanText(content);
-
-      const response = await fetch("https://text.pollinations.ai/openai/audio/speech", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "openai-audio",
-          input: cleanedText,
-          voice: selectedVoice,
-          response_format: "mp3",
-          speed: rate,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`);
-      }
-
-      const audioBlob = await response.blob();
-      audioBlobRef.current = audioBlob;
-      const url = URL.createObjectURL(audioBlob);
-
-      if (audioRef.current) {
-        audioRef.current.pause();
-        URL.revokeObjectURL(audioRef.current.src);
-      }
-
-      const audio = new Audio(url);
-      audioRef.current = audio;
-
-      audio.onended = () => {
+      utterance.onend = () => {
         setPlayState("idle");
         setProgress(100);
         stopProgressTracking();
+        resolve();
+      };
+      utterance.onerror = (e) => {
+        if (e.error !== "canceled") reject(new Error(e.error));
       };
 
-      audio.onerror = () => {
-        setPlayState("idle");
-        toast.error("Erro ao reproduzir áudio");
-        stopProgressTracking();
-      };
+      const estimatedDuration = (text.length / 15) / rate;
+      const startTime = Date.now();
+      stopProgressTracking();
+      progressIntervalRef.current = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        setProgress(Math.min(99, Math.round((elapsed / estimatedDuration) * 100)));
+      }, 300);
 
-      await audio.play();
-      setPlayState("playing");
-      startProgressTracking();
+      window.speechSynthesis.speak(utterance);
+    });
+  }, [rate, selectedVoice]);
+
+  const playWithPollinations = useCallback(async (text: string) => {
+    const truncated = text.slice(0, 2000);
+    const encodedText = encodeURIComponent(truncated);
+    const url = `https://text.pollinations.ai/${encodedText}?model=openai-audio&voice=${selectedVoice}`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Pollinations API error: ${response.status}`);
+
+    const audioBlob = await response.blob();
+    audioBlobRef.current = audioBlob;
+    const blobUrl = URL.createObjectURL(audioBlob);
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      URL.revokeObjectURL(audioRef.current.src);
+    }
+
+    const audio = new Audio(blobUrl);
+    audio.playbackRate = rate;
+    audioRef.current = audio;
+
+    audio.onended = () => { setPlayState("idle"); setProgress(100); stopProgressTracking(); };
+    audio.onerror = () => { setPlayState("idle"); toast.error("Erro ao reproduzir áudio"); stopProgressTracking(); };
+
+    await audio.play();
+    startProgressTracking();
+  }, [selectedVoice, rate]);
+
+  const handlePlay = useCallback(async () => {
+    if (playState === "paused") {
+      if (engine === "browser") { window.speechSynthesis.resume(); setPlayState("playing"); return; }
+      if (audioRef.current) { audioRef.current.play(); setPlayState("playing"); startProgressTracking(); return; }
+    }
+
+    setPlayState("loading");
+    try {
+      const cleanedText = cleanText(content);
+      if (engine === "browser") {
+        setPlayState("playing");
+        await playWithBrowser(cleanedText);
+      } else {
+        await playWithPollinations(cleanedText);
+        setPlayState("playing");
+      }
     } catch (err) {
       console.error("TTS error:", err);
       setPlayState("idle");
-      toast.error("Erro ao gerar áudio. Verifique sua conexão.");
+      toast.error(engine === "pollinations"
+        ? "Erro na API Pollinations. Tente o motor 'Navegador'."
+        : "Erro ao gerar áudio.");
     }
-  }, [content, playState, selectedVoice, rate]);
+  }, [content, playState, engine, playWithBrowser, playWithPollinations]);
 
   const startProgressTracking = () => {
     stopProgressTracking();
     progressIntervalRef.current = setInterval(() => {
       if (audioRef.current && audioRef.current.duration) {
-        const pct = Math.round((audioRef.current.currentTime / audioRef.current.duration) * 100);
-        setProgress(pct);
+        setProgress(Math.round((audioRef.current.currentTime / audioRef.current.duration) * 100));
       }
     }, 200);
   };
 
   const stopProgressTracking = () => {
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current);
-      progressIntervalRef.current = null;
-    }
+    if (progressIntervalRef.current) { clearInterval(progressIntervalRef.current); progressIntervalRef.current = null; }
   };
 
   const handlePause = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setPlayState("paused");
-      stopProgressTracking();
-    }
-  }, []);
+    if (engine === "browser") { window.speechSynthesis.pause(); }
+    else if (audioRef.current) { audioRef.current.pause(); stopProgressTracking(); }
+    setPlayState("paused");
+  }, [engine]);
 
   const handleStop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      URL.revokeObjectURL(audioRef.current.src);
-      audioRef.current = null;
-    }
+    window.speechSynthesis.cancel();
+    utteranceRef.current = null;
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; URL.revokeObjectURL(audioRef.current.src); audioRef.current = null; }
     setPlayState("idle");
     setProgress(0);
     stopProgressTracking();
   }, []);
 
   const handleDownload = useCallback(() => {
-    if (!audioBlobRef.current) {
-      toast.error("Gere o áudio primeiro antes de baixar.");
-      return;
-    }
+    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use Pollinations."); return; }
+    if (!audioBlobRef.current) { toast.error("Gere o áudio primeiro antes de baixar."); return; }
     const url = URL.createObjectURL(audioBlobRef.current);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `audio-pregacao.mp3`;
+    a.download = "audio-pregacao.mp3";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     toast.success("Download iniciado!");
-  }, []);
+  }, [engine]);
 
   if (!open) return null;
 
   const rateLabel = rate === 1 ? "Normal" : `${rate.toFixed(2)}x`;
-  const selectedVoiceInfo = VOICE_OPTIONS.find(v => v.id === selectedVoice);
-  const hasAudio = audioBlobRef.current !== null || playState !== "idle";
+  const selectedVoiceInfo = voiceOptions.find(v => v.id === selectedVoice);
+  const hasAudio = engine === "pollinations" && (audioBlobRef.current !== null || playState !== "idle");
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-md bg-card rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
             <Volume2 className="h-5 w-5 text-primary" />
@@ -179,68 +208,57 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         </div>
 
         <div className="p-6 space-y-5">
+          {/* Engine Selection */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Motor de Áudio</label>
+            <div className="flex gap-2">
+              <Button variant={engine === "browser" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("browser"); }} disabled={playState !== "idle"} className="flex-1">
+                🖥️ Navegador
+              </Button>
+              <Button variant={engine === "pollinations" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("pollinations"); }} disabled={playState !== "idle"} className="flex-1">
+                🌐 Pollinations AI
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {engine === "browser" ? "Gratuito e offline. Usa as vozes do seu dispositivo." : "Vozes IA de alta qualidade (pode ser instável). Requer internet."}
+            </p>
+          </div>
+
           {/* Voice Selection */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
-              <Mic className="h-4 w-4 text-muted-foreground" />
-              Escolha a Voz
+              <Mic className="h-4 w-4 text-muted-foreground" /> Escolha a Voz
             </label>
             <Select value={selectedVoice} onValueChange={setSelectedVoice} disabled={playState !== "idle"}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione uma voz" />
-              </SelectTrigger>
+              <SelectTrigger className="w-full"><SelectValue placeholder="Selecione uma voz" /></SelectTrigger>
               <SelectContent className="max-h-[300px]">
                 <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Vozes Femininas</div>
-                {VOICE_OPTIONS.filter(v => v.category === "Feminina").map(v => (
-                  <SelectItem key={v.id} value={v.id} className="text-sm">
-                    {v.label}
-                  </SelectItem>
+                {voiceOptions.filter(v => v.category === "Feminina").map(v => (
+                  <SelectItem key={v.id} value={v.id} className="text-sm">{v.label}</SelectItem>
                 ))}
                 <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-1">Vozes Masculinas</div>
-                {VOICE_OPTIONS.filter(v => v.category === "Masculina").map(v => (
-                  <SelectItem key={v.id} value={v.id} className="text-sm">
-                    {v.label}
-                  </SelectItem>
+                {voiceOptions.filter(v => v.category === "Masculina").map(v => (
+                  <SelectItem key={v.id} value={v.id} className="text-sm">{v.label}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            {selectedVoiceInfo && (
-              <p className="text-xs text-muted-foreground italic">
-                {selectedVoiceInfo.label.split(" — ")[1]}
-              </p>
-            )}
+            {selectedVoiceInfo && <p className="text-xs text-muted-foreground italic">{selectedVoiceInfo.label.split(" — ")[1]}</p>}
           </div>
 
-          {/* Speed Control */}
+          {/* Speed */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
-              <Gauge className="h-4 w-4 text-muted-foreground" />
-              Velocidade: <span className="text-primary font-semibold">{rateLabel}</span>
+              <Gauge className="h-4 w-4 text-muted-foreground" /> Velocidade: <span className="text-primary font-semibold">{rateLabel}</span>
             </label>
-            <Slider
-              value={[rate]}
-              onValueChange={([v]) => setRate(v)}
-              min={0.7}
-              max={1.2}
-              step={0.05}
-              disabled={playState !== "idle"}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Lenta</span>
-              <span>Normal</span>
-              <span>Rápida</span>
-            </div>
+            <Slider value={[rate]} onValueChange={([v]) => setRate(v)} min={0.5} max={2} step={0.1} disabled={playState !== "idle"} className="w-full" />
+            <div className="flex justify-between text-xs text-muted-foreground"><span>Lenta</span><span>Normal</span><span>Rápida</span></div>
           </div>
 
-          {/* Progress Bar */}
+          {/* Progress */}
           {(playState !== "idle" && playState !== "loading") && (
             <div className="space-y-1">
               <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-primary rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
+                <div className="h-full bg-primary rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
               </div>
               <p className="text-xs text-muted-foreground text-center">{progress}% concluído</p>
             </div>
@@ -249,32 +267,17 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           {/* Controls */}
           <div className="flex items-center justify-center gap-3 flex-wrap">
             {playState === "loading" ? (
-              <Button variant="default" size="lg" disabled className="gap-2 min-w-[120px]">
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Gerando...
-              </Button>
+              <Button variant="default" size="lg" disabled className="gap-2 min-w-[120px]"><Loader2 className="h-5 w-5 animate-spin" /> Gerando...</Button>
             ) : playState === "playing" ? (
-              <Button variant="outline" size="lg" onClick={handlePause} className="gap-2 min-w-[120px]">
-                <Pause className="h-5 w-5" />
-                Pausar
-              </Button>
+              <Button variant="outline" size="lg" onClick={handlePause} className="gap-2 min-w-[120px]"><Pause className="h-5 w-5" /> Pausar</Button>
             ) : (
-              <Button variant="default" size="lg" onClick={handlePlay} className="gap-2 min-w-[120px]">
-                <Play className="h-5 w-5" />
-                {playState === "paused" ? "Retomar" : "Ouvir"}
-              </Button>
+              <Button variant="default" size="lg" onClick={handlePlay} className="gap-2 min-w-[120px]"><Play className="h-5 w-5" /> {playState === "paused" ? "Retomar" : "Ouvir"}</Button>
             )}
             {(playState === "playing" || playState === "paused") && (
-              <Button variant="destructive" size="lg" onClick={handleStop} className="gap-2 min-w-[120px]">
-                <Square className="h-5 w-5" />
-                Parar
-              </Button>
+              <Button variant="destructive" size="lg" onClick={handleStop} className="gap-2 min-w-[120px]"><Square className="h-5 w-5" /> Parar</Button>
             )}
             {hasAudio && (
-              <Button variant="secondary" size="lg" onClick={handleDownload} className="gap-2 min-w-[120px]">
-                <Download className="h-5 w-5" />
-                Baixar MP3
-              </Button>
+              <Button variant="secondary" size="lg" onClick={handleDownload} className="gap-2 min-w-[120px]"><Download className="h-5 w-5" /> Baixar MP3</Button>
             )}
           </div>
         </div>
