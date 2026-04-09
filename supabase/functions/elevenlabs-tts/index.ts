@@ -28,7 +28,7 @@ serve(async (req) => {
       });
     }
 
-    const cleanText = text.replace(/[#*_]/g, "").trim().slice(0, 5000);
+    const cleanText = text.replace(/[#*_]/g, "").trim().slice(0, 4096);
     const speakingRate = Math.max(0.5, Math.min(2.0, Number(speed) || 0.95));
 
     console.log(`Generating audio: voice=${voice}, speed=${speakingRate}, textLen=${cleanText.length}`);
@@ -51,8 +51,9 @@ serve(async (req) => {
     if (!response.ok) {
       const errorData = await response.text();
       console.error("Pollinations TTS error:", response.status, errorData);
-      return new Response(JSON.stringify({ error: "Failed to generate audio", details: response.status }), {
-        status: 502,
+      const isFallbackable = response.status >= 400;
+      return new Response(JSON.stringify({ error: "POLLINATIONS_SERVICE_ERROR", fallback: isFallbackable, details: response.status }), {
+        status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
