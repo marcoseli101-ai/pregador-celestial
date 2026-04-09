@@ -103,9 +103,22 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
       }
     );
 
+    const contentType = response.headers.get("Content-Type");
+    if (contentType && contentType.includes("application/json")) {
+      const errorData = await response.json();
+      if (errorData?.fallback) {
+        console.warn("Pollinations TTS fallback triggered, switching to browser TTS");
+        toast.info("Pollinations indisponível. Usando voz do navegador.");
+        setEngine("browser");
+        setSelectedVoice("browser-male");
+        await playWithBrowser(text);
+        return;
+      }
+      throw new Error(errorData?.error || "Erro desconhecido do Pollinations");
+    }
+
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Pollinations TTS error: ${response.status} - ${errorText}`);
+      throw new Error(`Pollinations TTS error: ${response.status}`);
     }
 
     const audioBlob = await response.blob();
@@ -125,7 +138,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
     await audio.play();
     startProgressTracking();
-  }, [selectedVoice, rate]);
+  }, [selectedVoice, rate, playWithBrowser]);
 
   const handlePlay = useCallback(async () => {
     if (playState === "paused") {
