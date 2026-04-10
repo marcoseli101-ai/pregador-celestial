@@ -11,15 +11,15 @@ serve(async (req) => {
   }
 
   try {
-    const apiKey = Deno.env.get("POLLINATIONS_API_KEY");
+    const apiKey = Deno.env.get("MULTIVOZ_API_KEY");
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: "POLLINATIONS_API_KEY not configured" }), {
+      return new Response(JSON.stringify({ error: "MULTIVOZ_API_KEY not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const { text, voice = "daniel", speed = 0.95 } = await req.json();
+    const { text, voice = "alloy" } = await req.json();
 
     if (!text || typeof text !== "string" || text.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Text is required" }), {
@@ -29,30 +29,26 @@ serve(async (req) => {
     }
 
     const cleanText = text.replace(/[#*_]/g, "").trim().slice(0, 4096);
-    const speakingRate = Math.max(0.5, Math.min(2.0, Number(speed) || 0.95));
 
-    console.log(`Generating audio: voice=${voice}, speed=${speakingRate}, textLen=${cleanText.length}`);
+    console.log(`Generating audio: voice=${voice}, textLen=${cleanText.length}`);
 
-    const response = await fetch("https://gen.pollinations.ai/v1/audio/speech", {
+    const response = await fetch("https://multivozesbrengine-production.up.railway.app/v1/audio/speech", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "elevenlabs",
+        model: "tts-1",
         input: cleanText,
         voice: voice,
-        response_format: "mp3",
-        speed: speakingRate,
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error("Pollinations TTS error:", response.status, errorData);
-      const isFallbackable = response.status >= 400;
-      return new Response(JSON.stringify({ error: "POLLINATIONS_SERVICE_ERROR", fallback: isFallbackable, details: response.status }), {
+      console.error("MultiVozes TTS error:", response.status, errorData);
+      return new Response(JSON.stringify({ error: "TTS_SERVICE_ERROR", fallback: true, details: response.status }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

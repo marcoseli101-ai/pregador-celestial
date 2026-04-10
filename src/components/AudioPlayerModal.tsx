@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { X, Play, Pause, Square, Volume2, Gauge, Mic, Loader2, Download } from "lucide-react";
+import { X, Play, Pause, Square, Volume2, Mic, Loader2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
@@ -12,21 +11,10 @@ interface AudioPlayerModalProps {
 }
 
 type PlayState = "idle" | "playing" | "paused" | "loading";
-type TTSEngine = "pollinations" | "browser";
+type TTSEngine = "multivozes" | "browser";
 
-const POLLINATIONS_VOICES = [
-  { id: "daniel", label: "🇧🇷 Daniel — Masculina, serena e pastoral", category: "Masculina" },
-  { id: "roger", label: "🇧🇷 Roger — Masculina, grave e autoritária", category: "Masculina" },
-  { id: "george", label: "🇧🇷 George — Masculina, profunda e envolvente", category: "Masculina" },
-  { id: "charlie", label: "🇧🇷 Charlie — Masculina, jovem e energética", category: "Masculina" },
-  { id: "liam", label: "🇧🇷 Liam — Masculina, clara e eloquente", category: "Masculina" },
-  { id: "brian", label: "🇧🇷 Brian — Masculina, narrativa e profissional", category: "Masculina" },
-  { id: "sarah", label: "🇧🇷 Sarah — Feminina, suave e natural", category: "Feminina" },
-  { id: "laura", label: "🇧🇷 Laura — Feminina, clara e expressiva", category: "Feminina" },
-  { id: "alice", label: "🇧🇷 Alice — Feminina, jovem e dinâmica", category: "Feminina" },
-  { id: "jessica", label: "🇧🇷 Jessica — Feminina, madura e firme", category: "Feminina" },
-  { id: "lily", label: "🇧🇷 Lily — Feminina, doce e calma", category: "Feminina" },
-  { id: "matilda", label: "🇧🇷 Matilda — Feminina, calorosa e acolhedora", category: "Feminina" },
+const MULTIVOZES_VOICES = [
+  { id: "alloy", label: "🎙️ Alloy — Voz padrão, natural", category: "Padrão" },
 ];
 
 const BROWSER_VOICES = [
@@ -35,9 +23,9 @@ const BROWSER_VOICES = [
 ];
 
 export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalProps) {
-  const [engine, setEngine] = useState<TTSEngine>("pollinations");
-  const [selectedVoice, setSelectedVoice] = useState("daniel");
-  const [rate, setRate] = useState(0.95);
+  const [engine, setEngine] = useState<TTSEngine>("multivozes");
+  const [selectedVoice, setSelectedVoice] = useState("alloy");
+  const [rate, setRate] = useState(1);
   const [playState, setPlayState] = useState<PlayState>("idle");
   const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -50,10 +38,10 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   }, [open]);
 
   useEffect(() => {
-    setSelectedVoice(engine === "pollinations" ? "daniel" : "browser-male");
+    setSelectedVoice(engine === "multivozes" ? "alloy" : "browser-male");
   }, [engine]);
 
-  const voiceOptions = engine === "pollinations" ? POLLINATIONS_VOICES : BROWSER_VOICES;
+  const voiceOptions = engine === "multivozes" ? MULTIVOZES_VOICES : BROWSER_VOICES;
   const cleanText = (text: string) => text.replace(/[#*_`]/g, "").replace(/\n{2,}/g, ". ").trim();
 
   const getBrowserVoice = (voiceId: string): SpeechSynthesisVoice | null => {
@@ -89,7 +77,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     });
   }, [rate, selectedVoice]);
 
-  const playWithPollinations = useCallback(async (text: string) => {
+  const playWithMultiVozes = useCallback(async (text: string) => {
     const response = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
       {
@@ -99,7 +87,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ text, voice: selectedVoice, speed: rate }),
+        body: JSON.stringify({ text, voice: selectedVoice }),
       }
     );
 
@@ -107,18 +95,18 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json();
       if (errorData?.fallback) {
-        console.warn("Pollinations TTS fallback triggered, switching to browser TTS");
-        toast.info("Pollinations indisponível. Usando voz do navegador.");
+        console.warn("MultiVozes TTS fallback triggered, switching to browser TTS");
+        toast.info("Serviço de voz indisponível. Usando voz do navegador.");
         setEngine("browser");
         setSelectedVoice("browser-male");
         await playWithBrowser(text);
         return;
       }
-      throw new Error(errorData?.error || "Erro desconhecido do Pollinations");
+      throw new Error(errorData?.error || "Erro desconhecido do serviço de voz");
     }
 
     if (!response.ok) {
-      throw new Error(`Pollinations TTS error: ${response.status}`);
+      throw new Error(`TTS error: ${response.status}`);
     }
 
     const audioBlob = await response.blob();
@@ -153,17 +141,17 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
         setPlayState("playing");
         await playWithBrowser(cleanedText);
       } else {
-        await playWithPollinations(cleanedText);
+        await playWithMultiVozes(cleanedText);
         setPlayState("playing");
       }
     } catch (err) {
       console.error("TTS error:", err);
       setPlayState("idle");
-      toast.error(engine === "pollinations"
-        ? "Erro no Pollinations TTS. Tente o motor 'Navegador'."
+      toast.error(engine === "multivozes"
+        ? "Erro no serviço de voz. Tente o motor 'Navegador'."
         : "Erro ao gerar áudio.");
     }
-  }, [content, playState, engine, playWithBrowser, playWithPollinations]);
+  }, [content, playState, engine, playWithBrowser, playWithMultiVozes]);
 
   const startProgressTracking = () => {
     stopProgressTracking();
@@ -194,7 +182,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   }, []);
 
   const handleDownload = useCallback(() => {
-    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use Pollinations."); return; }
+    if (engine === "browser") { toast.info("Download não disponível para o motor Navegador. Use MultiVozes."); return; }
     if (!audioBlobRef.current) { toast.error("Gere o áudio primeiro antes de baixar."); return; }
     const url = URL.createObjectURL(audioBlobRef.current);
     const a = document.createElement("a");
@@ -209,9 +197,8 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
   if (!open) return null;
 
-  const rateLabel = rate === 1 ? "Normal" : `${rate.toFixed(2)}x`;
   const selectedVoiceInfo = voiceOptions.find(v => v.id === selectedVoice);
-  const hasAudio = engine === "pollinations" && (audioBlobRef.current !== null || playState !== "idle");
+  const hasAudio = engine === "multivozes" && (audioBlobRef.current !== null || playState !== "idle");
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -230,15 +217,15 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Motor de Áudio</label>
             <div className="flex gap-2">
-              <Button variant={engine === "pollinations" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("pollinations"); }} disabled={playState !== "idle"} className="flex-1">
-                🎙️ Pollinations AI
+              <Button variant={engine === "multivozes" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("multivozes"); }} disabled={playState !== "idle"} className="flex-1">
+                🎙️ MultiVozes AI
               </Button>
               <Button variant={engine === "browser" ? "default" : "outline"} size="sm" onClick={() => { if (playState === "idle") setEngine("browser"); }} disabled={playState !== "idle"} className="flex-1">
                 🖥️ Navegador
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              {engine === "pollinations" ? "Vozes ElevenLabs via Pollinations AI. Alta qualidade com download." : "Gratuito e offline. Usa as vozes do seu dispositivo."}
+              {engine === "multivozes" ? "Voz de alta qualidade via MultiVozes AI com download." : "Gratuito e offline. Usa as vozes do seu dispositivo."}
             </p>
           </div>
 
@@ -250,26 +237,12 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
             <Select value={selectedVoice} onValueChange={setSelectedVoice} disabled={playState !== "idle"}>
               <SelectTrigger className="w-full"><SelectValue placeholder="Selecione uma voz" /></SelectTrigger>
               <SelectContent className="max-h-[300px]">
-                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Vozes Masculinas</div>
-                {voiceOptions.filter(v => v.category === "Masculina").map(v => (
-                  <SelectItem key={v.id} value={v.id} className="text-sm">{v.label}</SelectItem>
-                ))}
-                <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-1">Vozes Femininas</div>
-                {voiceOptions.filter(v => v.category === "Feminina").map(v => (
+                {voiceOptions.map(v => (
                   <SelectItem key={v.id} value={v.id} className="text-sm">{v.label}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {selectedVoiceInfo && <p className="text-xs text-muted-foreground italic">{selectedVoiceInfo.label.split(" — ")[1]}</p>}
-          </div>
-
-          {/* Speed */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
-              <Gauge className="h-4 w-4 text-muted-foreground" /> Velocidade: <span className="text-primary font-semibold">{rateLabel}</span>
-            </label>
-            <Slider value={[rate]} onValueChange={([v]) => setRate(v)} min={0.5} max={2} step={0.05} disabled={playState !== "idle"} className="w-full" />
-            <div className="flex justify-between text-xs text-muted-foreground"><span>Lenta</span><span>Normal</span><span>Rápida</span></div>
           </div>
 
           {/* Progress */}
