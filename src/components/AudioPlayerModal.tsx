@@ -138,7 +138,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
     setPlayState("loading");
     try {
-      const cleanedText = cleanText(content);
+      const cleanedText = removeVerseNumbers(cleanText(content));
       await playWithMultiVozes(cleanedText);
       setPlayState("playing");
     } catch (err) {
@@ -147,7 +147,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
       setUseBrowserFallback(true);
       try {
         setPlayState("playing");
-        await playWithBrowser(cleanText(content));
+        await playWithBrowser(removeVerseNumbers(cleanText(content)));
       } catch {
         setPlayState("idle");
         toast.error("Erro ao gerar áudio.");
