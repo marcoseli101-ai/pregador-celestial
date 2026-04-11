@@ -24,8 +24,8 @@ serve(async (req) => {
     }
 
     const { messages, context } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY não configurada");
+    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
+    if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY não configurada");
 
     const systemPrompt = `Você é um professor de teologia das Assembleias de Deus (CGADB — Convenção Geral das Assembleias de Deus no Brasil). Responda dúvidas teológicas com profundidade acadêmica e fidelidade à doutrina pentecostal clássica.
 
@@ -42,14 +42,14 @@ Diretrizes:
 - Use markdown para formatar (negrito, listas, títulos)
 - Respostas em português do Brasil`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`, {
+    const response = await fetch(`https://openrouter.ai/api/v1/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GEMINI_API_KEY}`,
+        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-2.0-flash",
+        model: "google/gemini-2.0-flash-exp:free",
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
