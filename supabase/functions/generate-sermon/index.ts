@@ -234,8 +234,8 @@ serve(async (req) => {
     }
 
     const { tema, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, mode, messages: chatMessages } = await req.json();
-    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
-    if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY is not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
     let messages: { role: string; content: string }[];
 
     if (mode === "chat") {
@@ -256,14 +256,14 @@ serve(async (req) => {
       ];
     }
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "gemini-2.0-flash",
         messages,
         stream: true,
       }),
