@@ -23,8 +23,8 @@ serve(async (req) => {
     }
 
     const { nivel, questionsAnswered } = await req.json();
-    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
-    if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY is not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
     const nivelDescriptions: Record<string, string> = {
       "Fácil": "perguntas simples e diretas sobre fatos básicos da Bíblia que qualquer pessoa com conhecimento básico saberia",
@@ -46,14 +46,14 @@ REGRAS IMPORTANTES:
 
 Perguntas já feitas (NÃO repita estas): ${questionsAnswered || "nenhuma ainda"}`;
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "gemini-2.0-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Gere 1 pergunta bíblica de nível ${nivel}.` },
