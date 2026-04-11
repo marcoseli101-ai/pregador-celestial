@@ -24,8 +24,8 @@ serve(async (req) => {
     }
 
     const { messages, context } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY não configurada");
+    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
+    if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY não configurada");
 
     const systemPrompt = `Você é um professor de teologia das Assembleias de Deus (CGADB — Convenção Geral das Assembleias de Deus no Brasil). Responda dúvidas teológicas com profundidade acadêmica e fidelidade à doutrina pentecostal clássica.
 
@@ -42,14 +42,14 @@ Diretrizes:
 - Use markdown para formatar (negrito, listas, títulos)
 - Respostas em português do Brasil`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${GROQ_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "llama-3.3-70b-versatile",
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
