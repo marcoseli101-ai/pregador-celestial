@@ -38,6 +38,13 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
   const cleanText = (text: string) => text.replace(/[#*_`]/g, "").replace(/\n{2,}/g, ". ").trim();
 
+  const removeVerseNumbers = (text: string) =>
+    text.replace(/(?:^|\n)\s*(\d+)\s+(?=[A-ZÀ-ÚÉa-zà-úé])/g, (match, num, offset) => {
+      const before = text.slice(Math.max(0, text.lastIndexOf("\n", offset - 1)), offset).trim();
+      if (/[A-Za-zÀ-úé]\s*\d+:\s*$/.test(before)) return match;
+      return match.replace(/\d+\s+/, "");
+    });
+
   const stopProgressTracking = () => {
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current);
