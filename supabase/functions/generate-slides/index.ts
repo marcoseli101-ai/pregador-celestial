@@ -52,14 +52,14 @@ REGRAS:
 - Use linguagem clara e profissional
 - Destaque versículos bíblicos quando relevante`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.0-flash-exp:free",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Crie slides profissionais para o seguinte conteúdo:\n\n${content.slice(0, 8000)}` },
