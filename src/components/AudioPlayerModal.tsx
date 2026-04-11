@@ -38,6 +38,11 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
   const cleanText = (text: string) => text.replace(/[#*_`]/g, "").replace(/\n{2,}/g, ". ").trim();
 
+  const removeVerseNumbers = (text: string) =>
+    text.replace(/(^|\n)\s*(\d{1,3})\s+/g, (match, prefix) => {
+      return prefix + " ";
+    });
+
   const stopProgressTracking = () => {
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current);
@@ -133,7 +138,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
     setPlayState("loading");
     try {
-      const cleanedText = cleanText(content);
+      const cleanedText = removeVerseNumbers(cleanText(content));
       await playWithMultiVozes(cleanedText);
       setPlayState("playing");
     } catch (err) {
@@ -142,7 +147,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
       setUseBrowserFallback(true);
       try {
         setPlayState("playing");
-        await playWithBrowser(cleanText(content));
+        await playWithBrowser(removeVerseNumbers(cleanText(content)));
       } catch {
         setPlayState("idle");
         toast.error("Erro ao gerar áudio.");
