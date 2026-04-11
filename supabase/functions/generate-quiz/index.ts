@@ -23,8 +23,8 @@ serve(async (req) => {
     }
 
     const { nivel, questionsAnswered } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
+    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
+    if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is not configured");
 
     const nivelDescriptions: Record<string, string> = {
       "Fácil": "perguntas simples e diretas sobre fatos básicos da Bíblia que qualquer pessoa com conhecimento básico saberia",

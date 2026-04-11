@@ -23,8 +23,8 @@ serve(async (req) => {
     }
 
     const { book, theme, description } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
+    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
+    if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is not configured");
 
     const systemPrompt = `Você é um teólogo evangélico pentecostal com profundo conhecimento bíblico.
 Gere um comentário teológico conciso e edificante sobre o livro solicitado.
@@ -42,14 +42,14 @@ Limite o comentário a aproximadamente 400 palavras.`;
 Tema principal: ${theme}
 Descrição: ${description}`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`, {
+    const response = await fetch(`https://openrouter.ai/api/v1/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GEMINI_API_KEY}`,
+        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gemini-2.0-flash",
+        model: "google/gemini-2.0-flash-exp:free",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
