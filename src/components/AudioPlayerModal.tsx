@@ -261,7 +261,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[200]">
                   {VOICE_OPTIONS.map((v) => (
                     <SelectItem key={v.id} value={v.id}>
                       {v.label} — {v.description}
