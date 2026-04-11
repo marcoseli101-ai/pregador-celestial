@@ -176,18 +176,18 @@ function buildUserPrompt(params: {
   lines.push(``);
   lines.push(`## FORMATO OBRIGATÓRIO DE SAÍDA`);
   lines.push(``);
-  lines.push(`A pregação DEVE conter estas seções em markdown:`);
-  lines.push(`- **## Texto Base**: Referência bíblica principal com versículo transcrito`);
-  lines.push(`- **## Tema Central**: Título claro e impactante`);
-  lines.push(`- **## Introdução**: Contextualização que capture a atenção do público`);
-  lines.push(`- **## Desenvolvimento**: Corpo da pregação seguindo a ESTRUTURA HOMILÉTICA definida acima`);
-  lines.push(`  - Cada ponto deve ter: subtítulo, versículos citados integralmente, explicação e aplicação`);
-  lines.push(`- **## Ministração**: Frases de impacto espiritual para o momento de altar`);
-  lines.push(`- **## Conclusão**: Apelo, convite à decisão e oração de encerramento`);
-  lines.push(`- **## Aplicação Prática**: 3-5 pontos de ação para a semana`);
-  if (refSim) {
-    lines.push(`- **## 📖 Referências Bíblicas Complementares**: Mínimo 5 versículos com texto e conexão ao tema`);
-  }
+  lines.push(`A pregação DEVE conter estas seções em markdown, escritas como se você estivesse no púlpito:`);
+  lines.push(`- **## 📖 Texto Base**: Referência bíblica principal com versículo transcrito integralmente`);
+  lines.push(`- **## 🎯 Tema Central**: Título claro, impactante e memorável`);
+  lines.push(`- **## 🔥 Introdução**: Comece com uma ilustração do cotidiano brasileiro que conecte emocionalmente com o texto. Prenda a atenção da congregação desde a primeira frase. Use expressões naturais de púlpito.`);
+  lines.push(`- **## 📜 Desenvolvimento**: Corpo da pregação seguindo a ESTRUTURA HOMILÉTICA definida acima`);
+  lines.push(`  - Cada ponto deve ter: subtítulo impactante, versículos citados integralmente, exegese com termos do original (grego/hebraico em itálico), contexto histórico-cultural detalhado, aplicação prática e uma declaração de fé poderosa no final`);
+  lines.push(`  - Use perguntas retóricas para engajar: "Quantos aqui já viveram isso?", "Você crê?"`);
+  lines.push(`  - Alterne entre momentos de ensino profundo e momentos de clamor/ministração`);
+  lines.push(`- **## 🙏 Ministração**: Momento de altar — chamado emocional e espiritual genuíno, como se estivesse ministrando presencialmente. Use declarações proféticas, orações espontâneas e convites à entrega.`);
+  lines.push(`- **## ✝️ Conclusão**: Apelo final poderoso com convite à decisão e oração modelo completa que a congregação possa repetir`);
+  lines.push(`- **## 📋 Aplicação Prática**: 5 pontos de ação concretos para a semana, escritos de forma pessoal e desafiadora`);
+  lines.push(`- **## 📖 Referências Bíblicas Complementares**: Mínimo 5 versículos com texto completo e explicação da conexão teológica com o tema`);
 
   lines.push(``);
   lines.push(`## CHECKLIST FINAL (verifique antes de finalizar)`);
@@ -196,11 +196,16 @@ function buildUserPrompt(params: {
   lines.push(`✅ O estilo (${nivel || "ensino"}) está presente em todo o texto?`);
   lines.push(`✅ A estrutura homilética (${estrutura || "textual"}) foi seguida?`);
   lines.push(`✅ O tom emocional (${tom || "encorajamento"}) permeia toda a pregação?`);
+  lines.push(`✅ Há expressões naturais de púlpito brasileiro ("Igreja!", "Amados!", "Glória a Deus!")?`);
+  lines.push(`✅ Há exegese com termos do original (grego/hebraico) em pelo menos 3 pontos?`);
+  lines.push(`✅ Cada ponto termina com uma declaração de fé poderosa?`);
+  lines.push(`✅ A introdução tem uma ilustração do cotidiano brasileiro?`);
+  lines.push(`✅ A ministração é genuína e emocional, não genérica?`);
   if (ocasiaoDesc) {
     lines.push(`✅ A introdução e conclusão estão adaptadas para a ocasião?`);
   }
   lines.push(``);
-  lines.push(`AGORA GERE A PREGAÇÃO COMPLETA. Não pule nenhuma seção. Não encurte. Respeite o tamanho de ${palavrasAlvo} palavras.`);
+  lines.push(`AGORA GERE A PREGAÇÃO COMPLETA. Escreva como um pregador ungido no púlpito. Não pule nenhuma seção. Não encurte. Respeite o tamanho de ${palavrasAlvo} palavras.`);
 
   return lines.join("\n");
 }
