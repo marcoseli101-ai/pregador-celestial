@@ -1,7 +1,14 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { X, Play, Pause, Square, Volume2, Loader2, Download, Minimize2, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+
+const VOICE_OPTIONS = [
+  { id: "pt-BR-AntonioNeural", label: "Antônio", description: "Voz masculina" },
+  { id: "pt-BR-FranciscaNeural", label: "Francisca", description: "Voz feminina clássica" },
+  { id: "pt-BR-ThalitaMultilingualNeural", label: "Thalita", description: "Voz feminina moderna" },
+] as const;
 
 interface AudioPlayerModalProps {
   content: string;
@@ -16,6 +23,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
   const [progress, setProgress] = useState(0);
   const [minimized, setMinimized] = useState(false);
   const [useBrowserFallback, setUseBrowserFallback] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState("pt-BR-AntonioNeural");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioBlobRef = useRef<Blob | null>(null);
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -82,7 +90,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
           apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ text, voice: "alloy" }),
+        body: JSON.stringify({ text, voice: selectedVoice }),
       }
     );
 
@@ -115,7 +123,7 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
     audio.onerror = () => { setPlayState("idle"); toast.error("Erro ao reproduzir áudio"); stopProgressTracking(); };
     await audio.play();
     startProgressTracking();
-  }, [playWithBrowser]);
+  }, [playWithBrowser, selectedVoice]);
 
   const handlePlay = useCallback(async () => {
     if (playState === "paused") {
@@ -244,6 +252,25 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
               ? "🖥️ Usando voz do navegador"
               : "🎙️ MultiVozes AI — Voz natural de alta qualidade"}
           </p>
+
+          {/* Voice selector */}
+          {!useBrowserFallback && playState === "idle" && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Escolha a voz:</label>
+              <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {VOICE_OPTIONS.map((v) => (
+                    <SelectItem key={v.id} value={v.id}>
+                      {v.label} — {v.description}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Progress */}
           {(playState !== "idle" && playState !== "loading") && (
