@@ -484,16 +484,21 @@ const Index = () => {
 
       {/* Testimonials — Enhanced with glass morphism */}
       <section className="py-24 bg-gradient-celestial text-primary-foreground relative overflow-hidden">
-        {/* Decorative orbs */}
+        {/* Decorative orbs — more vibrant */}
         <motion.div
-          className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[hsl(42,55%,52%/0.08)]"
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
-          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[hsl(38,70%,55%/0.12)]"
+          animate={{ scale: [1, 1.15, 1], rotate: [0, 45, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full bg-[hsl(265,30%,55%/0.1)]"
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 15, repeat: Infinity }}
+          className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-[hsl(260,45%,55%/0.12)]"
+          animate={{ scale: [1, 1.25, 1] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[hsl(42,65%,55%/0.04)]"
+          animate={{ scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <div className="container relative">
