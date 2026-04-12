@@ -49,7 +49,7 @@ const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.7, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] },
+    transition: { duration: 0.7, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
   }),
 };
 
@@ -60,7 +60,7 @@ const stagger = {
 const floatingParticle = (delay: number, duration: number) => ({
   y: [0, -20, 0],
   opacity: [0.3, 0.7, 0.3],
-  transition: { duration, delay, repeat: Infinity, ease: "easeInOut" },
+  transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const },
 });
 
 const Index = () => {
