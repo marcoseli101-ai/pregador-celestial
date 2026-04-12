@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
-  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText
+  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText,
+  StickyNote, Bookmark
 } from "lucide-react";
 
 
@@ -20,7 +21,10 @@ const features = [
   { icon: Languages, title: "Dicionário Hebraico/Grego", desc: "Palavras bíblicas com significado teológico e pronúncia.", link: "/dicionario" },
   { icon: HelpCircle, title: "Questionários Espirituais", desc: "Testes bíblicos, desafios e reflexões para crescimento.", link: "/questionarios" },
   { icon: Calendar, title: "Devocional Diário", desc: "Versículo do dia, reflexão e oração gerados por IA.", link: "/devocional" },
-  { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/login" },
+  { icon: BookMarked, title: "Plano de Leitura", desc: "Planos de leitura bíblica organizados para acompanhar seu progresso.", link: "/plano-leitura" },
+  { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/area-pregador" },
+  { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas" },
+  { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores" },
 ];
 
 const themes = [
