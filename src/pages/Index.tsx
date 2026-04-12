@@ -524,12 +524,12 @@ const Index = () => {
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.6, type: "spring" }}
-                whileHover={{ y: -5 }}
+                transition={{ delay: i * 0.2, duration: 0.8, type: "spring", stiffness: 120 }}
+                whileHover={{ y: -4, transition: { duration: 0.4 } }}
               >
-                <Card className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground backdrop-blur-md h-full">
+                <Card className="bg-primary-foreground/12 border-primary-foreground/15 text-primary-foreground backdrop-blur-lg h-full hover:bg-primary-foreground/18 transition-colors duration-500">
                   <CardContent className="p-7">
-                    <div className="flex gap-1 mb-4">
+                    <div className="flex gap-1.5 mb-4">
                       {[...Array(5)].map((_, j) => (
                         <motion.div
                           key={j}
