@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      personal_notes: {
+        Row: {
+          bible_reference: string | null
+          category: string
+          content: string
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bible_reference?: string | null
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bible_reference?: string | null
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       preachers: {
         Row: {
           active: boolean
@@ -182,6 +215,42 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      verse_bookmarks: {
+        Row: {
+          book: string
+          chapter: number
+          color: string
+          created_at: string
+          id: string
+          note: string | null
+          user_id: string
+          verse_number: number
+          verse_text: string
+        }
+        Insert: {
+          book: string
+          chapter: number
+          color?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          user_id: string
+          verse_number: number
+          verse_text: string
+        }
+        Update: {
+          book?: string
+          chapter?: number
+          color?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          user_id?: string
+          verse_number?: number
+          verse_text?: string
         }
         Relationships: []
       }
