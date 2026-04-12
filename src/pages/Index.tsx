@@ -436,7 +436,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Devocional Preview with Background Image — Enhanced */}
+      {/* Devocional do Dia — Dynamic */}
       <section className="relative py-28 overflow-hidden">
         <div className="absolute inset-0">
           <motion.img
@@ -461,27 +461,78 @@ const Index = () => {
                 <Card className="mt-8 overflow-hidden border-[hsl(42,65%,55%/0.35)] bg-card/92 backdrop-blur-lg shadow-[0_20px_60px_-15px_hsl(42,55%,52%/0.2)]">
                   <div className="h-1.5 bg-gradient-to-r from-[hsl(42,70%,50%)] via-[hsl(38,65%,58%)] to-[hsl(42,70%,50%)]" />
                   <CardContent className="p-10">
-                    <motion.p
-                      className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.25em] mb-6"
-                      animate={{ opacity: [0.4, 1, 0.4] }}
-                      transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      Versículo do Dia
-                    </motion.p>
-                    <blockquote className="text-xl sm:text-2xl font-serif italic text-foreground leading-relaxed mb-5">
-                      "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito,
-                      para que todo aquele que nele crê não pereça, mas tenha a vida eterna."
-                    </blockquote>
-                    <p className="text-sm font-semibold text-muted-foreground">— João 3:16</p>
-                    <div className="mt-8">
-                      <Link to="/devocional">
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                          <Button className="bg-gradient-gold text-background hover:opacity-90 gap-2 shadow-gold">
-                            Ler Devocional Completo <ArrowRight className="h-4 w-4" />
-                          </Button>
-                        </motion.div>
-                      </Link>
-                    </div>
+                    {(devLoading || devGenerating) ? (
+                      <div className="flex flex-col items-center gap-3 py-8">
+                        <Loader2 className="h-8 w-8 animate-spin text-accent" />
+                        <p className="text-sm text-muted-foreground">
+                          {devGenerating ? "Gerando devocional de hoje..." : "Carregando..."}
+                        </p>
+                      </div>
+                    ) : devotional ? (
+                      <>
+                        <span className="inline-block rounded-full bg-accent/10 px-4 py-1 text-xs font-semibold text-accent uppercase tracking-widest mb-4">
+                          Devocional de hoje — {new Date(devotional.data + "T12:00:00").toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}
+                        </span>
+                        <motion.p
+                          className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.25em] mb-4"
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          Versículo do Dia
+                        </motion.p>
+                        {devotional.versiculo_base && (
+                          <p className="text-sm font-semibold text-muted-foreground mb-2">— {devotional.versiculo_base}</p>
+                        )}
+                        {devotional.titulo && (
+                          <h3 className="font-serif text-xl font-bold mb-4">{devotional.titulo}</h3>
+                        )}
+                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4 mb-6">
+                          {devotional.conteudo.replace(/[#*_📖💛🙏✅]/g, "").slice(0, 250).trim()}...
+                        </p>
+                        <div className="flex gap-3 justify-center flex-wrap">
+                          <Link to="/devocional">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                              <Button className="bg-gradient-gold text-background hover:opacity-90 gap-2 shadow-gold">
+                                Ler Devocional Completo <ArrowRight className="h-4 w-4" />
+                              </Button>
+                            </motion.div>
+                          </Link>
+                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                            <Button
+                              variant="outline"
+                              className="gap-2 border-[hsl(142,70%,45%/0.5)] text-[hsl(142,70%,45%)] hover:bg-[hsl(142,70%,45%/0.1)]"
+                              onClick={() => shareWhatsApp(`📖 Devocional de Hoje\n\n${devotional.titulo}\n\n${devotional.conteudo.slice(0, 400)}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`)}
+                            >
+                              <Share2 className="h-4 w-4" /> Compartilhar
+                            </Button>
+                          </motion.div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <motion.p
+                          className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.25em] mb-6"
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          Versículo do Dia
+                        </motion.p>
+                        <blockquote className="text-xl sm:text-2xl font-serif italic text-foreground leading-relaxed mb-5">
+                          "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito,
+                          para que todo aquele que nele crê não pereça, mas tenha a vida eterna."
+                        </blockquote>
+                        <p className="text-sm font-semibold text-muted-foreground">— João 3:16</p>
+                        <div className="mt-8">
+                          <Link to="/devocional">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                              <Button className="bg-gradient-gold text-background hover:opacity-90 gap-2 shadow-gold">
+                                Ler Devocional Completo <ArrowRight className="h-4 w-4" />
+                              </Button>
+                            </motion.div>
+                          </Link>
+                        </div>
+                      </>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
