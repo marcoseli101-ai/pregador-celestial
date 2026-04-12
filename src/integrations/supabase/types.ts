@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      devocional_diario: {
+        Row: {
+          conteudo: string
+          created_at: string
+          data: string
+          id: string
+          titulo: string
+          versiculo_base: string
+        }
+        Insert: {
+          conteudo: string
+          created_at?: string
+          data: string
+          id?: string
+          titulo?: string
+          versiculo_base?: string
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string
+          data?: string
+          id?: string
+          titulo?: string
+          versiculo_base?: string
+        }
+        Relationships: []
+      }
       personal_notes: {
         Row: {
           bible_reference: string | null
