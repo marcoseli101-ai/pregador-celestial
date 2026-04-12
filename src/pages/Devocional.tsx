@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { AnimatedPage, AnimatedSection } from "@/components/AnimatedSection";
-import { getAuthToken } from "@/lib/auth-helpers";
-import { Calendar, BookOpen, Heart, Loader2, RefreshCw, Sparkles, Save, History, Trash2, ChevronLeft } from "lucide-react";
+import { Calendar, BookOpen, Heart, Loader2, Sparkles, Save, History, Trash2, ChevronLeft, Share2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -9,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { ContentActions } from "@/components/ContentActions";
 import { BibleVerseLink } from "@/components/BibleVerseLink";
+import { useDailyDevotional } from "@/hooks/useDailyDevotional";
 
 interface SavedDevotional {
   id: string;
@@ -19,13 +19,11 @@ interface SavedDevotional {
 
 const Devocional = () => {
   const { user } = useAuth();
+  const { devotional, loading, generating, error } = useDailyDevotional();
   const today = new Date().toLocaleDateString("pt-BR", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
   });
 
-  const [content, setContent] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [hasGenerated, setHasGenerated] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [savedList, setSavedList] = useState<SavedDevotional[]>([]);
@@ -52,85 +50,16 @@ const Devocional = () => {
     if (showSaved) fetchSaved();
   }, [showSaved, fetchSaved]);
 
-  const generateDevotional = useCallback(async () => {
-    setIsGenerating(true);
-    setContent("");
-    setHasGenerated(false);
-    setViewingDevotional(null);
-
-    try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-devotional`;
-      const token = await getAuthToken();
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({ error: "Erro desconhecido" }));
-        toast.error(err.error || "Erro ao gerar devocional");
-        setIsGenerating(false);
-        return;
-      }
-
-      if (!resp.body) throw new Error("Sem resposta");
-
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let accumulated = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let newlineIndex: number;
-        while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
-          let line = buffer.slice(0, newlineIndex);
-          buffer = buffer.slice(newlineIndex + 1);
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (!line.startsWith("data: ")) continue;
-
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") break;
-
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const delta = parsed.choices?.[0]?.delta?.content;
-            if (delta) {
-              accumulated += delta;
-              setContent(accumulated);
-            }
-          } catch {
-            buffer = line + "\n" + buffer;
-            break;
-          }
-        }
-      }
-
-      setHasGenerated(true);
-    } catch (e) {
-      console.error(e);
-      toast.error("Erro ao gerar devocional. Tente novamente.");
-    } finally {
-      setIsGenerating(false);
-    }
-  }, []);
-
   const handleSave = async () => {
     if (!user) {
       toast.error("Faça login para salvar devocionais.");
       return;
     }
+    if (!devotional) return;
     setIsSaving(true);
     const { error } = await supabase.from("saved_devotionals").insert({
       user_id: user.id,
-      content,
+      content: devotional.conteudo,
       date_label: today,
     });
     if (error) {
@@ -153,18 +82,14 @@ const Devocional = () => {
     }
   };
 
-  const handleShare = async () => {
-    const text = (viewingDevotional?.content || content).replace(/[#*_]/g, "");
-    if (navigator.share) {
-      try { await navigator.share({ title: "Devocional Diário", text: text.slice(0, 500) }); } catch {}
-    } else {
-      await navigator.clipboard.writeText(text);
-      toast.success("Devocional copiado!");
-    }
+  const shareWhatsApp = (text: string) => {
+    const cleaned = text.replace(/[#*_]/g, "").slice(0, 500);
+    const url = `https://wa.me/?text=${encodeURIComponent(`📖 Devocional Diário\n\n${cleaned}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`)}`;
+    window.open(url, "_blank");
   };
 
   const parseContent = (text: string) => {
-    const sections: { type: "verse" | "reflection" | "prayer" | "other"; content: string }[] = [];
+    const sections: { type: "verse" | "reflection" | "prayer" | "application" | "other"; content: string }[] = [];
     const parts = text.split(/##\s+/);
     for (const part of parts) {
       if (!part.trim()) continue;
@@ -175,6 +100,8 @@ const Devocional = () => {
         sections.push({ type: "reflection", content: part.replace(/^[💛❤\s]*reflexão[^\n]*/i, "").trim() });
       } else if (lower.startsWith("🙏") || lower.includes("oração")) {
         sections.push({ type: "prayer", content: part.replace(/^[🙏\s]*oração[^\n]*/i, "").trim() });
+      } else if (lower.startsWith("✅") || lower.includes("aplicação")) {
+        sections.push({ type: "application", content: part.replace(/^[✅\s]*aplicação[^\n]*/i, "").trim() });
       } else {
         sections.push({ type: "other", content: part.trim() });
       }
@@ -182,13 +109,22 @@ const Devocional = () => {
     return sections;
   };
 
-  const displayContent = viewingDevotional?.content || content;
+  const displayContent = viewingDevotional?.content || devotional?.conteudo || "";
   const sections = displayContent ? parseContent(displayContent) : [];
 
   const renderDevotionalCard = (text: string, showActions: boolean) => (
     <Card className="shadow-celestial border-gold/20 overflow-hidden">
       <div className="h-2 bg-gradient-gold" />
       <CardContent className="p-8 space-y-6">
+        {/* Tag */}
+        {!viewingDevotional && devotional && (
+          <div className="text-center">
+            <span className="inline-block rounded-full bg-accent/10 px-4 py-1 text-xs font-semibold text-accent uppercase tracking-widest">
+              Devocional de hoje — {new Date(devotional.data + "T12:00:00").toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}
+            </span>
+          </div>
+        )}
+
         {sections.find((s) => s.type === "verse") && (
           <div className="text-center">
             <BookOpen className="h-8 w-8 mx-auto mb-3 text-accent" />
@@ -219,6 +155,15 @@ const Devocional = () => {
           </div>
         )}
 
+        {sections.find((s) => s.type === "application") && (
+          <div>
+            <h3 className="font-serif text-lg font-semibold mb-3">✅ Aplicação Prática</h3>
+            <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+              <BibleVerseLink text={sections.find((s) => s.type === "application")!.content} />
+            </div>
+          </div>
+        )}
+
         {sections.length === 0 && text && (
           <div className="text-sm leading-relaxed whitespace-pre-line">{text}</div>
         )}
@@ -226,12 +171,6 @@ const Devocional = () => {
         {sections.filter((s) => s.type === "other").map((s, i) => (
           <div key={i} className="text-sm leading-relaxed whitespace-pre-line">{s.content}</div>
         ))}
-
-        {isGenerating && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Gerando...
-          </div>
-        )}
 
         {showActions && (
           <div className="flex gap-3 pt-2 flex-wrap">
@@ -242,11 +181,14 @@ const Devocional = () => {
                 Salvar
               </Button>
             )}
-            {!viewingDevotional && (
-              <Button variant="outline" size="sm" onClick={generateDevotional} className="gap-1.5">
-                <RefreshCw className="h-4 w-4" /> Novo
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 border-[hsl(142,70%,45%/0.5)] text-[hsl(142,70%,45%)] hover:bg-[hsl(142,70%,45%/0.1)]"
+              onClick={() => shareWhatsApp(displayContent)}
+            >
+              <Share2 className="h-4 w-4" /> WhatsApp
+            </Button>
           </div>
         )}
       </CardContent>
@@ -277,7 +219,7 @@ const Devocional = () => {
         <h1 className="font-serif text-4xl font-bold mb-2">
           Devocional <span className="text-gradient-gold">Diário</span>
         </h1>
-        <p className="text-muted-foreground">Versículo do dia, reflexão espiritual e oração gerados por IA.</p>
+        <p className="text-muted-foreground">Versículo do dia, reflexão, oração e aplicação prática — gerado automaticamente toda meia-noite.</p>
       </AnimatedSection>
 
       <div className="mx-auto max-w-2xl">
@@ -288,7 +230,7 @@ const Devocional = () => {
             className={!showSaved ? "bg-gradient-gold text-background" : ""}
             onClick={() => setShowSaved(false)}
           >
-            <Sparkles className="h-4 w-4 mr-1.5" /> Gerar
+            <Sparkles className="h-4 w-4 mr-1.5" /> Devocional de Hoje
           </Button>
           {user && (
             <Button
@@ -301,7 +243,7 @@ const Devocional = () => {
           )}
         </div>
 
-        {/* === GENERATE TAB === */}
+        {/* === TODAY TAB === */}
         {!showSaved && (
           <>
             <div className="flex items-center justify-center gap-2 mb-6 text-sm text-muted-foreground">
@@ -309,36 +251,27 @@ const Devocional = () => {
               <span className="capitalize">{today}</span>
             </div>
 
-            {!content && !isGenerating && (
-              <Card className="shadow-celestial border-celestial/20">
-                <CardContent className="p-10 text-center space-y-6">
-                  <div className="h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
-                    <Sparkles className="h-8 w-8 text-accent" />
-                  </div>
-                  <div>
-                    <h2 className="font-serif text-xl font-semibold mb-2">Seu devocional de hoje</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Clique no botão abaixo para gerar um devocional personalizado com versículo,
-                      reflexão espiritual e oração, criado pela IA especialmente para hoje.
-                    </p>
-                  </div>
-                  <Button onClick={generateDevotional} className="bg-gradient-gold text-background hover:opacity-90 gap-2" size="lg">
-                    <Sparkles className="h-4 w-4" /> Gerar Devocional de Hoje
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {isGenerating && !content && (
+            {(loading || generating) && (
               <Card className="shadow-celestial border-celestial/20">
                 <CardContent className="p-10 text-center space-y-4">
                   <Loader2 className="h-10 w-10 animate-spin text-accent mx-auto" />
-                  <p className="text-sm text-muted-foreground">Preparando seu devocional com unção...</p>
+                  <p className="text-sm text-muted-foreground">
+                    {generating ? "Gerando o devocional de hoje com unção..." : "Carregando devocional do dia..."}
+                  </p>
                 </CardContent>
               </Card>
             )}
 
-            {content && renderDevotionalCard(content, hasGenerated)}
+            {error && !loading && !generating && (
+              <Card className="shadow-celestial border-destructive/20">
+                <CardContent className="p-10 text-center space-y-4">
+                  <p className="text-destructive font-medium">Não foi possível carregar o devocional.</p>
+                  <p className="text-sm text-muted-foreground">{error}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {!loading && !generating && devotional && renderDevotionalCard(devotional.conteudo, true)}
           </>
         )}
 
@@ -355,13 +288,13 @@ const Devocional = () => {
                   <History className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">Nenhum devocional salvo ainda.</p>
                   <Button variant="outline" className="mt-4" onClick={() => setShowSaved(false)}>
-                    Gerar primeiro devocional
+                    Ver devocional de hoje
                   </Button>
                 </CardContent>
               </Card>
             ) : (
               savedList.map((d) => {
-                const preview = d.content.replace(/[#*_📖💛🙏❤]/g, "").slice(0, 120).trim();
+                const preview = d.content.replace(/[#*_📖💛🙏❤✅]/g, "").slice(0, 120).trim();
                 return (
                   <Card
                     key={d.id}
