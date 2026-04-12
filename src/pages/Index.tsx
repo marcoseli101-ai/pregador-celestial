@@ -46,20 +46,22 @@ const stats = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 25 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.7, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
+    transition: { duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.12 } },
 };
 
 const floatingParticle = (delay: number, duration: number) => ({
-  y: [0, -20, 0],
-  opacity: [0.3, 0.7, 0.3],
+  y: [0, -25, 0],
+  x: [0, 8, 0],
+  opacity: [0.2, 0.8, 0.2],
+  scale: [0.8, 1.2, 0.8],
   transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const },
 });
 
