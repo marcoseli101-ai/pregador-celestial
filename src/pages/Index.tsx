@@ -215,9 +215,9 @@ const Index = () => {
                 className="text-center group"
               >
                 <motion.div
-                  className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent"
-                  whileHover={{ scale: 1.15, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent shadow-sm"
+                  whileHover={{ scale: 1.2, rotate: 8, boxShadow: "0 8px 25px hsl(265 30% 55% / 0.25)" }}
+                  transition={{ type: "spring", stiffness: 250, damping: 15 }}
                 >
                   <s.icon className="h-6 w-6" />
                 </motion.div>
