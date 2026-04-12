@@ -64,7 +64,7 @@ Retorne APENAS o JSON válido, sem texto adicional.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-exp:free",
+        model: "google/gemini-2.0-flash-001",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Pesquise a palavra ou conceito bíblico: "${word}"` },
