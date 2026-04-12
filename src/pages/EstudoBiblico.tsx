@@ -263,18 +263,31 @@ const EstudoBiblico = () => {
                     <p
                       key={v.number}
                       id={`verse-${v.number}`}
-                      className={`leading-relaxed text-sm rounded-lg transition-all ${
+                      className={`leading-relaxed text-sm rounded-lg transition-all group/verse flex items-start gap-1 ${
                         isHighlighted
                           ? "bg-accent/15 border-l-4 border-accent px-4 py-3 shadow-sm"
+                          : isBookmarked(v.number)
+                          ? "bg-yellow-50 dark:bg-yellow-900/10 px-2 py-1"
                           : "px-1 py-0.5"
                       }`}
                     >
-                      <span className={`font-bold mr-1.5 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
+                      <span className={`font-bold mr-1.5 shrink-0 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
                         {v.number}
                       </span>
-                      <span className={isHighlighted ? "font-medium text-foreground" : ""}>
+                      <span className={`flex-1 ${isHighlighted ? "font-medium text-foreground" : ""}`}>
                         {v.text}
                       </span>
+                      <button
+                        onClick={() => toggleBookmark(v.number, v.text)}
+                        className={`shrink-0 p-0.5 rounded transition-all ${
+                          isBookmarked(v.number)
+                            ? "text-yellow-500 opacity-100"
+                            : "text-muted-foreground/30 opacity-0 group-hover/verse:opacity-100 hover:text-yellow-500"
+                        }`}
+                        title={isBookmarked(v.number) ? "Remover marcador" : "Marcar versículo"}
+                      >
+                        <Bookmark className={`h-4 w-4 ${isBookmarked(v.number) ? "fill-current" : ""}`} />
+                      </button>
                     </p>
                   );
                 })}
