@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuthToken } from "@/lib/auth-helpers";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb } from "lucide-react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb, Bookmark } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/data/thematicStudies";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { useVerseBookmarks } from "@/hooks/useVerseBookmarks";
 
 const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
@@ -91,6 +92,7 @@ const EstudoBiblico = () => {
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
+  const { isBookmarked, toggleBookmark, getBookmark } = useVerseBookmarks(selectedBook?.name, selectedChapter ?? undefined);
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos" | "tematicos">("biblia");
@@ -261,18 +263,31 @@ const EstudoBiblico = () => {
                     <p
                       key={v.number}
                       id={`verse-${v.number}`}
-                      className={`leading-relaxed text-sm rounded-lg transition-all ${
+                      className={`leading-relaxed text-sm rounded-lg transition-all group/verse flex items-start gap-1 ${
                         isHighlighted
                           ? "bg-accent/15 border-l-4 border-accent px-4 py-3 shadow-sm"
+                          : isBookmarked(v.number)
+                          ? "bg-yellow-50 dark:bg-yellow-900/10 px-2 py-1"
                           : "px-1 py-0.5"
                       }`}
                     >
-                      <span className={`font-bold mr-1.5 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
+                      <span className={`font-bold mr-1.5 shrink-0 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
                         {v.number}
                       </span>
-                      <span className={isHighlighted ? "font-medium text-foreground" : ""}>
+                      <span className={`flex-1 ${isHighlighted ? "font-medium text-foreground" : ""}`}>
                         {v.text}
                       </span>
+                      <button
+                        onClick={() => toggleBookmark(v.number, v.text)}
+                        className={`shrink-0 p-0.5 rounded transition-all ${
+                          isBookmarked(v.number)
+                            ? "text-yellow-500 opacity-100"
+                            : "text-muted-foreground/30 opacity-0 group-hover/verse:opacity-100 hover:text-yellow-500"
+                        }`}
+                        title={isBookmarked(v.number) ? "Remover marcador" : "Marcar versículo"}
+                      >
+                        <Bookmark className={`h-4 w-4 ${isBookmarked(v.number) ? "fill-current" : ""}`} />
+                      </button>
                     </p>
                   );
                 })}
