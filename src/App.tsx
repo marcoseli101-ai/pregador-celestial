@@ -18,6 +18,8 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import AreaPregador from "./pages/AreaPregador";
 import PlanoLeitura from "./pages/PlanoLeitura";
+import NotasPessoais from "./pages/NotasPessoais";
+import Marcadores from "./pages/Marcadores";
 import NotFound from "./pages/NotFound";
 
 
@@ -46,6 +48,8 @@ const App = () => (
               <Route path="/devocional" element={<Devocional />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/area-pregador" element={<AreaPregador />} />
+              <Route path="/notas" element={<NotasPessoais />} />
+              <Route path="/marcadores" element={<Marcadores />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
