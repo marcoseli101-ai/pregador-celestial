@@ -5,9 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
   HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText,
-  StickyNote, Bookmark, Zap, Heart, Shield
+  StickyNote, Bookmark, Zap, Heart, Shield, Loader2, Share2
 } from "lucide-react";
 import { useRef } from "react";
+import { useDailyDevotional } from "@/hooks/useDailyDevotional";
 
 import bibleLandscape from "@/assets/bible-landscape.jpg";
 import bibleScrolls from "@/assets/bible-scrolls.jpg";
@@ -70,6 +71,13 @@ const Index = () => {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const { devotional, loading: devLoading, generating: devGenerating } = useDailyDevotional();
+
+  const shareWhatsApp = (text: string) => {
+    const cleaned = text.replace(/[#*_]/g, "").slice(0, 500);
+    const url = `https://wa.me/?text=${encodeURIComponent(cleaned)}`;
+    window.open(url, "_blank");
+  };
 
   return (
     <div className="overflow-hidden">
