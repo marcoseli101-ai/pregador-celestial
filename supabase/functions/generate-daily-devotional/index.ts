@@ -37,8 +37,10 @@ serve(async (req) => {
       );
     }
 
+    // Try Lovable AI first, fallback to OpenRouter
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
+    if (!LOVABLE_API_KEY && !OPENROUTER_API_KEY) throw new Error("No AI API key configured");
 
     const dateLabel = brasiliaDate.toLocaleDateString("pt-BR", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -92,21 +94,58 @@ A Paz que Excede Todo Entendimento
 ## 📖 Versículo do Dia
 ...`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        stream: false,
-      }),
-    });
+    // Try Lovable AI Gateway first
+    let response: Response | null = null;
+    
+    if (LOVABLE_API_KEY) {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          stream: false,
+        }),
+      });
+
+      // If 402 (no credits), fallback to OpenRouter
+      if (response.status === 402 && OPENROUTER_API_KEY) {
+        console.log("Lovable AI credits exhausted, falling back to OpenRouter");
+        response = null;
+      }
+    }
+
+    // Fallback to OpenRouter
+    if (!response && OPENROUTER_API_KEY) {
+      response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.0-flash-001",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          stream: false,
+        }),
+      });
+    }
+
+    if (!response) {
+      return new Response(
+        JSON.stringify({ error: "No AI provider available" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
