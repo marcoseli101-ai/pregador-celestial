@@ -59,7 +59,7 @@ REGRAS:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-exp:free",
+        model: "google/gemini-2.0-flash-001",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Crie slides profissionais para o seguinte conteúdo:\n\n${content.slice(0, 8000)}` },
