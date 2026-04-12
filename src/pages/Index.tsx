@@ -301,12 +301,12 @@ const Index = () => {
                 key={f.title}
                 custom={i}
                 variants={fadeUp}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                whileHover={{ y: -6, transition: { duration: 0.4, ease: "easeOut" } }}
               >
                 <Link to={f.link}>
-                  <Card className="group h-full cursor-pointer border-border/40 bg-card/80 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:border-accent/30 relative overflow-hidden">
+                  <Card className="group h-full cursor-pointer border-border/40 bg-card/80 backdrop-blur-sm transition-all duration-500 hover:shadow-[0_15px_50px_-12px_hsl(var(--accent)/0.2)] hover:border-accent/40 relative overflow-hidden">
                     {/* Hover glow effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.08)_0%,transparent_60%)]" />
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.1)_0%,transparent_55%)]" />
                     <CardContent className="p-6 relative">
                       <motion.div
                         className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${f.color} shadow-lg`}
