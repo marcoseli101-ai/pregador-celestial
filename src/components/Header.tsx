@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, BookOpen, Sun, Moon, LogOut, ShieldCheck } from "lucide-react";
+import { Menu, X, BookOpen, Sun, Moon, LogOut, ShieldCheck, StickyNote, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +17,8 @@ const navItems = [
   { label: "Questionários", path: "/questionarios" },
   { label: "Devocional", path: "/devocional" },
   { label: "Área do Pregador", path: "/area-pregador" },
+  { label: "Notas", path: "/notas" },
+  { label: "Marcadores", path: "/marcadores" },
 ];
 
 export function Header() {
