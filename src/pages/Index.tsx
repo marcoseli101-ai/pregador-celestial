@@ -77,27 +77,42 @@ const Index = () => {
       <section ref={heroRef} className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
         {/* Animated background layers */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,hsl(250,45%,28%/0.35)_0%,transparent_60%)]" />
-          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] max-w-[520px] max-h-[520px] rounded-full bg-[radial-gradient(circle,hsl(42,65%,55%/0.15)_0%,transparent_65%)]" />
+          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,hsl(250,55%,30%/0.4)_0%,transparent_55%)]" />
+          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] max-w-[560px] max-h-[560px] rounded-full bg-[radial-gradient(circle,hsl(38,75%,55%/0.2)_0%,transparent_60%)]" />
           {/* Animated glow ring */}
           <motion.div
-            className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[650px] max-h-[650px] rounded-full border border-[hsl(42,55%,52%/0.15)]"
-            animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[650px] max-h-[650px] rounded-full border-2 border-[hsl(42,65%,55%/0.2)]"
+            animate={{ scale: [1, 1.06, 1], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Second subtle ring */}
+          <motion.div
+            className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45vw] h-[45vw] max-w-[480px] max-h-[480px] rounded-full border border-[hsl(265,40%,55%/0.12)]"
+            animate={{ scale: [1.05, 1, 1.05], opacity: [0.15, 0.35, 0.15] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           />
         </div>
 
-        {/* Floating particles */}
+        {/* Floating particles — multi-colored */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(6)].map((_, i) => (
+          {[
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-2 h-2" },
+            { color: "bg-[hsl(265,45%,60%)]", size: "w-1.5 h-1.5" },
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-1 h-1" },
+            { color: "bg-[hsl(225,50%,60%)]", size: "w-2 h-2" },
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-1.5 h-1.5" },
+            { color: "bg-[hsl(265,45%,60%)]", size: "w-1 h-1" },
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-1.5 h-1.5" },
+            { color: "bg-[hsl(195,60%,50%)]", size: "w-1 h-1" },
+          ].map((p, i) => (
             <motion.div
               key={i}
-              className="absolute w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold))]"
+              className={`absolute rounded-full ${p.color} ${p.size}`}
               style={{
-                left: `${15 + i * 14}%`,
-                top: `${20 + (i % 3) * 25}%`,
+                left: `${10 + i * 11}%`,
+                top: `${18 + (i % 4) * 18}%`,
               }}
-              animate={floatingParticle(i * 0.6, 3 + i * 0.5)}
+              animate={floatingParticle(i * 0.5, 3.5 + i * 0.4)}
             />
           ))}
         </div>
