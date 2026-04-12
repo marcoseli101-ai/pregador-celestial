@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
-  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText
+  HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText,
+  StickyNote, Bookmark
 } from "lucide-react";
 
 
