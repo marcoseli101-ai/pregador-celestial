@@ -14,17 +14,17 @@ import bibleScrolls from "@/assets/bible-scrolls.jpg";
 import bibleCross from "@/assets/bible-cross.jpg";
 
 const features = [
-  { icon: BookOpen, title: "Estudo Bíblico Avançado", desc: "Bíblia completa com busca, comparação e comentários teológicos.", link: "/estudo-biblico", color: "from-[hsl(225,40%,55%)] to-[hsl(250,35%,65%)]" },
-  { icon: Sparkles, title: "Gerador de Pregações (IA)", desc: "Esboços e sermões completos gerados por inteligência artificial.", link: "/gerador-pregacoes", color: "from-[hsl(42,55%,52%)] to-[hsl(42,45%,62%)]" },
-  { icon: FileText, title: "Biblioteca de Mensagens", desc: "Pregações organizadas por temas com texto base e aplicação.", link: "/biblioteca", color: "from-[hsl(265,30%,55%)] to-[hsl(280,35%,60%)]" },
-  { icon: GraduationCap, title: "Curso de Teologia", desc: "Estudo completo de teologia sistemática com IA para tirar dúvidas.", link: "/curso-teologia", color: "from-[hsl(200,50%,45%)] to-[hsl(210,55%,55%)]" },
-  { icon: Languages, title: "Dicionário Hebraico/Grego", desc: "Palavras bíblicas com significado teológico e pronúncia.", link: "/dicionario", color: "from-[hsl(160,40%,40%)] to-[hsl(170,45%,50%)]" },
-  { icon: HelpCircle, title: "Questionários Espirituais", desc: "Testes bíblicos, desafios e reflexões para crescimento.", link: "/questionarios", color: "from-[hsl(340,45%,55%)] to-[hsl(350,50%,60%)]" },
-  { icon: Calendar, title: "Devocional Diário", desc: "Versículo do dia, reflexão e oração gerados por IA.", link: "/devocional", color: "from-[hsl(42,55%,52%)] to-[hsl(30,50%,50%)]" },
-  { icon: BookMarked, title: "Plano de Leitura", desc: "Planos de leitura bíblica organizados para acompanhar seu progresso.", link: "/plano-leitura", color: "from-[hsl(190,50%,45%)] to-[hsl(200,55%,55%)]" },
-  { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/area-pregador", color: "from-[hsl(225,40%,55%)] to-[hsl(235,45%,60%)]" },
-  { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas", color: "from-[hsl(45,60%,50%)] to-[hsl(35,55%,55%)]" },
-  { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores", color: "from-[hsl(280,40%,55%)] to-[hsl(300,35%,50%)]" },
+  { icon: BookOpen, title: "Estudo Bíblico Avançado", desc: "Bíblia completa com busca, comparação e comentários teológicos.", link: "/estudo-biblico", color: "from-[hsl(220,55%,50%)] to-[hsl(250,50%,60%)]" },
+  { icon: Sparkles, title: "Gerador de Pregações (IA)", desc: "Esboços e sermões completos gerados por inteligência artificial.", link: "/gerador-pregacoes", color: "from-[hsl(38,70%,50%)] to-[hsl(45,65%,58%)]" },
+  { icon: FileText, title: "Biblioteca de Mensagens", desc: "Pregações organizadas por temas com texto base e aplicação.", link: "/biblioteca", color: "from-[hsl(260,45%,52%)] to-[hsl(280,50%,58%)]" },
+  { icon: GraduationCap, title: "Curso de Teologia", desc: "Estudo completo de teologia sistemática com IA para tirar dúvidas.", link: "/curso-teologia", color: "from-[hsl(195,65%,42%)] to-[hsl(210,60%,52%)]" },
+  { icon: Languages, title: "Dicionário Hebraico/Grego", desc: "Palavras bíblicas com significado teológico e pronúncia.", link: "/dicionario", color: "from-[hsl(155,50%,38%)] to-[hsl(170,55%,48%)]" },
+  { icon: HelpCircle, title: "Questionários Espirituais", desc: "Testes bíblicos, desafios e reflexões para crescimento.", link: "/questionarios", color: "from-[hsl(335,55%,52%)] to-[hsl(350,60%,58%)]" },
+  { icon: Calendar, title: "Devocional Diário", desc: "Versículo do dia, reflexão e oração gerados por IA.", link: "/devocional", color: "from-[hsl(25,65%,48%)] to-[hsl(38,60%,55%)]" },
+  { icon: BookMarked, title: "Plano de Leitura", desc: "Planos de leitura bíblica organizados para acompanhar seu progresso.", link: "/plano-leitura", color: "from-[hsl(185,60%,42%)] to-[hsl(200,65%,52%)]" },
+  { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/area-pregador", color: "from-[hsl(220,50%,48%)] to-[hsl(240,55%,58%)]" },
+  { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas", color: "from-[hsl(42,70%,48%)] to-[hsl(50,65%,55%)]" },
+  { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores", color: "from-[hsl(275,50%,52%)] to-[hsl(295,45%,55%)]" },
 ];
 
 const themes = [
@@ -46,20 +46,22 @@ const stats = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 25 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.7, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
+    transition: { duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.12 } },
 };
 
 const floatingParticle = (delay: number, duration: number) => ({
-  y: [0, -20, 0],
-  opacity: [0.3, 0.7, 0.3],
+  y: [0, -25, 0],
+  x: [0, 8, 0],
+  opacity: [0.2, 0.8, 0.2],
+  scale: [0.8, 1.2, 0.8],
   transition: { duration, delay, repeat: Infinity, ease: "easeInOut" as const },
 });
 
@@ -75,27 +77,42 @@ const Index = () => {
       <section ref={heroRef} className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
         {/* Animated background layers */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,hsl(250,45%,28%/0.35)_0%,transparent_60%)]" />
-          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] max-w-[520px] max-h-[520px] rounded-full bg-[radial-gradient(circle,hsl(42,65%,55%/0.15)_0%,transparent_65%)]" />
+          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,hsl(250,55%,30%/0.4)_0%,transparent_55%)]" />
+          <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] max-w-[560px] max-h-[560px] rounded-full bg-[radial-gradient(circle,hsl(38,75%,55%/0.2)_0%,transparent_60%)]" />
           {/* Animated glow ring */}
           <motion.div
-            className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[650px] max-h-[650px] rounded-full border border-[hsl(42,55%,52%/0.15)]"
-            animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[650px] max-h-[650px] rounded-full border-2 border-[hsl(42,65%,55%/0.2)]"
+            animate={{ scale: [1, 1.06, 1], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Second subtle ring */}
+          <motion.div
+            className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45vw] h-[45vw] max-w-[480px] max-h-[480px] rounded-full border border-[hsl(265,40%,55%/0.12)]"
+            animate={{ scale: [1.05, 1, 1.05], opacity: [0.15, 0.35, 0.15] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           />
         </div>
 
-        {/* Floating particles */}
+        {/* Floating particles — multi-colored */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(6)].map((_, i) => (
+          {[
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-2 h-2" },
+            { color: "bg-[hsl(265,45%,60%)]", size: "w-1.5 h-1.5" },
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-1 h-1" },
+            { color: "bg-[hsl(225,50%,60%)]", size: "w-2 h-2" },
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-1.5 h-1.5" },
+            { color: "bg-[hsl(265,45%,60%)]", size: "w-1 h-1" },
+            { color: "bg-[hsl(42,70%,55%)]", size: "w-1.5 h-1.5" },
+            { color: "bg-[hsl(195,60%,50%)]", size: "w-1 h-1" },
+          ].map((p, i) => (
             <motion.div
               key={i}
-              className="absolute w-1.5 h-1.5 rounded-full bg-[hsl(var(--gold))]"
+              className={`absolute rounded-full ${p.color} ${p.size}`}
               style={{
-                left: `${15 + i * 14}%`,
-                top: `${20 + (i % 3) * 25}%`,
+                left: `${10 + i * 11}%`,
+                top: `${18 + (i % 4) * 18}%`,
               }}
-              animate={floatingParticle(i * 0.6, 3 + i * 0.5)}
+              animate={floatingParticle(i * 0.5, 3.5 + i * 0.4)}
             />
           ))}
         </div>
@@ -182,7 +199,7 @@ const Index = () => {
       </section>
 
       {/* Stats Counter Section */}
-      <section className="relative py-16 bg-muted/30 border-y border-border/30">
+      <section className="relative py-20 bg-gradient-to-b from-muted/40 to-background border-y border-border/20">
         <div className="container">
           <motion.div
             initial="hidden"
@@ -198,9 +215,9 @@ const Index = () => {
                 className="text-center group"
               >
                 <motion.div
-                  className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent"
-                  whileHover={{ scale: 1.15, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent shadow-sm"
+                  whileHover={{ scale: 1.2, rotate: 8, boxShadow: "0 8px 25px hsl(265 30% 55% / 0.25)" }}
+                  transition={{ type: "spring", stiffness: 250, damping: 15 }}
                 >
                   <s.icon className="h-6 w-6" />
                 </motion.div>
@@ -284,12 +301,12 @@ const Index = () => {
                 key={f.title}
                 custom={i}
                 variants={fadeUp}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                whileHover={{ y: -6, transition: { duration: 0.4, ease: "easeOut" } }}
               >
                 <Link to={f.link}>
-                  <Card className="group h-full cursor-pointer border-border/40 bg-card/80 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:border-accent/30 relative overflow-hidden">
+                  <Card className="group h-full cursor-pointer border-border/40 bg-card/80 backdrop-blur-sm transition-all duration-500 hover:shadow-[0_15px_50px_-12px_hsl(var(--accent)/0.2)] hover:border-accent/40 relative overflow-hidden">
                     {/* Hover glow effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.08)_0%,transparent_60%)]" />
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.1)_0%,transparent_55%)]" />
                     <CardContent className="p-6 relative">
                       <motion.div
                         className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${f.color} shadow-lg`}
@@ -433,13 +450,13 @@ const Index = () => {
                 ✨ Devocional do Dia
               </motion.h2>
               <motion.div custom={1} variants={fadeUp}>
-                <Card className="mt-8 overflow-hidden border-[hsl(var(--gold)/0.3)] bg-card/90 backdrop-blur-md shadow-2xl">
-                  <div className="h-1 bg-gradient-gold" />
+                <Card className="mt-8 overflow-hidden border-[hsl(42,65%,55%/0.35)] bg-card/92 backdrop-blur-lg shadow-[0_20px_60px_-15px_hsl(42,55%,52%/0.2)]">
+                  <div className="h-1.5 bg-gradient-to-r from-[hsl(42,70%,50%)] via-[hsl(38,65%,58%)] to-[hsl(42,70%,50%)]" />
                   <CardContent className="p-10">
                     <motion.p
-                      className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.2em] mb-6"
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 3, repeat: Infinity }}
+                      className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.25em] mb-6"
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
                     >
                       Versículo do Dia
                     </motion.p>
@@ -467,16 +484,21 @@ const Index = () => {
 
       {/* Testimonials — Enhanced with glass morphism */}
       <section className="py-24 bg-gradient-celestial text-primary-foreground relative overflow-hidden">
-        {/* Decorative orbs */}
+        {/* Decorative orbs — more vibrant */}
         <motion.div
-          className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[hsl(42,55%,52%/0.08)]"
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
-          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[hsl(38,70%,55%/0.12)]"
+          animate={{ scale: [1, 1.15, 1], rotate: [0, 45, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full bg-[hsl(265,30%,55%/0.1)]"
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 15, repeat: Infinity }}
+          className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-[hsl(260,45%,55%/0.12)]"
+          animate={{ scale: [1, 1.25, 1] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[hsl(42,65%,55%/0.04)]"
+          animate={{ scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <div className="container relative">
@@ -502,12 +524,12 @@ const Index = () => {
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.6, type: "spring" }}
-                whileHover={{ y: -5 }}
+                transition={{ delay: i * 0.2, duration: 0.8, type: "spring", stiffness: 120 }}
+                whileHover={{ y: -4, transition: { duration: 0.4 } }}
               >
-                <Card className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground backdrop-blur-md h-full">
+                <Card className="bg-primary-foreground/12 border-primary-foreground/15 text-primary-foreground backdrop-blur-lg h-full hover:bg-primary-foreground/18 transition-colors duration-500">
                   <CardContent className="p-7">
-                    <div className="flex gap-1 mb-4">
+                    <div className="flex gap-1.5 mb-4">
                       {[...Array(5)].map((_, j) => (
                         <motion.div
                           key={j}
