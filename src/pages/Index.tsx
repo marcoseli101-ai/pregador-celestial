@@ -14,17 +14,17 @@ import bibleScrolls from "@/assets/bible-scrolls.jpg";
 import bibleCross from "@/assets/bible-cross.jpg";
 
 const features = [
-  { icon: BookOpen, title: "Estudo Bíblico Avançado", desc: "Bíblia completa com busca, comparação e comentários teológicos.", link: "/estudo-biblico", color: "from-[hsl(225,40%,55%)] to-[hsl(250,35%,65%)]" },
-  { icon: Sparkles, title: "Gerador de Pregações (IA)", desc: "Esboços e sermões completos gerados por inteligência artificial.", link: "/gerador-pregacoes", color: "from-[hsl(42,55%,52%)] to-[hsl(42,45%,62%)]" },
-  { icon: FileText, title: "Biblioteca de Mensagens", desc: "Pregações organizadas por temas com texto base e aplicação.", link: "/biblioteca", color: "from-[hsl(265,30%,55%)] to-[hsl(280,35%,60%)]" },
-  { icon: GraduationCap, title: "Curso de Teologia", desc: "Estudo completo de teologia sistemática com IA para tirar dúvidas.", link: "/curso-teologia", color: "from-[hsl(200,50%,45%)] to-[hsl(210,55%,55%)]" },
-  { icon: Languages, title: "Dicionário Hebraico/Grego", desc: "Palavras bíblicas com significado teológico e pronúncia.", link: "/dicionario", color: "from-[hsl(160,40%,40%)] to-[hsl(170,45%,50%)]" },
-  { icon: HelpCircle, title: "Questionários Espirituais", desc: "Testes bíblicos, desafios e reflexões para crescimento.", link: "/questionarios", color: "from-[hsl(340,45%,55%)] to-[hsl(350,50%,60%)]" },
-  { icon: Calendar, title: "Devocional Diário", desc: "Versículo do dia, reflexão e oração gerados por IA.", link: "/devocional", color: "from-[hsl(42,55%,52%)] to-[hsl(30,50%,50%)]" },
-  { icon: BookMarked, title: "Plano de Leitura", desc: "Planos de leitura bíblica organizados para acompanhar seu progresso.", link: "/plano-leitura", color: "from-[hsl(190,50%,45%)] to-[hsl(200,55%,55%)]" },
-  { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/area-pregador", color: "from-[hsl(225,40%,55%)] to-[hsl(235,45%,60%)]" },
-  { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas", color: "from-[hsl(45,60%,50%)] to-[hsl(35,55%,55%)]" },
-  { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores", color: "from-[hsl(280,40%,55%)] to-[hsl(300,35%,50%)]" },
+  { icon: BookOpen, title: "Estudo Bíblico Avançado", desc: "Bíblia completa com busca, comparação e comentários teológicos.", link: "/estudo-biblico", color: "from-[hsl(220,55%,50%)] to-[hsl(250,50%,60%)]" },
+  { icon: Sparkles, title: "Gerador de Pregações (IA)", desc: "Esboços e sermões completos gerados por inteligência artificial.", link: "/gerador-pregacoes", color: "from-[hsl(38,70%,50%)] to-[hsl(45,65%,58%)]" },
+  { icon: FileText, title: "Biblioteca de Mensagens", desc: "Pregações organizadas por temas com texto base e aplicação.", link: "/biblioteca", color: "from-[hsl(260,45%,52%)] to-[hsl(280,50%,58%)]" },
+  { icon: GraduationCap, title: "Curso de Teologia", desc: "Estudo completo de teologia sistemática com IA para tirar dúvidas.", link: "/curso-teologia", color: "from-[hsl(195,65%,42%)] to-[hsl(210,60%,52%)]" },
+  { icon: Languages, title: "Dicionário Hebraico/Grego", desc: "Palavras bíblicas com significado teológico e pronúncia.", link: "/dicionario", color: "from-[hsl(155,50%,38%)] to-[hsl(170,55%,48%)]" },
+  { icon: HelpCircle, title: "Questionários Espirituais", desc: "Testes bíblicos, desafios e reflexões para crescimento.", link: "/questionarios", color: "from-[hsl(335,55%,52%)] to-[hsl(350,60%,58%)]" },
+  { icon: Calendar, title: "Devocional Diário", desc: "Versículo do dia, reflexão e oração gerados por IA.", link: "/devocional", color: "from-[hsl(25,65%,48%)] to-[hsl(38,60%,55%)]" },
+  { icon: BookMarked, title: "Plano de Leitura", desc: "Planos de leitura bíblica organizados para acompanhar seu progresso.", link: "/plano-leitura", color: "from-[hsl(185,60%,42%)] to-[hsl(200,65%,52%)]" },
+  { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/area-pregador", color: "from-[hsl(220,50%,48%)] to-[hsl(240,55%,58%)]" },
+  { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas", color: "from-[hsl(42,70%,48%)] to-[hsl(50,65%,55%)]" },
+  { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores", color: "from-[hsl(275,50%,52%)] to-[hsl(295,45%,55%)]" },
 ];
 
 const themes = [
