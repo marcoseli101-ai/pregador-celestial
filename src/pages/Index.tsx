@@ -199,7 +199,7 @@ const Index = () => {
       </section>
 
       {/* Stats Counter Section */}
-      <section className="relative py-16 bg-muted/30 border-y border-border/30">
+      <section className="relative py-20 bg-gradient-to-b from-muted/40 to-background border-y border-border/20">
         <div className="container">
           <motion.div
             initial="hidden"
