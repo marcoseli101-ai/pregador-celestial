@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuthToken } from "@/lib/auth-helpers";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb } from "lucide-react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb, Bookmark } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/data/thematicStudies";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { useVerseBookmarks } from "@/hooks/useVerseBookmarks";
 
 const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
