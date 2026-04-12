@@ -450,13 +450,13 @@ const Index = () => {
                 ✨ Devocional do Dia
               </motion.h2>
               <motion.div custom={1} variants={fadeUp}>
-                <Card className="mt-8 overflow-hidden border-[hsl(var(--gold)/0.3)] bg-card/90 backdrop-blur-md shadow-2xl">
-                  <div className="h-1 bg-gradient-gold" />
+                <Card className="mt-8 overflow-hidden border-[hsl(42,65%,55%/0.35)] bg-card/92 backdrop-blur-lg shadow-[0_20px_60px_-15px_hsl(42,55%,52%/0.2)]">
+                  <div className="h-1.5 bg-gradient-to-r from-[hsl(42,70%,50%)] via-[hsl(38,65%,58%)] to-[hsl(42,70%,50%)]" />
                   <CardContent className="p-10">
                     <motion.p
-                      className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.2em] mb-6"
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 3, repeat: Infinity }}
+                      className="font-serif text-sm font-semibold text-accent uppercase tracking-[0.25em] mb-6"
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
                     >
                       Versículo do Dia
                     </motion.p>
