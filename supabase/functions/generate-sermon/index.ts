@@ -78,8 +78,20 @@ function buildUserPrompt(params: {
 
   // --- TEMPO ---
   const tempoMin = parseInt(tempo || "30", 10) || 30;
-  const palavrasMap: Record<number, number> = { 15: 1800, 30: 3600, 45: 5400, 60: 7200 };
+  const palavrasMap: Record<number, number> = { 5: 500, 10: 1200, 15: 1800, 20: 2400, 30: 3600, 45: 5400, 60: 7200 };
   const palavrasAlvo = palavrasMap[tempoMin] || Math.round(tempoMin * 120);
+
+  // --- Instruções específicas por tempo ---
+  let tempoInstrucoes = "";
+  if (tempoMin <= 5) {
+    tempoInstrucoes = `⚠️ PREGAÇÃO BREVÍSSIMA (5 min): Esboço EXTREMAMENTE curto. Use apenas 1 versículo principal, 1 ponto central, 1 aplicação rápida e 1 conclusão direta. Sem introdução longa, sem múltiplos pontos, sem ilustrações extensas. Vá direto ao ponto.`;
+  } else if (tempoMin <= 15) {
+    tempoInstrucoes = `⚠️ PREGAÇÃO CURTA (${tempoMin} min): Use 1-2 versículos, 2 pontos principais com explicação breve, 1 aplicação simples e conclusão. Mantenha a objetividade.`;
+  } else if (tempoMin <= 30) {
+    tempoInstrucoes = `⚠️ PREGAÇÃO MÉDIA (${tempoMin} min): Use 2-3 versículos, 3 pontos principais, explicação + aplicação prática para cada ponto, conclusão mais desenvolvida com ministração.`;
+  } else {
+    tempoInstrucoes = `⚠️ PREGAÇÃO COMPLETA (${tempoMin} min): Introdução completa com ilustração, 3-5 pontos desenvolvidos com exegese profunda, contexto histórico, ilustrações, aplicação detalhada para cada ponto, ministração intensa e conclusão forte.`;
+  }
 
   // --- PÚBLICO ---
   const publicoDescMap: Record<string, string> = {
