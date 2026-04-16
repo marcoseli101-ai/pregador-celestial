@@ -166,8 +166,8 @@ const GeradorPregacoes = () => {
   return (
     <AnimatedPage className="container py-12">
       <AnimatedSection className="mb-8 text-center">
-        <h1 className="font-serif text-4xl font-bold mb-2">Gerador de Pregações <span className="text-gradient-gold">com IA</span></h1>
-        <p className="text-muted-foreground">Gere esboços e sermões completos com inteligência artificial e base bíblica sólida.</p>
+        <h1 className="font-serif text-4xl font-bold mb-2">Gerador de <span className="text-gradient-gold">Esboço de Pregação</span></h1>
+        <p className="text-muted-foreground">Gere esboços e sermões completos com base bíblica sólida.</p>
       </AnimatedSection>
 
       <div className="mx-auto max-w-5xl grid gap-8 lg:grid-cols-[380px_1fr]">
@@ -359,7 +359,7 @@ const GeradorPregacoes = () => {
           {loading && !result && (
             <Card className="shadow-celestial border-celestial/20">
               <CardContent className="py-12 flex items-center justify-center gap-2 text-muted-foreground">
-                <Loader2 className="h-5 w-5 animate-spin" /> Gerando pregação com IA...
+                <Loader2 className="h-5 w-5 animate-spin" /> Gerando esboço de pregação...
               </CardContent>
             </Card>
           )}
@@ -372,7 +372,7 @@ const GeradorPregacoes = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
-                  {result ? <BibleTextContent content={result} /> : <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando pregação com IA...</div>}
+                  {result ? <BibleTextContent content={result} /> : <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando esboço de pregação...</div>}
                 </div>
                 {result && !loading && (
                   <div className="flex gap-2 flex-wrap pt-4 border-t border-border">
@@ -412,7 +412,7 @@ const GeradorPregacoes = () => {
                   {chatMessages.map((msg, i) => (
                     <div key={i} className={`rounded-lg p-3 text-sm ${msg.role === "user" ? "bg-accent/10 border border-accent/20 ml-8" : "bg-muted mr-8"}`}>
                       <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 text-muted-foreground">
-                        {msg.role === "user" ? "Você" : "IA Teológica"}
+                        {msg.role === "user" ? "Você" : "Assistente Teológico"}
                       </p>
                       <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap"><BibleTextContent content={msg.content} /></div>
                     </div>

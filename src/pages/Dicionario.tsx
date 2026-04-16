@@ -146,7 +146,7 @@ const Dicionario = () => {
       {/* Header */}
       <AnimatedSection className="mb-8 text-center">
         <h1 className="font-serif text-4xl font-bold mb-2">
-          Dicionário <span className="text-gradient-gold">Bíblico com IA</span>
+          Dicionário <span className="text-gradient-gold">Bíblico Completo</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
           Pesquise qualquer palavra ou conceito bíblico e receba definições completas em Hebraico, Aramaico e Grego com pronúncia em áudio.
@@ -154,7 +154,7 @@ const Dicionario = () => {
         <div className="flex items-center justify-center gap-2 mt-3">
           <Sparkles className="h-4 w-4 text-accent" />
           <span className="text-sm text-muted-foreground">
-            Powered by IA · Ilimitado · Hebraico · Aramaico · Grego
+            Ilimitado · Hebraico · Aramaico · Grego
           </span>
         </div>
       </AnimatedSection>
@@ -234,7 +234,7 @@ const Dicionario = () => {
         <div className="text-center py-16">
           <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-primary" />
           <p className="text-lg text-muted-foreground">Pesquisando nas línguas bíblicas...</p>
-          <p className="text-sm text-muted-foreground">A IA está analisando o termo</p>
+          <p className="text-sm text-muted-foreground">Analisando o termo nas línguas originais...</p>
         </div>
       )}
 

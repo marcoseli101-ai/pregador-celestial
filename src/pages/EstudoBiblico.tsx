@@ -802,7 +802,7 @@ function StudyGroup({
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-3">
                       <div className="flex items-center gap-2">
                         <BrainCircuit className="h-4 w-4 text-primary" />
-                        <h5 className="text-xs font-semibold text-primary uppercase tracking-wider">Comentário Teológico (IA)</h5>
+                        <h5 className="text-xs font-semibold text-primary uppercase tracking-wider">Comentário Teológico</h5>
                       </div>
                       {!commentaries[study.book] && !commentaryLoading[study.book] && !commentaryError[study.book] && (
                         <Button
