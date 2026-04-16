@@ -85,6 +85,10 @@ const GeradorPregacoes = () => {
 
   const handleGenerate = async () => {
     if (!tema.trim()) { toast.error("Digite um tema para a pregação"); return; }
+    if (!publico) { toast.error("Selecione o público-alvo"); return; }
+    if (!tempo) { toast.error("Selecione o tempo de pregação"); return; }
+    if (!nivel) { toast.error("Selecione o estilo da pregação"); return; }
+    if (!estrutura) { toast.error("Selecione a estrutura homilética"); return; }
     setResult("");
     setResultTema(tema);
     setLoading(true);
@@ -187,11 +191,13 @@ const GeradorPregacoes = () => {
                 <Select value={publico} onValueChange={setPublico}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="igreja">Igreja</SelectItem>
+                    <SelectItem value="igreja">Igreja Geral</SelectItem>
                     <SelectItem value="jovens">Jovens</SelectItem>
                     <SelectItem value="cruzada">Cruzada Evangelística</SelectItem>
-                    <SelectItem value="congresso">Congresso</SelectItem>
+                    <SelectItem value="congresso">Congresso / Obreiros</SelectItem>
                     <SelectItem value="casais">Casais</SelectItem>
+                    <SelectItem value="criancas">Crianças</SelectItem>
+                    <SelectItem value="idosos">Idosos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -200,7 +206,10 @@ const GeradorPregacoes = () => {
                 <Select value={tempo} onValueChange={setTempo}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="5">5 minutos (brevíssimo)</SelectItem>
+                    <SelectItem value="10">10 minutos</SelectItem>
                     <SelectItem value="15">15 minutos</SelectItem>
+                    <SelectItem value="20">20 minutos</SelectItem>
                     <SelectItem value="30">30 minutos</SelectItem>
                     <SelectItem value="45">45 minutos</SelectItem>
                     <SelectItem value="60">1 hora</SelectItem>
