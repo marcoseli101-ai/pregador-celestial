@@ -150,8 +150,12 @@ const Questionarios = () => {
         <div className="mt-8 text-center">
           <div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-4 py-2 rounded-full">
             <Brain className="h-4 w-4" />
-            Perguntas geradas por IA — nunca se repetem!
+            Perguntas sempre diferentes!
           </div>
+        </div>
+
+        <div className="mx-auto max-w-2xl mt-10">
+          <RankingPanel type="quiz" />
         </div>
       </AnimatedPage>
     );
