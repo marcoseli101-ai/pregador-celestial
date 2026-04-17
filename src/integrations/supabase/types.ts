@@ -137,6 +137,57 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_scores: {
+        Row: {
+          correct: boolean
+          created_at: string
+          id: string
+          nivel: string
+          points: number
+          user_id: string
+        }
+        Insert: {
+          correct: boolean
+          created_at?: string
+          id?: string
+          nivel: string
+          points?: number
+          user_id: string
+        }
+        Update: {
+          correct?: boolean
+          created_at?: string
+          id?: string
+          nivel?: string
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reading_progress: {
+        Row: {
+          completed_at: string
+          day_number: number
+          id: string
+          plan_type: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          day_number: number
+          id?: string
+          plan_type: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          day_number?: number
+          id?: string
+          plan_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_content: {
         Row: {
           content: string
@@ -286,6 +337,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_quiz_ranking: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          name: string
+          total_correct: number
+          total_points: number
+          user_id: string
+        }[]
+      }
+      get_reading_ranking: {
+        Args: { _plan_type: string }
+        Returns: {
+          avatar_url: string
+          days_completed: number
+          name: string
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
