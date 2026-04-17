@@ -233,5 +233,9 @@ export default function AnnualReadingPlan() {
         }}
       />
     </div>
+    <aside className="lg:sticky lg:top-20 lg:self-start">
+      <RankingPanel type="reading" planType={planType} />
+    </aside>
+    </div>
   );
 }
