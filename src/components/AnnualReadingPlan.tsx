@@ -11,6 +11,7 @@ import { ProgressHeader } from "@/components/ProgressHeader";
 import { DayCard } from "@/components/DayCard";
 import { DayModal } from "@/components/DayModal";
 import type { DayEntry } from "@/data/biblicalPlan";
+import { RankingPanel } from "@/components/RankingPanel";
 
 const READ_REFS_KEY = "reading-plan-read-refs";
 
@@ -104,7 +105,8 @@ export default function AnnualReadingPlan() {
   ];
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-[1fr_320px] gap-8">
+    <div className="space-y-8 min-w-0">
       {/* Hero header */}
       <div className="text-center space-y-3 pb-2">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-2">
