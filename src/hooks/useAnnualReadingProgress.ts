@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 type PlanType = "biblical" | "chronological";
 
@@ -37,13 +39,38 @@ function computeStreak(completedDays: Set<number>, today: number): number {
 }
 
 export function useAnnualReadingProgress(planType: PlanType) {
+  const { user } = useAuth();
   const [completedDays, setCompletedDays] = useState<Set<number>>(() =>
     loadCompleted(planType)
   );
 
+  // Carrega do Supabase quando autenticado
   useEffect(() => {
+    let cancelled = false;
     setCompletedDays(loadCompleted(planType));
-  }, [planType]);
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from("reading_progress")
+        .select("day_number")
+        .eq("user_id", user.id)
+        .eq("plan_type", planType);
+      if (!cancelled && data) {
+        const remote = new Set(data.map((r: any) => r.day_number as number));
+        // Mesclar com local (envia locais que faltam)
+        const local = loadCompleted(planType);
+        const toUpload = [...local].filter((d) => !remote.has(d));
+        if (toUpload.length) {
+          await supabase.from("reading_progress").insert(
+            toUpload.map((d) => ({ user_id: user.id, plan_type: planType, day_number: d }))
+          );
+          toUpload.forEach((d) => remote.add(d));
+        }
+        setCompletedDays(remote);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [planType, user]);
 
   useEffect(() => {
     saveCompleted(planType, completedDays);
@@ -52,14 +79,28 @@ export function useAnnualReadingProgress(planType: PlanType) {
   const toggleDay = useCallback((day: number) => {
     setCompletedDays((prev) => {
       const next = new Set(prev);
-      if (next.has(day)) {
+      const wasCompleted = next.has(day);
+      if (wasCompleted) {
         next.delete(day);
+        if (user) {
+          supabase.from("reading_progress")
+            .delete()
+            .eq("user_id", user.id)
+            .eq("plan_type", planType)
+            .eq("day_number", day)
+            .then(() => {});
+        }
       } else {
         next.add(day);
+        if (user) {
+          supabase.from("reading_progress")
+            .insert({ user_id: user.id, plan_type: planType, day_number: day })
+            .then(() => {});
+        }
       }
       return next;
     });
-  }, []);
+  }, [user, planType]);
 
   const todayDayNumber = useMemo(() => getDayOfYear(), []);
 
