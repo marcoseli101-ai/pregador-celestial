@@ -8,6 +8,11 @@ import { cn } from "@/lib/utils";
 import { ContentActions } from "@/components/ContentActions";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { RankingPanel } from "@/components/RankingPanel";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+const POINTS_BY_LEVEL: Record<string, number> = { "Fácil": 1, "Médio": 3, "Difícil": 5 };
 
 type Nivel = "Fácil" | "Médio" | "Difícil";
 
@@ -21,6 +26,7 @@ type Question = {
 const GENERATE_QUIZ_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-quiz`;
 
 const Questionarios = () => {
+  const { user } = useAuth();
   const [nivel, setNivel] = useState<Nivel | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
@@ -76,9 +82,18 @@ const Questionarios = () => {
     if (selected !== null || !currentQuestion) return;
     setSelected(idx);
     setTotal((t) => t + 1);
-    if (idx === currentQuestion.correct) setScore((s) => s + 1);
+    const isCorrect = idx === currentQuestion.correct;
+    if (isCorrect) setScore((s) => s + 1);
     setShowExplanation(true);
     setAnsweredQuestions((prev) => [...prev, currentQuestion.question]);
+    if (user && nivel) {
+      supabase.from("quiz_scores").insert({
+        user_id: user.id,
+        nivel,
+        correct: isCorrect,
+        points: isCorrect ? (POINTS_BY_LEVEL[nivel] ?? 1) : 0,
+      }).then(() => {});
+    }
   };
 
   const nextQuestion = () => {
