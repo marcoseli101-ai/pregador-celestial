@@ -279,6 +279,7 @@ serve(async (req) => {
         model: "deepseek/deepseek-chat",
         messages,
         stream: true,
+        max_tokens: 4000,
       }),
     });
 
