@@ -276,9 +276,10 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-001",
+        model: "deepseek/deepseek-chat",
         messages,
         stream: true,
+        max_tokens: 4000,
       }),
     });
 
