@@ -71,6 +71,7 @@ export async function streamSermon({
   tema: string; publico: string; tempo: string; nivel: string;
   estrutura?: string; ocasiao?: string; tom?: string; referencias?: string;
 } & SSECallbacks) {
+  console.log("streamSermon calling edge function", { tema, publico, tempo, nivel });
   const token = await getAuthToken();
   const resp = await fetch(GENERATE_SERMON_URL, {
     method: "POST",
