@@ -84,7 +84,6 @@ const GeradorPregacoes = () => {
   }, [user, publico, tempo, nivel, fetchHistory]);
 
   const handleGenerate = async () => {
-    console.log("handleGenerate called", { tema, publico, tempo, nivel, estrutura });
     if (!tema.trim()) { toast.error("Digite um tema para a pregação"); return; }
     if (!publico) { toast.error("Selecione o público-alvo"); return; }
     if (!tempo) { toast.error("Selecione o tempo de pregação"); return; }
