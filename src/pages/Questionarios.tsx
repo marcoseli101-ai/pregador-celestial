@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { RankingPanel } from "@/components/RankingPanel";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePersistedState, clearPersistedState } from "@/hooks/usePersistedState";
 
 const POINTS_BY_LEVEL: Record<string, number> = { "Fácil": 1, "Médio": 3, "Difícil": 5 };
 
@@ -27,14 +28,14 @@ const GENERATE_QUIZ_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gen
 
 const Questionarios = () => {
   const { user } = useAuth();
-  const [nivel, setNivel] = useState<Nivel | null>(null);
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [nivel, setNivel] = usePersistedState<Nivel | null>("quiz:nivel", null);
+  const [currentQuestion, setCurrentQuestion] = usePersistedState<Question | null>("quiz:currentQuestion", null);
+  const [selected, setSelected] = usePersistedState<number | null>("quiz:selected", null);
+  const [score, setScore] = usePersistedState<number>("quiz:score", 0);
+  const [total, setTotal] = usePersistedState<number>("quiz:total", 0);
   const [loading, setLoading] = useState(false);
-  const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [answeredQuestions, setAnsweredQuestions] = usePersistedState<string[]>("quiz:answered", []);
+  const [showExplanation, setShowExplanation] = usePersistedState<boolean>("quiz:showExplanation", false);
 
   const fetchQuestion = useCallback(async (selectedNivel: Nivel, prevQuestions: string[]) => {
     setLoading(true);
@@ -109,6 +110,7 @@ const Questionarios = () => {
     setTotal(0);
     setAnsweredQuestions([]);
     setShowExplanation(false);
+    ["quiz:nivel","quiz:currentQuestion","quiz:selected","quiz:score","quiz:total","quiz:answered","quiz:showExplanation"].forEach(clearPersistedState);
   };
 
   const nivelConfig: Record<Nivel, { color: string; icon: string; desc: string }> = {
