@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { getAuthToken } from "@/lib/auth-helpers";
+import { usePersistedState } from "@/hooks/usePersistedState";
 import { motion } from "framer-motion";
 import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, FileText, Download, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
