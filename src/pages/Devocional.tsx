@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ContentActions } from "@/components/ContentActions";
 import { BibleVerseLink } from "@/components/BibleVerseLink";
 import { useDailyDevotional, type DailyDevotional } from "@/hooks/useDailyDevotional";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 interface SavedDevotional {
   id: string;
@@ -26,7 +27,7 @@ const Devocional = () => {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
   });
 
-  const [activeTab, setActiveTab] = useState<Tab>("hoje");
+  const [activeTab, setActiveTab] = usePersistedState<Tab>("dev:activeTab", "hoje");
   const [isSaving, setIsSaving] = useState(false);
   const [savedList, setSavedList] = useState<SavedDevotional[]>([]);
   const [loadingSaved, setLoadingSaved] = useState(false);

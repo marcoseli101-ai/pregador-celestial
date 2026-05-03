@@ -12,6 +12,7 @@ import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/data/thematicStudies";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useVerseBookmarks } from "@/hooks/useVerseBookmarks";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
@@ -90,17 +91,17 @@ const EstudoBiblico = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { books } = useBibleBooks();
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
-  const [selectedBook, setSelectedBook] = useState<BibleBook | null>(null);
-  const [selectedChapter, setSelectedChapter] = useState<number | null>(null);
+  const [selectedBook, setSelectedBook] = usePersistedState<BibleBook | null>("estudo:selectedBook", null);
+  const [selectedChapter, setSelectedChapter] = usePersistedState<number | null>("estudo:selectedChapter", null);
   const { isBookmarked, toggleBookmark, getBookmark } = useVerseBookmarks(selectedBook?.name, selectedChapter ?? undefined);
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<"biblia" | "versiculos" | "estudos" | "tematicos">("biblia");
-  const [expandedStudy, setExpandedStudy] = useState<string | null>(null);
-  const [studyFilter, setStudyFilter] = useState<"all" | "VT" | "NT">("all");
-  const [studySearch, setStudySearch] = useState("");
-  const [expandedThematic, setExpandedThematic] = useState<string | null>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = usePersistedState<string>("estudo:searchQuery", "");
+  const [activeTab, setActiveTab] = usePersistedState<"biblia" | "versiculos" | "estudos" | "tematicos">("estudo:activeTab", "biblia");
+  const [expandedStudy, setExpandedStudy] = usePersistedState<string | null>("estudo:expandedStudy", null);
+  const [studyFilter, setStudyFilter] = usePersistedState<"all" | "VT" | "NT">("estudo:studyFilter", "all");
+  const [studySearch, setStudySearch] = usePersistedState<string>("estudo:studySearch", "");
+  const [expandedThematic, setExpandedThematic] = usePersistedState<string | null>("estudo:expandedThematic", null);
+  const [expandedSection, setExpandedSection] = usePersistedState<string | null>("estudo:expandedSection", null);
   const { results: verseResults, loading: versesLoading, fetchAll: fetchVerses } = useBibleVerses([]);
 
   // Handle URL params for deep-linking from verse clicks
@@ -129,7 +130,7 @@ const EstudoBiblico = () => {
   }, [searchParams, books, setSearchParams]);
 
   // AI commentary state
-  const [commentaries, setCommentaries] = useState<Record<string, string>>({});
+  const [commentaries, setCommentaries] = usePersistedState<Record<string, string>>("estudo:commentaries", {});
   const [commentaryLoading, setCommentaryLoading] = useState<Record<string, boolean>>({});
   const [commentaryError, setCommentaryError] = useState<Record<string, string>>({});
   const commentaryRequestedRef = useRef<Set<string>>(new Set());

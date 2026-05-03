@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { getAuthToken } from "@/lib/auth-helpers";
+import { usePersistedState } from "@/hooks/usePersistedState";
 import { motion } from "framer-motion";
 import { BookOpen, GraduationCap, ChevronRight, CheckCircle2, Lock, MessageCircle, Send, Loader2, ChevronDown, FileText, Download, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -884,15 +885,13 @@ type ChatMsg = { role: "user" | "assistant"; content: string };
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/theology-chat`;
 
 const CursoTeologia = () => {
-  const [activeModule, setActiveModule] = useState(0);
-  const [activeLesson, setActiveLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
-    try { return JSON.parse(localStorage.getItem("theology-completed") || "[]"); } catch { return []; }
-  });
-  const [chatMessages, setChatMessages] = useState<ChatMsg[]>([]);
-  const [chatInput, setChatInput] = useState("");
+  const [activeModule, setActiveModule] = usePersistedState<number>("curso:activeModule", 0);
+  const [activeLesson, setActiveLesson] = usePersistedState<number>("curso:activeLesson", 0);
+  const [completedLessons, setCompletedLessons] = usePersistedState<string[]>("theology-completed", []);
+  const [chatMessages, setChatMessages] = usePersistedState<ChatMsg[]>("curso:chatMessages", []);
+  const [chatInput, setChatInput] = usePersistedState<string>("curso:chatInput", "");
   const [chatLoading, setChatLoading] = useState(false);
-  const [expandedModule, setExpandedModule] = useState<number | null>(0);
+  const [expandedModule, setExpandedModule] = usePersistedState<number | null>("curso:expandedModule", 0);
   
   const [materialModal, setMaterialModal] = useState<Material | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);

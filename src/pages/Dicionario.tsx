@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 interface DictionaryEntry {
   word: string;
@@ -35,11 +36,11 @@ const addToHistory = (word: string) => {
 };
 
 const Dicionario = () => {
-  const [search, setSearch] = useState("");
-  const [selectedLang, setSelectedLang] = useState<"Todos" | "Hebraico" | "Grego" | "Aramaico">("Todos");
-  const [results, setResults] = useState<DictionaryEntry[]>([]);
+  const [search, setSearch] = usePersistedState<string>("dic:search", "");
+  const [selectedLang, setSelectedLang] = usePersistedState<"Todos" | "Hebraico" | "Grego" | "Aramaico">("dic:lang", "Todos");
+  const [results, setResults] = usePersistedState<DictionaryEntry[]>("dic:results", []);
   const [loading, setLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [hasSearched, setHasSearched] = usePersistedState<boolean>("dic:hasSearched", false);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([]);
 
