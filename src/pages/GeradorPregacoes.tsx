@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { ContentActions } from "@/components/ContentActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BibleTextContent } from "@/components/BibleVerseLink";
+import { usePersistedState, clearPersistedState } from "@/hooks/usePersistedState";
 
 interface SavedSermon {
   id: string;
@@ -25,16 +26,16 @@ interface SavedSermon {
 }
 
 const GeradorPregacoes = () => {
-  const [tema, setTema] = useState("");
-  const [publico, setPublico] = useState("");
-  const [tempo, setTempo] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [estrutura, setEstrutura] = useState("");
-  const [ocasiao, setOcasiao] = useState("");
-  const [tom, setTom] = useState("");
-  const [referencias, setReferencias] = useState("");
-  const [result, setResult] = useState(() => localStorage.getItem("lastSermon") || "");
-  const [resultTema, setResultTema] = useState(() => localStorage.getItem("lastSermonTema") || "");
+  const [tema, setTema] = usePersistedState("ger:tema", "");
+  const [publico, setPublico] = usePersistedState("ger:publico", "");
+  const [tempo, setTempo] = usePersistedState("ger:tempo", "");
+  const [nivel, setNivel] = usePersistedState("ger:nivel", "");
+  const [estrutura, setEstrutura] = usePersistedState("ger:estrutura", "");
+  const [ocasiao, setOcasiao] = usePersistedState("ger:ocasiao", "");
+  const [tom, setTom] = usePersistedState("ger:tom", "");
+  const [referencias, setReferencias] = usePersistedState("ger:referencias", "");
+  const [result, setResult] = usePersistedState<string>("ger:result", "");
+  const [resultTema, setResultTema] = usePersistedState<string>("ger:resultTema", "");
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
@@ -44,19 +45,11 @@ const GeradorPregacoes = () => {
   const [historyLoading, setHistoryLoading] = useState(false);
 
   // Q&A state
-  const [activeTab, setActiveTab] = useState<"pregacao" | "perguntas">("pregacao");
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const [chatInput, setChatInput] = useState("");
+  const [activeTab, setActiveTab] = usePersistedState<"pregacao" | "perguntas">("ger:activeTab", "pregacao");
+  const [chatMessages, setChatMessages] = usePersistedState<ChatMessage[]>("ger:chatMessages", []);
+  const [chatInput, setChatInput] = usePersistedState<string>("ger:chatInput", "");
   const [chatLoading, setChatLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
-
-  // Persist result to localStorage
-  useEffect(() => {
-    if (result) {
-      localStorage.setItem("lastSermon", result);
-      localStorage.setItem("lastSermonTema", resultTema || tema);
-    }
-  }, [result, resultTema, tema]);
 
   const fetchHistory = useCallback(async () => {
     if (!user) return;
@@ -93,6 +86,7 @@ const GeradorPregacoes = () => {
     setResultTema(tema);
     setLoading(true);
     setChatMessages([]);
+    clearPersistedState("ger:chatMessages");
     setActiveTab("pregacao");
     let accumulated = "";
     const currentTema = tema;
