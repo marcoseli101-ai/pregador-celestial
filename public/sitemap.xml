@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://pregador.site/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://pregador.site/estudo-biblico</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pregador.site/plano-leitura</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pregador.site/gerador-pregacoes</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pregador.site/biblioteca</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pregador.site/curso-teologia</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pregador.site/dicionario</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pregador.site/questionarios</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pregador.site/devocional</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://pregador.site/area-pregador</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pregador.site/notas</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://pregador.site/marcadores</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://pregador.site/login</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
