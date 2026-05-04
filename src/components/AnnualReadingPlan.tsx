@@ -105,8 +105,8 @@ export default function AnnualReadingPlan() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-[1fr_320px] gap-8">
-    <div className="space-y-8 min-w-0">
+    <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+    <div className="flex-1 space-y-8 min-w-0 order-2 lg:order-1">
       {/* Hero header */}
       <div className="text-center space-y-3 pb-2">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-2">
@@ -233,7 +233,7 @@ export default function AnnualReadingPlan() {
         }}
       />
     </div>
-    <aside className="lg:sticky lg:top-20 lg:self-start">
+    <aside className="w-full lg:w-[320px] order-1 lg:order-2 lg:sticky lg:top-20 lg:self-start">
       <RankingPanel type="reading" planType={planType} />
     </aside>
     </div>
