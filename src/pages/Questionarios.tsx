@@ -156,9 +156,11 @@ const Questionarios = () => {
           </div>
         </div>
 
-        <div className="mx-auto max-w-2xl mt-10">
+        <div className="mx-auto max-w-2xl mt-4 order-first lg:order-none">
           <RankingPanel type="quiz" />
         </div>
+
+        <div className="mx-auto max-w-2xl grid gap-4 sm:grid-cols-3 mt-8">
       </AnimatedPage>
     );
   }
