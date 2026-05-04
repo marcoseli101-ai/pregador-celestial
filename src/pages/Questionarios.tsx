@@ -132,35 +132,35 @@ const Questionarios = () => {
           </p>
         </AnimatedSection>
 
-        <div className="mx-auto max-w-2xl grid gap-4 sm:grid-cols-3">
-          {(Object.keys(nivelConfig) as Nivel[]).map((n) => (
-            <button
-              key={n}
-              onClick={() => startGame(n)}
-              className={cn(
-                "rounded-xl border-2 p-6 text-left transition-all duration-200 cursor-pointer",
-                nivelConfig[n].color
-              )}
-            >
-              <span className="text-3xl mb-3 block">{nivelConfig[n].icon}</span>
-              <h3 className="font-serif text-lg font-bold mb-1">{n}</h3>
-              <p className="text-xs text-muted-foreground">{nivelConfig[n].desc}</p>
-            </button>
-          ))}
-        </div>
+        <div className="flex flex-col gap-8">
+          <div className="mx-auto w-full max-w-2xl order-1 lg:order-2">
+            <RankingPanel type="quiz" />
+          </div>
 
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-4 py-2 rounded-full">
-            <Brain className="h-4 w-4" />
-            Perguntas sempre diferentes!
+          <div className="mx-auto w-full max-w-2xl grid gap-4 sm:grid-cols-3 order-2 lg:order-1">
+            {(Object.keys(nivelConfig) as Nivel[]).map((n) => (
+              <button
+                key={n}
+                onClick={() => startGame(n)}
+                className={cn(
+                  "rounded-xl border-2 p-6 text-left transition-all duration-200 cursor-pointer",
+                  nivelConfig[n].color
+                )}
+              >
+                <span className="text-3xl mb-3 block">{nivelConfig[n].icon}</span>
+                <h3 className="font-serif text-lg font-bold mb-1">{n}</h3>
+                <p className="text-xs text-muted-foreground">{nivelConfig[n].desc}</p>
+              </button>
+            ))}
+          </div>
+
+          <div className="order-3 text-center">
+            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-4 py-2 rounded-full">
+              <Brain className="h-4 w-4" />
+              Perguntas sempre diferentes!
+            </div>
           </div>
         </div>
-
-        <div className="mx-auto max-w-2xl mt-4 order-first lg:order-none">
-          <RankingPanel type="quiz" />
-        </div>
-
-        <div className="mx-auto max-w-2xl grid gap-4 sm:grid-cols-3 mt-8">
       </AnimatedPage>
     );
   }
