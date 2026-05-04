@@ -80,38 +80,73 @@ export function Header() {
         </div>
       </div>
 
-      {mobileOpen && (
-        <div className="border-t border-border bg-background p-4 lg:hidden">
-          <nav className="flex flex-col gap-1">
-            {navItems.map((item) => (
-              <Link key={item.path} to={item.path} onClick={() => setMobileOpen(false)} className={cn("rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent", location.pathname === item.path ? "bg-accent text-accent-foreground" : "text-muted-foreground")}>
-                {item.label}
-              </Link>
-            ))}
-            {isAdmin && (
-              <Link to="/admin" onClick={() => setMobileOpen(false)} className={cn("rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent flex items-center gap-1 text-accent", location.pathname === "/admin" ? "bg-accent text-accent-foreground" : "")}>
-                <ShieldCheck className="h-4 w-4" /> Painel Admin
-              </Link>
-            )}
-            <div className="mt-3 flex gap-2">
-              {user ? (
-                <Button variant="outline" className="w-full" onClick={() => { signOut(); setMobileOpen(false); }}>
-                  <LogOut className="h-4 w-4 mr-1" /> Sair
-                </Button>
-              ) : (
-                <>
-                  <Link to="/login" className="flex-1" onClick={() => setMobileOpen(false)}><Button variant="outline" className="w-full">Entrar</Button></Link>
-                  <Link to="/login" className="flex-1" onClick={() => setMobileOpen(false)}><Button className="w-full bg-gradient-gold text-background">Cadastrar</Button></Link>
-                </>
+      {/* Mobile Navigation Menu */}
+      <div 
+        className={cn(
+          "fixed inset-x-0 top-[64px] z-50 bg-background border-b border-border p-4 lg:hidden transition-all duration-300 ease-in-out origin-top",
+          mobileOpen ? "opacity-100 scale-y-100 visible" : "opacity-0 scale-y-0 invisible"
+        )}
+        style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}
+      >
+        <nav className="flex flex-col gap-1 pb-8">
+          {navItems.map((item) => (
+            <Link 
+              key={item.path} 
+              to={item.path} 
+              onClick={() => setMobileOpen(false)} 
+              className={cn(
+                "rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-accent", 
+                location.pathname === item.path ? "bg-accent text-accent-foreground" : "text-muted-foreground"
               )}
-            </div>
-            <Button variant="ghost" size="sm" onClick={toggleTheme} className="mt-2">
-              {dark ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+            >
+              {item.label}
+            </Link>
+          ))}
+          {isAdmin && (
+            <Link 
+              to="/admin" 
+              onClick={() => setMobileOpen(false)} 
+              className={cn(
+                "rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-accent flex items-center gap-1 text-accent", 
+                location.pathname === "/admin" ? "bg-accent text-accent-foreground" : ""
+              )}
+            >
+              <ShieldCheck className="h-5 w-5" /> Painel Admin
+            </Link>
+          )}
+          
+          <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={toggleTheme} 
+              className="justify-start px-3 text-base"
+            >
+              {dark ? <Sun className="mr-2 h-5 w-5" /> : <Moon className="mr-2 h-5 w-5" />}
               {dark ? "Modo Claro" : "Modo Escuro"}
             </Button>
-          </nav>
-        </div>
-      )}
+
+            {user ? (
+              <Button 
+                variant="outline" 
+                className="w-full justify-start text-base px-3" 
+                onClick={() => { signOut(); setMobileOpen(false); }}
+              >
+                <LogOut className="h-5 w-5 mr-2" /> Sair
+              </Button>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <Link to="/login" onClick={() => setMobileOpen(false)}>
+                  <Button variant="outline" className="w-full text-base">Entrar</Button>
+                </Link>
+                <Link to="/login" onClick={() => setMobileOpen(false)}>
+                  <Button className="w-full bg-gradient-gold text-background text-base">Cadastrar</Button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }
