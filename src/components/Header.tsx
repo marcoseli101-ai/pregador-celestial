@@ -80,6 +80,14 @@ export function Header() {
         </div>
       </div>
 
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
       {/* Mobile Navigation Menu */}
       <div 
         className={cn(
