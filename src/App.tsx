@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LoginPromptProvider } from "@/contexts/LoginPromptContext";
 import { Layout } from "@/components/Layout";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
 import GeradorPregacoes from "./pages/GeradorPregacoes";
@@ -50,7 +50,7 @@ const App = () => (
                 <Route path="/notas" element={<NotasPessoais />} />
                 <Route path="/marcadores" element={<Marcadores />} />
               </Route>
-              <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+              <Route element={<AdminRoute><Layout /></AdminRoute>}>
                 <Route path="/admin" element={<Admin />} />
               </Route>
               <Route path="*" element={<NotFound />} />
