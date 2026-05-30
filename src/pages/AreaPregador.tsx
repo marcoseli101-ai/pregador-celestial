@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { ContentActions } from "@/components/ContentActions";
-import { Link } from "react-router-dom";
 
 interface SavedItem {
   id: string;
@@ -28,6 +28,7 @@ const typeLabels: Record<string, { label: string; icon: typeof FileText }> = {
 
 const AreaPregador = () => {
   const { user } = useAuth();
+  const { openLogin } = useLoginPrompt();
   const [items, setItems] = useState<SavedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("todos");
@@ -85,10 +86,10 @@ const AreaPregador = () => {
         <div className="mx-auto max-w-lg text-center space-y-6">
           <FolderOpen className="h-16 w-16 mx-auto text-muted-foreground" />
           <h1 className="font-serif text-3xl font-bold">Área do Pregador</h1>
-          <p className="text-muted-foreground">Faça login para acessar seus conteúdos salvos.</p>
-          <Link to="/login">
-            <Button className="bg-gradient-gold text-background hover:opacity-90">Entrar</Button>
-          </Link>
+          <p className="text-muted-foreground">Entre para acessar seus conteúdos salvos.</p>
+          <Button onClick={() => openLogin()} className="bg-gradient-gold text-background hover:opacity-90">
+            Entrar
+          </Button>
         </div>
       </div>
     );
