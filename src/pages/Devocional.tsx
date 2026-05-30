@@ -75,10 +75,7 @@ const Devocional = () => {
   }, [activeTab, fetchSaved, fetchHistory]);
 
   const handleSave = async () => {
-    if (!user) {
-      toast.error("Faça login para salvar devocionais.");
-      return;
-    }
+    if (!requireLogin()) return;
     if (!devotional && !viewingHistory) return;
     setIsSaving(true);
     const contentToSave = viewingHistory?.conteudo || devotional?.conteudo || "";

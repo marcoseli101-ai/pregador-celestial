@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { SlideGeneratorModal } from "./SlideGeneratorModal";
 import { AudioPlayerModal } from "./AudioPlayerModal";
 
@@ -19,6 +20,7 @@ interface ContentActionsProps {
 
 export function ContentActions({ content, title = "Pregador Pro", contentType = "geral", compact = false, className = "", hideSave = false }: ContentActionsProps) {
   const { user } = useAuth();
+  const { requireLogin } = useLoginPrompt();
   const [isSaving, setIsSaving] = useState(false);
   const [slidesOpen, setSlidesOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
@@ -92,13 +94,10 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
   };
 
   const handleSave = async () => {
-    if (!user) {
-      toast.error("Faça login para salvar conteúdos.");
-      return;
-    }
+    if (!requireLogin()) return;
     setIsSaving(true);
     const { error } = await supabase.from("saved_content").insert({
-      user_id: user.id,
+      user_id: user!.id,
       title,
       content,
       content_type: contentType,
