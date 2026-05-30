@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { streamSermon, streamSermonChat, type ChatMessage } from "@/lib/stream-chat";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ContentActions } from "@/components/ContentActions";
@@ -38,6 +39,7 @@ const GeradorPregacoes = () => {
   const [resultTema, setResultTema] = usePersistedState<string>("ger:resultTema", "");
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { requireLogin } = useLoginPrompt();
 
   // History state
   const [history, setHistory] = useState<SavedSermon[]>([]);
@@ -99,10 +101,10 @@ const GeradorPregacoes = () => {
   };
 
   const handleSave = async () => {
-    if (!user) { toast.error("Faça login para salvar pregações"); return; }
+    if (!requireLogin()) return;
     if (!result) return;
     const { error } = await supabase.from("saved_sermons").insert({
-      user_id: user.id, title: resultTema || tema, tema: resultTema || tema, publico, tempo, nivel, content: result,
+      user_id: user!.id, title: resultTema || tema, tema: resultTema || tema, publico, tempo, nivel, content: result,
     });
     if (error) toast.error("Erro ao salvar");
     else { toast.success("Pregação salva!"); fetchHistory(); }

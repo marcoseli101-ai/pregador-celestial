@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LoginPromptProvider } from "@/contexts/LoginPromptContext";
 import { Layout } from "@/components/Layout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
@@ -32,27 +33,29 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/login" element={<Layout />}>
-              <Route index element={<Login />} />
-            </Route>
-            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-              <Route path="/" element={<Index />} />
-              <Route path="/estudo-biblico" element={<EstudoBiblico />} />
-              <Route path="/plano-leitura" element={<PlanoLeitura />} />
-              <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
-              <Route path="/biblioteca" element={<Biblioteca />} />
-              <Route path="/curso-teologia" element={<CursoTeologia />} />
-              <Route path="/dicionario" element={<Dicionario />} />
-              <Route path="/questionarios" element={<Questionarios />} />
-              <Route path="/devocional" element={<Devocional />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/area-pregador" element={<AreaPregador />} />
-              <Route path="/notas" element={<NotasPessoais />} />
-              <Route path="/marcadores" element={<Marcadores />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <LoginPromptProvider>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Index />} />
+                <Route path="/estudo-biblico" element={<EstudoBiblico />} />
+                <Route path="/plano-leitura" element={<PlanoLeitura />} />
+                <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
+                <Route path="/biblioteca" element={<Biblioteca />} />
+                <Route path="/curso-teologia" element={<CursoTeologia />} />
+                <Route path="/dicionario" element={<Dicionario />} />
+                <Route path="/questionarios" element={<Questionarios />} />
+                <Route path="/devocional" element={<Devocional />} />
+                <Route path="/area-pregador" element={<AreaPregador />} />
+                <Route path="/notas" element={<NotasPessoais />} />
+                <Route path="/marcadores" element={<Marcadores />} />
+              </Route>
+              <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+                <Route path="/admin" element={<Admin />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </LoginPromptProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

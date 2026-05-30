@@ -4,6 +4,7 @@ import { Menu, X, BookOpen, Sun, Moon, LogOut, ShieldCheck, StickyNote, Bookmark
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const navItems = [
@@ -26,6 +27,7 @@ export function Header() {
   const [dark, setDark] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { openLogin } = useLoginPrompt();
   const { isAdmin } = useAdminCheck();
 
   const toggleTheme = () => {
@@ -70,8 +72,8 @@ export function Header() {
             </Button>
           ) : (
             <>
-              <Link to="/login"><Button variant="outline" size="sm" className="hidden sm:flex">Entrar</Button></Link>
-              <Link to="/login"><Button size="sm" className="hidden sm:flex bg-gradient-gold text-background hover:opacity-90">Cadastrar</Button></Link>
+              <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => openLogin()}>Entrar</Button>
+              <Button size="sm" className="hidden sm:flex bg-gradient-gold text-background hover:opacity-90" onClick={() => openLogin()}>Cadastrar</Button>
             </>
           )}
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
@@ -144,12 +146,8 @@ export function Header() {
               </Button>
             ) : (
               <div className="flex flex-col gap-2">
-                <Link to="/login" onClick={() => setMobileOpen(false)}>
-                  <Button variant="outline" className="w-full text-base">Entrar</Button>
-                </Link>
-                <Link to="/login" onClick={() => setMobileOpen(false)}>
-                  <Button className="w-full bg-gradient-gold text-background text-base">Cadastrar</Button>
-                </Link>
+                <Button variant="outline" className="w-full text-base" onClick={() => { setMobileOpen(false); openLogin(); }}>Entrar</Button>
+                <Button className="w-full bg-gradient-gold text-background text-base" onClick={() => { setMobileOpen(false); openLogin(); }}>Cadastrar</Button>
               </div>
             )}
           </div>

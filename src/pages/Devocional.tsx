@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { ContentActions } from "@/components/ContentActions";
 import { BibleVerseLink } from "@/components/BibleVerseLink";
 import { useDailyDevotional, type DailyDevotional } from "@/hooks/useDailyDevotional";
@@ -22,6 +23,7 @@ type Tab = "hoje" | "historico" | "salvos";
 
 const Devocional = () => {
   const { user } = useAuth();
+  const { requireLogin } = useLoginPrompt();
   const { devotional, loading, generating, error } = useDailyDevotional();
   const today = new Date().toLocaleDateString("pt-BR", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -75,10 +77,7 @@ const Devocional = () => {
   }, [activeTab, fetchSaved, fetchHistory]);
 
   const handleSave = async () => {
-    if (!user) {
-      toast.error("Faça login para salvar devocionais.");
-      return;
-    }
+    if (!requireLogin()) return;
     if (!devotional && !viewingHistory) return;
     setIsSaving(true);
     const contentToSave = viewingHistory?.conteudo || devotional?.conteudo || "";
