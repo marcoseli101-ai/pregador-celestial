@@ -37,10 +37,8 @@ serve(async (req) => {
       );
     }
 
-    // Try Lovable AI first, fallback to OpenRouter
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) throw new Error("No AI API key configured");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY não configurada");
 
     const dateLabel = brasiliaDate.toLocaleDateString("pt-BR", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -94,64 +92,27 @@ A Paz que Excede Todo Entendimento
 ## 📖 Versículo do Dia
 ...`;
 
-    // Try Lovable AI Gateway first
-    let response: Response | null = null;
-    
-    if (LOVABLE_API_KEY) {
-      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          stream: false,
-        }),
-      });
-
-      // If 402 (no credits), fallback to OpenRouter
-      if (response.status === 402 && OPENAI_API_KEY) {
-        console.log("Lovable AI credits exhausted, falling back to OpenRouter");
-        response = null;
-      }
-    }
-
-    // Fallback to OpenRouter
-    if (!response && OPENAI_API_KEY) {
-      response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          stream: false,
-        }),
-      });
-    }
-
-    if (!response) {
-      return new Response(
-        JSON.stringify({ error: "No AI provider available" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        stream: false,
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
+      console.error("OpenAI error:", response.status, errorText);
       return new Response(
-        JSON.stringify({ error: "Erro ao gerar devocional via IA" }),
+        JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
