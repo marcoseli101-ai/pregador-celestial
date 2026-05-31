@@ -276,7 +276,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek/deepseek-chat",
+        model: "gpt-4o-mini",
         messages,
         stream: true,
         max_tokens: 4000,
