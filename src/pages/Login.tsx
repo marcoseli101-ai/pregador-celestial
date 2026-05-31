@@ -20,15 +20,6 @@ const friendlyError = (msg: string): string => {
   return msg || "Algo deu errado. Tente novamente.";
 };
 
-const GoogleIcon = () => (
-  <svg className="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
-    <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.4 0-11.5-5.1-11.5-11.5S17.6 12.5 24 12.5c2.9 0 5.6 1.1 7.6 2.9l5.7-5.7C33.7 6.3 29.1 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5c10.8 0 19.5-8.7 19.5-19.5 0-1.2-.1-2.3-.4-3.5z"/>
-    <path fill="#FF3D00" d="M6.3 14.1l6.6 4.8C14.6 15.2 18.9 12.5 24 12.5c2.9 0 5.6 1.1 7.6 2.9l5.7-5.7C33.7 6.3 29.1 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.1z"/>
-    <path fill="#4CAF50" d="M24 43.5c5.1 0 9.7-1.7 13.2-4.7l-6.1-5c-2 1.4-4.5 2.2-7.1 2.2-5.3 0-9.7-3.1-11.3-7.5l-6.5 5C9.6 39.1 16.2 43.5 24 43.5z"/>
-    <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.1 5C41.5 35.5 43.5 30.1 43.5 24c0-1.2-.1-2.3-.4-3.5z"/>
-  </svg>
-);
-
 const Login = () => {
   const [tab, setTab] = useState("login");
   const [email, setEmail] = useState("");
@@ -36,11 +27,10 @@ const Login = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [forgotOpen, setForgotOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
-  const { signIn, signUp, user, signInWithGoogle, resetPassword } = useAuth();
+  const { signIn, signUp, user, resetPassword } = useAuth();
   const navigate = useNavigate();
 
   if (user) {
@@ -75,16 +65,6 @@ const Login = () => {
     }
   };
 
-  const handleGoogle = async () => {
-    setGoogleLoading(true);
-    try {
-      await signInWithGoogle();
-    } catch (err: any) {
-      toast.error(friendlyError(err.message));
-      setGoogleLoading(false);
-    }
-  };
-
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
     setForgotLoading(true);
@@ -115,23 +95,7 @@ const Login = () => {
               </TabsList>
 
               <TabsContent value="login">
-                <Button
-                  type="button"
-                  onClick={handleGoogle}
-                  disabled={googleLoading}
-                  variant="outline"
-                  className="w-full mt-4 h-11 gap-3 border-2 font-medium shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <GoogleIcon />
-                  {googleLoading ? "Conectando..." : "Entrar com Google"}
-                </Button>
-                <div className="relative my-5">
-                  <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">ou com e-mail</span>
-                  </div>
-                </div>
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4 mt-4">
                   <div>
                     <Label>E-mail</Label>
                     <div className="relative mt-1">
@@ -161,23 +125,7 @@ const Login = () => {
               </TabsContent>
 
               <TabsContent value="cadastro">
-                <Button
-                  type="button"
-                  onClick={handleGoogle}
-                  disabled={googleLoading}
-                  variant="outline"
-                  className="w-full mt-4 h-11 gap-3 border-2 font-medium shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <GoogleIcon />
-                  {googleLoading ? "Conectando..." : "Cadastrar com Google"}
-                </Button>
-                <div className="relative my-5">
-                  <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">ou com e-mail</span>
-                  </div>
-                </div>
-                <form onSubmit={handleSignUp} className="space-y-4">
+                <form onSubmit={handleSignUp} className="space-y-4 mt-4">
                   <div>
                     <Label>Nome Completo</Label>
                     <div className="relative mt-1">
