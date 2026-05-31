@@ -18,6 +18,7 @@ import Questionarios from "./pages/Questionarios";
 import Devocional from "./pages/Devocional";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import AreaPregador from "./pages/AreaPregador";
 import PlanoLeitura from "./pages/PlanoLeitura";
 import NotasPessoais from "./pages/NotasPessoais";
@@ -38,6 +39,7 @@ const App = () => (
             <Routes>
               <Route element={<Layout />}>
                 <Route path="/login" element={<Login />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/" element={<Index />} />
                 <Route path="/estudo-biblico" element={<EstudoBiblico />} />
                 <Route path="/plano-leitura" element={<PlanoLeitura />} />
