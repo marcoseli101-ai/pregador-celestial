@@ -61,13 +61,13 @@ Retorne APENAS o JSON válido, sem texto adicional.`;
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Muitas requisições. Tente novamente em alguns segundos." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

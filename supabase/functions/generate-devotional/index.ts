@@ -83,7 +83,7 @@ IMPORTANTE:
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns segundos." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -94,7 +94,7 @@ IMPORTANTE:
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Erro ao gerar devocional" }), {
+      return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
