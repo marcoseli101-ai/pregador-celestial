@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { LoginPromptProvider } from "@/contexts/LoginPromptContext";
 import { Layout } from "@/components/Layout";
 import { AdminRoute } from "@/components/AdminRoute";
+import { InstallPWAPrompt } from "@/components/InstallPWAPrompt";
 import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
 import GeradorPregacoes from "./pages/GeradorPregacoes";
@@ -55,6 +56,7 @@ const App = () => (
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <InstallPWAPrompt />
           </LoginPromptProvider>
         </AuthProvider>
       </BrowserRouter>
