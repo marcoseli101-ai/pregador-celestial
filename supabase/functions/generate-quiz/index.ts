@@ -23,8 +23,8 @@ serve(async (req) => {
     }
 
     const { nivel, questionsAnswered } = await req.json();
-    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
-    if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const nivelDescriptions: Record<string, string> = {
       "Fácil": "perguntas simples e diretas sobre fatos básicos da Bíblia que qualquer pessoa com conhecimento básico saberia",
@@ -46,14 +46,14 @@ REGRAS IMPORTANTES:
 
 Perguntas já feitas (NÃO repita estas): ${questionsAnswered || "nenhuma ainda"}`;
 
-    const response = await fetch(`https://openrouter.ai/api/v1/chat/completions`, {
+    const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-001",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Gere 1 pergunta bíblica de nível ${nivel}.` },
@@ -94,12 +94,12 @@ Perguntas já feitas (NÃO repita estas): ${questionsAnswered || "nenhuma ainda"
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns segundos." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }

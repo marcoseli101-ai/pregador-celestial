@@ -24,8 +24,8 @@ serve(async (req) => {
     }
 
     const { messages, context } = await req.json();
-    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
-    if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY não configurada");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY não configurada");
 
     const systemPrompt = `Você é um professor de teologia das Assembleias de Deus (CGADB — Convenção Geral das Assembleias de Deus no Brasil). Responda dúvidas teológicas com profundidade acadêmica e fidelidade à doutrina pentecostal clássica.
 
@@ -42,14 +42,14 @@ Diretrizes:
 - Use markdown para formatar (negrito, listas, títulos)
 - Respostas em português do Brasil`;
 
-    const response = await fetch(`https://openrouter.ai/api/v1/chat/completions`, {
+    const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-001",
+        model: "gpt-4o-mini",
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
@@ -57,18 +57,18 @@ Diretrizes:
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns instantes." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes." }), {
+        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Erro no serviço de IA" }), {
+      return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
