@@ -8,6 +8,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
+const toText = (v: any): string => {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (Array.isArray(v))
+    return v.map(toText).filter(Boolean).join(" • ");
+  if (typeof v === "object") {
+    if ("reference" in v || "explanation" in v) {
+      return [v.reference, v.explanation].filter(Boolean).join(" — ");
+    }
+    return Object.values(v).map(toText).filter(Boolean).join(" — ");
+  }
+  return String(v);
+};
+
 interface DictionaryEntry {
   word: string;
   transliteration: string;
@@ -320,15 +334,15 @@ const Dicionario = () => {
                   <div className="space-y-3 text-sm">
                     <div>
                       <p className="font-semibold text-foreground">Significado:</p>
-                      <p className="text-muted-foreground">{entry.meaning}</p>
+                      <p className="text-muted-foreground">{toText(entry.meaning)}</p>
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Uso nas Escrituras:</p>
-                      <p className="text-muted-foreground">{entry.usage}</p>
+                      <p className="text-muted-foreground">{toText(entry.usage)}</p>
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Referências:</p>
-                      <p className="text-muted-foreground">{entry.verses}</p>
+                      <p className="text-muted-foreground">{toText(entry.verses)}</p>
                     </div>
                   </div>
 
