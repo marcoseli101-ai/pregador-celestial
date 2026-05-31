@@ -39,8 +39,8 @@ serve(async (req) => {
 
     // Try Lovable AI first, fallback to OpenRouter
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
-    if (!LOVABLE_API_KEY && !OPENROUTER_API_KEY) throw new Error("No AI API key configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) throw new Error("No AI API key configured");
 
     const dateLabel = brasiliaDate.toLocaleDateString("pt-BR", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -105,7 +105,7 @@ A Paz que Excede Todo Entendimento
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
+          model: "gpt-4o-mini",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userPrompt },
@@ -115,22 +115,22 @@ A Paz que Excede Todo Entendimento
       });
 
       // If 402 (no credits), fallback to OpenRouter
-      if (response.status === 402 && OPENROUTER_API_KEY) {
+      if (response.status === 402 && OPENAI_API_KEY) {
         console.log("Lovable AI credits exhausted, falling back to OpenRouter");
         response = null;
       }
     }
 
     // Fallback to OpenRouter
-    if (!response && OPENROUTER_API_KEY) {
-      response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    if (!response && OPENAI_API_KEY) {
+      response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.0-flash-001",
+          model: "gpt-4o-mini",
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userPrompt },
