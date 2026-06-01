@@ -37,10 +37,45 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
   };
 
   const handleWhatsApp = () => {
-    const text = cleanText(content).slice(0, 2000);
+    const text = cleanText(content);
     const message = title ? `*${title}*\n\n${text}` : text;
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+
+    // Try native share first (supports long text on mobile + desktop PWAs)
+    const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
+    if (nav.share) {
+      nav
+        .share({ title, text: message })
+        .catch(() => {
+          openWhatsAppFallback(message);
+        });
+      return;
+    }
+
+    openWhatsAppFallback(message);
+  };
+
+  const openWhatsAppFallback = (message: string) => {
+    // WhatsApp web/app URL has practical length limits (~2k chars).
+    // For long content, copy to clipboard and open WhatsApp with a short note.
+    const MAX = 1800;
+    if (message.length <= MAX) {
+      const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+      return;
+    }
+
+    navigator.clipboard
+      .writeText(message)
+      .then(() => {
+        toast.success("Texto completo copiado! Cole no WhatsApp para enviar.");
+        const preview = `${message.slice(0, 300)}...`;
+        const url = `https://wa.me/?text=${encodeURIComponent(preview + "\n\n(Conteúdo completo copiado para a área de transferência — cole aqui)")}`;
+        window.open(url, "_blank");
+      })
+      .catch(() => {
+        const url = `https://wa.me/?text=${encodeURIComponent(message.slice(0, MAX))}`;
+        window.open(url, "_blank");
+      });
   };
 
   const handlePDF = () => {
