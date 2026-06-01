@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { shareContent } from "@/lib/share";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
   HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText,

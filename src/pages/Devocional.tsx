@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { ContentActions } from "@/components/ContentActions";
+import { shareContent } from "@/lib/share";
 import { BibleVerseLink } from "@/components/BibleVerseLink";
 import { useDailyDevotional, type DailyDevotional } from "@/hooks/useDailyDevotional";
 import { usePersistedState } from "@/hooks/usePersistedState";
