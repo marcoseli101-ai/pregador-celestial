@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { ContentActions } from "@/components/ContentActions";
+import { shareContent } from "@/lib/share";
 import { BibleVerseLink } from "@/components/BibleVerseLink";
 import { useDailyDevotional, type DailyDevotional } from "@/hooks/useDailyDevotional";
 import { usePersistedState } from "@/hooks/usePersistedState";
@@ -110,9 +111,8 @@ const Devocional = () => {
   };
 
   const shareWhatsApp = (text: string) => {
-    const cleaned = text.replace(/[#*_]/g, "").slice(0, 500);
-    const url = `https://wa.me/?text=${encodeURIComponent(`📖 Devocional Diário\n\n${cleaned}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`)}`;
-    window.open(url, "_blank");
+    const full = `${text}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`;
+    void shareContent(full, "📖 Devocional Diário");
   };
 
   const parseContent = (text: string) => {

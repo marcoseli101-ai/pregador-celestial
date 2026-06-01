@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { shareContent } from "@/lib/share";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
   HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText,
@@ -74,9 +75,7 @@ const Index = () => {
   const { devotional, loading: devLoading, generating: devGenerating } = useDailyDevotional();
 
   const shareWhatsApp = (text: string) => {
-    const cleaned = text.replace(/[#*_]/g, "").slice(0, 500);
-    const url = `https://wa.me/?text=${encodeURIComponent(cleaned)}`;
-    window.open(url, "_blank");
+    void shareContent(text, "Devocional Diário");
   };
 
   return (
