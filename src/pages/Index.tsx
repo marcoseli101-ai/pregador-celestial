@@ -74,9 +74,7 @@ const Index = () => {
   const { devotional, loading: devLoading, generating: devGenerating } = useDailyDevotional();
 
   const shareWhatsApp = (text: string) => {
-    const cleaned = text.replace(/[#*_]/g, "").slice(0, 500);
-    const url = `https://wa.me/?text=${encodeURIComponent(cleaned)}`;
-    window.open(url, "_blank");
+    void shareContent(text, "Devocional Diário");
   };
 
   return (

@@ -110,9 +110,8 @@ const Devocional = () => {
   };
 
   const shareWhatsApp = (text: string) => {
-    const cleaned = text.replace(/[#*_]/g, "").slice(0, 500);
-    const url = `https://wa.me/?text=${encodeURIComponent(`📖 Devocional Diário\n\n${cleaned}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`)}`;
-    window.open(url, "_blank");
+    const full = `${text}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`;
+    void shareContent(full, "📖 Devocional Diário");
   };
 
   const parseContent = (text: string) => {
