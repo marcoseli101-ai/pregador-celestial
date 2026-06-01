@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import { ContentActions } from "@/components/ContentActions";
 
 const toText = (v: any): string => {
   if (v == null) return "";
@@ -364,6 +365,15 @@ const Dicionario = () => {
                       </div>
                     </div>
                   )}
+
+                  {/* Actions Footer */}
+                  <div className="mt-4 pt-3 border-t border-border">
+                    <ContentActions
+                      title={`${entry.word} (${entry.transliteration}) — Dicionário Bíblico`}
+                      contentType="dicionario"
+                      content={`${entry.word} — ${entry.transliteration}\nPronúncia: ${entry.pronunciation_guide}\nIdioma: ${entry.language}${entry.strongs_number ? ` (${entry.strongs_number})` : ""}\n\nSignificado:\n${toText(entry.meaning)}\n\nUso nas Escrituras:\n${toText(entry.usage)}\n\nReferências:\n${toText(entry.verses)}${entry.related_words?.length ? `\n\nPalavras relacionadas: ${entry.related_words.map((r) => r.transliteration).join(", ")}` : ""}`}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             );
