@@ -18,8 +18,8 @@ serve(async (req) => {
       });
     }
 
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const systemPrompt = `Você é um especialista em criar apresentações de slides profissionais para igrejas e pregadores.
 
@@ -39,14 +39,14 @@ REGRAS:
 - Use linguagem clara e profissional
 - Destaque versículos bíblicos quando relevante`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Crie slides profissionais para o seguinte conteúdo:\n\n${content.slice(0, 8000)}` },
