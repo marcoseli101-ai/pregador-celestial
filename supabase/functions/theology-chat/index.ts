@@ -11,8 +11,8 @@ serve(async (req) => {
 
   try {
     const { messages, context } = await req.json();
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY não configurada");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY não configurada");
 
     const systemPrompt = `Você é um professor de teologia das Assembleias de Deus (CGADB — Convenção Geral das Assembleias de Deus no Brasil). Responda dúvidas teológicas com profundidade acadêmica e fidelidade à doutrina pentecostal clássica.
 
@@ -29,14 +29,14 @@ Diretrizes:
 - Use markdown para formatar (negrito, listas, títulos)
 - Respostas em português do Brasil`;
 
-    const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
+    const response = await fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "google/gemini-2.5-flash",
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),

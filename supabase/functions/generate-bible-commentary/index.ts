@@ -10,8 +10,8 @@ serve(async (req) => {
 
   try {
     const { book, theme, description } = await req.json();
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const systemPrompt = `Você é um teólogo evangélico pentecostal com profundo conhecimento bíblico.
 Gere um comentário teológico conciso e edificante sobre o livro solicitado.
@@ -29,14 +29,14 @@ Limite o comentário a aproximadamente 400 palavras.`;
 Tema principal: ${theme}
 Descrição: ${description}`;
 
-    const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
+    const response = await fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
