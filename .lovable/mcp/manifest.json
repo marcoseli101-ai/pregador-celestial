@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "sdk_version": "0.25.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://wvllorttpekoxksrtiwo.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "pregador-celestial",
+      "version": "0.1.0",
+      "title": "Pregador Celestial"
+    },
+    "tools": [
+      {
+        "name": "list_saved_content",
+        "title": "Listar conteúdos salvos",
+        "description": "Lista os conteúdos salvos pelo pregador (pregações, devocionais, estudos, verbetes do dicionário). Filtre por tipo com content_type.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "content_type": {
+              "type": "string",
+              "description": "Filtro opcional de tipo: pregacao, devocional, estudo, dicionario, questionario."
+            },
+            "limit": {
+              "type": "number",
+              "description": "Número máximo de itens (padrão 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "save_content",
+        "title": "Salvar conteúdo",
+        "description": "Salva um conteúdo (pregação, devocional, estudo, verbete) na Área do Pregador do usuário autenticado.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Título do conteúdo."
+            },
+            "content": {
+              "type": "string",
+              "description": "Texto completo do conteúdo, em markdown."
+            },
+            "content_type": {
+              "type": "string",
+              "description": "Tipo: pregacao, devocional, estudo, dicionario, questionario. Padrão: pregacao."
+            }
+          },
+          "required": [
+            "title",
+            "content"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_notes",
+        "title": "Listar notas pessoais",
+        "description": "Lista as notas pessoais do usuário autenticado, opcionalmente filtradas por categoria.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Categoria da nota (opcional)."
+            },
+            "limit": {
+              "type": "number",
+              "description": "Número máximo de notas (padrão 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_note",
+        "title": "Criar nota pessoal",
+        "description": "Cria uma nota pessoal de estudo para o usuário autenticado.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Título da nota."
+            },
+            "content": {
+              "type": "string",
+              "description": "Conteúdo da nota."
+            },
+            "category": {
+              "type": "string",
+              "description": "Categoria da nota (opcional)."
+            },
+            "bible_reference": {
+              "type": "string",
+              "description": "Referência bíblica relacionada, ex.: João 3:16."
+            }
+          },
+          "required": [
+            "title",
+            "content"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_daily_devotional",
+        "title": "Devocional do dia",
+        "description": "Retorna o devocional diário publicado no app (versículo, reflexão e oração). Use a data no formato AAAA-MM-DD para dias anteriores.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "description": "Data no formato AAAA-MM-DD. Padrão: o devocional mais recente."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
