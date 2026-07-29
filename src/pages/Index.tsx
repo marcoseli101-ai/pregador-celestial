@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useRef } from "react";
 import { useDailyDevotional } from "@/hooks/useDailyDevotional";
+import { HeroBackgroundCarousel } from "@/components/HeroBackgroundCarousel";
 
 import bibleLandscape from "@/assets/bible-landscape.jpg";
 import bibleScrolls from "@/assets/bible-scrolls.jpg";
@@ -82,6 +83,7 @@ const Index = () => {
     <div className="overflow-hidden">
       {/* Hero Section — Enhanced with particles and parallax */}
       <section ref={heroRef} className="relative min-h-[95vh] flex items-center justify-center overflow-hidden">
+        <HeroBackgroundCarousel />
         {/* Animated background layers */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,hsl(250,55%,30%/0.4)_0%,transparent_55%)]" />
