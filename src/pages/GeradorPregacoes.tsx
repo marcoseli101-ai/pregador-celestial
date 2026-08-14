@@ -164,13 +164,13 @@ const GeradorPregacoes = () => {
   const displayTema = resultTema || tema;
 
   return (
-    <AnimatedPage className="container py-12">
+    <AnimatedPage className="container px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <AnimatedSection className="mb-8 text-center">
-        <h1 className="font-serif text-4xl font-bold mb-2">Gerador de <span className="text-gradient-gold">Esboço de Pregação</span></h1>
-        <p className="text-muted-foreground">Gere esboços e sermões completos com base bíblica sólida.</p>
+        <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Gerador de <span className="text-gradient-gold">Esboço de Pregação</span></h1>
+        <p className="text-sm sm:text-base text-muted-foreground">Gere esboços e sermões completos com base bíblica sólida.</p>
       </AnimatedSection>
 
-      <div className="mx-auto max-w-5xl grid gap-8 lg:grid-cols-[380px_1fr]">
+      <div className="mx-auto w-full max-w-3xl lg:max-w-6xl grid gap-6 md:gap-8 lg:grid-cols-[340px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
         {/* Left column: Config + History */}
         <div className="space-y-4">
           <Card className="shadow-celestial border-celestial/20">
