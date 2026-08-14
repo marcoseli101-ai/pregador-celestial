@@ -269,19 +269,25 @@ serve(async (req) => {
       ];
     }
 
-    const response = await fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages,
-        stream: true,
-        max_tokens: 4000,
-      }),
-    });
+    const MAX_TOKENS = 32000;
+    const MAX_CONTINUATIONS = 5;
+
+    const callAI = (msgs: { role: string; content: string }[]) =>
+      fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: msgs,
+          stream: true,
+          max_tokens: MAX_TOKENS,
+        }),
+      });
+
+    const response = await callAI(messages);
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -301,8 +307,106 @@ serve(async (req) => {
       });
     }
 
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    // Proxy the stream, tracking finish_reason. If the model stops due to
+    // token limit ("length"/"MAX_TOKENS"), automatically continue generating
+    // from where it stopped until it finishes naturally ("stop"/"STOP").
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        const send = (content: string) => {
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`,
+            ),
+          );
+        };
+
+        // Reads one upstream SSE response, forwarding deltas.
+        // Returns { text, finishReason }.
+        const pump = async (resp: Response) => {
+          let text = "";
+          let finishReason = "stop";
+          const reader = resp.body!.getReader();
+          let buffer = "";
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            let idx: number;
+            while ((idx = buffer.indexOf("\n")) !== -1) {
+              let line = buffer.slice(0, idx);
+              buffer = buffer.slice(idx + 1);
+              if (line.endsWith("\r")) line = line.slice(0, -1);
+              if (!line.startsWith("data: ")) continue;
+              const payload = line.slice(6).trim();
+              if (payload === "[DONE]") continue;
+              try {
+                const parsed = JSON.parse(payload);
+                const choice = parsed.choices?.[0];
+                const content = choice?.delta?.content as string | undefined;
+                if (content) {
+                  text += content;
+                  send(content);
+                }
+                const fr = choice?.finish_reason ?? parsed.candidates?.[0]?.finishReason;
+                if (fr) finishReason = String(fr).toLowerCase();
+              } catch {
+                // partial JSON — put it back and wait for more bytes
+                buffer = line + "\n" + buffer;
+                break;
+              }
+            }
+          }
+          return { text, finishReason };
+        };
+
+        try {
+          let { text: full, finishReason } = await pump(response);
+          let rounds = 0;
+
+          while (
+            (finishReason === "length" || finishReason === "max_tokens") &&
+            rounds < MAX_CONTINUATIONS
+          ) {
+            rounds++;
+            console.log(`finish_reason=${finishReason} — continuando (rodada ${rounds})`);
+            const contResp = await callAI([
+              ...messages,
+              { role: "assistant", content: full },
+              {
+                role: "user",
+                content:
+                  "Continue EXATAMENTE de onde parou, sem repetir nada do que já foi escrito, sem reintroduzir títulos já usados e sem qualquer comentário meta. Apenas prossiga o texto até concluir todas as seções obrigatórias.",
+              },
+            ]);
+            if (!contResp.ok) {
+              console.error("continuation error:", contResp.status, await contResp.text());
+              break;
+            }
+            const cont = await pump(contResp);
+            full += cont.text;
+            finishReason = cont.finishReason;
+            if (!cont.text.trim()) break;
+          }
+
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+        } catch (err) {
+          console.error("stream error:", err);
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
     });
   } catch (e) {
     console.error("generate-sermon error:", e);
