@@ -376,7 +376,7 @@ const GeradorPregacoes = () => {
                 <CardTitle className="font-serif">{displayTema ? `Pregação: ${displayTema}` : "Pregação Gerada"}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
+                <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none lg:max-w-[72ch] lg:mx-auto whitespace-pre-wrap break-words leading-relaxed">
                   {result ? <BibleTextContent content={result} /> : <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Gerando esboço de pregação...</div>}
                 </div>
                 {result && !loading && (
@@ -419,7 +419,7 @@ const GeradorPregacoes = () => {
                       <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 text-muted-foreground">
                         {msg.role === "user" ? "Você" : "Assistente Teológico"}
                       </p>
-                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap"><BibleTextContent content={msg.content} /></div>
+                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap break-words leading-relaxed"><BibleTextContent content={msg.content} /></div>
                     </div>
                   ))}
                   {chatLoading && chatMessages[chatMessages.length - 1]?.role !== "assistant" && (
