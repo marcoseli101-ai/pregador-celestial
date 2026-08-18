@@ -337,9 +337,12 @@ function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo)
       ? `- **Texto base:** ${cfg.textoBase.trim()} — ESTA passagem controla a mensagem e não pode ser substituída.`
       : "- **Texto base:** não informado — use o texto principal definido na exegese e declare-o no início.",
   );
-  L.push(`- **Tempo:** ${tempoMin} minutos = entre ${plano.minimo} e ${plano.palavras} palavras (${PPM} palavras/min). ${plano.palavras} palavras é TETO ABSOLUTO — ultrapassá-lo é erro. ${plano.regra} O tempo controla a quantidade de conteúdo: reduza desenvolvimento e referências, nunca a coerência (introdução, desenvolvimento e conclusão sempre presentes).`);
-  L.push(`- **Estilo da mensagem:** ${pick(ESTILO, cfg.nivel, "ensino")}`);
+  L.push(`- **Duração (obrigatória):** ${tempoMin} minutos — faixa ${plano.faixa.nome}. Extensão correspondente: ${plano.minimo}–${plano.palavras} palavras (${PPM} palavras/min).`);
+  L.push(`- **Arquitetura exigida por esta duração:** ${plano.regra}`);
+  L.push("- **Regra central do tempo:** a duração determina a PROFUNDIDADE e é definida ANTES de escrever. Nunca escreva material maior e depois corte, e nunca interrompa um raciocínio para caber no tempo: redimensione a estrutura (quantos pontos, quanta exegese, quanto contexto, quantas referências) antes da primeira linha.");
+  L.push(`- **Estilo/tipo de pregação:** ${pick(ESTILO, cfg.nivel, "ensino")}`);
   L.push(`- **Estrutura homilética:** ${pick(ESTRUTURA, cfg.estrutura, "textual")}`);
+  L.push("- **Não misturar modelos:** obedeça ao tipo escolhido. Expositiva/Textual = tudo nasce da passagem selecionada, na sua sequência e intenção. Temática = o tema é desenvolvido com textos realmente pertinentes, cada um no seu contexto. Só recorra a outro modelo quando o próprio texto exigir.");
   L.push(`- **Público-alvo:** ${pick(PUBLICO, cfg.publico, "igreja")} A adaptação é de linguagem e aplicação, nunca de doutrina ou do sentido do texto.`);
   if (cfg.ocasiao && OCASIAO[cfg.ocasiao]) L.push(`- **Ocasião:** ${OCASIAO[cfg.ocasiao]} A ocasião molda ênfase e aplicação, nunca o significado do texto.`);
   if (cfg.tom && TOM[cfg.tom]) L.push(`- **Tom:** ${TOM[cfg.tom]} O tom molda a forma, não substitui a exposição.`);
