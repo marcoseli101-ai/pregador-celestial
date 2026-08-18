@@ -72,11 +72,10 @@ async function parseSSEStream(resp: Response, { onDelta, onDone, onError }: SSEC
 }
 
 export async function streamSermon({
-  tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, incluirApelo, onDelta, onDone, onError,
+  tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, onDelta, onDone, onError,
 }: {
   tema: string; publico: string; tempo: string; nivel: string;
   textoBase?: string; estrutura?: string; ocasiao?: string; tom?: string; referencias?: string;
-  incluirApelo?: boolean;
 } & SSECallbacks) {
   const token = await getAuthToken();
   const resp = await fetch(GENERATE_SERMON_URL, {
@@ -85,7 +84,7 @@ export async function streamSermon({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, incluirApelo }),
+    body: JSON.stringify({ tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias }),
   });
   await parseSSEStream(resp, { onDelta, onDone, onError });
 }
