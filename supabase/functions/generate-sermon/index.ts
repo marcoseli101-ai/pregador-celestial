@@ -351,7 +351,7 @@ function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo)
   return L.join("\n");
 }
 
-function promptExegese(cfg: GenerationConfig): string {
+function promptExegese(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo): string {
   const L: string[] = [];
   L.push("Prepare a EXEGESE PRÉVIA (não escreva pregação) para o seguinte trabalho:");
   L.push(`- Tema informado: ${cfg.tema.trim()}`);
@@ -360,10 +360,12 @@ function promptExegese(cfg: GenerationConfig): string {
       ? `- Texto base informado: ${cfg.textoBase.trim()} — estude ESTA passagem.`
       : "- Texto base: não informado. Escolha UMA passagem que trate realmente do tema e declare-a como texto principal.",
   );
+  L.push(`- Duração da mensagem: ${tempoMin} minutos (${plano.faixa.nome}). ${plano.faixa.exegese}`);
   L.push(`- Estrutura que será usada depois: ${pick(ESTRUTURA, cfg.estrutura, "textual")}`);
   L.push(`- Nível de referências pedido: ${pick(REFERENCIAS, cfg.referencias, "moderadas")}`);
   L.push("");
   L.push("Liste apenas os movimentos que o texto realmente apresenta e descreva a progressão do argumento com precisão.");
+  L.push("A passagem principal tem prioridade. Referências cruzadas só entram se confirmarem ou esclarecerem o argumento — nunca por semelhança de palavras. Não invente dado histórico nem significado teológico.");
   return L.join("\n");
 }
 
@@ -375,7 +377,9 @@ function promptPlano(cfg: GenerationConfig, exegese: string, tempoMin: number, p
     "## CONFIGURAÇÃO ESCOLHIDA PELO PREGADOR (cada campo é instrução obrigatória)",
     blocoConfig(cfg, tempoMin, plano),
     "",
-    `Monte agora a ARQUITETURA da mensagem para ${tempoMin} minutos (máximo ${plano.palavras} palavras). A quantidade de pontos nasce dos movimentos reais do texto — nunca fixe em três. Distribua o teto de palavras entre introdução, pontos e conclusão e declare quantas palavras cabem a cada parte.`,
+    `Monte agora a ARQUITETURA própria desta duração: ${tempoMin} minutos (${plano.faixa.nome}), ${plano.minimo}–${plano.palavras} palavras.`,
+    `${plano.regra}`,
+    "Dimensione a estrutura ANTES de escrever: decida quantos pontos, quanta exegese, quanto contexto histórico-cultural e literário, quantas referências cruzadas e quanta doutrina cabem nesta duração — de modo que a mensagem seja escrita completa desde a origem, sem precisar ser cortada depois. A quantidade de pontos nasce dos movimentos reais do texto e da duração — nunca fixe em três. Declare quantas palavras cabem à introdução, a cada ponto e à conclusão.",
   ].join("\n");
 }
 
