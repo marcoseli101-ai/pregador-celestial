@@ -560,7 +560,7 @@ serve(async (req) => {
         };
 
         try {
-          const { messages, maxOut } = await prepare();
+          const { messages, maxOut, minWords } = await prepare();
           clearInterval(ping);
 
           const MAX_TOKENS = maxOut;
@@ -606,6 +606,34 @@ serve(async (req) => {
             full += cont.text;
             finishReason = cont.finishReason;
             if (!cont.text.trim()) break;
+          }
+
+          // Profundidade insuficiente para a duração pedida: aprofunda o TEXTO
+          // (mais exegese/contexto/referências), nunca repetindo o já escrito.
+          const conta = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+          let deep = 0;
+          while (mode !== "chat" && minWords > 0 && conta(full) < minWords && deep < 3) {
+            deep++;
+            const faltam = minWords - conta(full);
+            const deepResp = await callAI(
+              [
+                ...messages,
+                { role: "assistant", content: full },
+                {
+                  role: "user",
+                  content:
+                    `O material está raso para a duração pedida: faltam cerca de ${faltam} palavras de profundidade. NÃO reescreva e NÃO repita nada já escrito, NÃO reintroduza títulos já usados e NÃO escreva oração nem apelo. Continue o mesmo material aprofundando o TEXTO: amplie o contexto histórico-cultural e literário, a exegese das unidades decisivas, o argumento do autor, termos originais quando esclarecem, referências cruzadas pertinentes explicadas, implicações doutrinárias e aplicações derivadas dos versículos já expostos. Se a conclusão já foi escrita, reescreva-a apenas ao final, depois do material acrescentado, retomando a verdade central de forma resumida.`,
+                },
+              ],
+              { stream: true, maxTokens: Math.min(MAX_TOKENS, Math.round(faltam * 2.6) + 800) },
+            );
+            if (!deepResp.ok) {
+              console.error("deepening error:", deepResp.status, await deepResp.text());
+              break;
+            }
+            const extra = await pump(deepResp);
+            if (!extra.text.trim()) break;
+            full += extra.text;
           }
 
           raw("data: [DONE]\n\n");
