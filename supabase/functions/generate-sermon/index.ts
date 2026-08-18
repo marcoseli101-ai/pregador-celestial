@@ -476,9 +476,10 @@ serve(async (req) => {
       const cfg: GenerationConfig = { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias };
       const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
       const plano = planoDeTempo(tempoMin);
-      const maxOut = Math.min(16000, Math.round(plano.palavras * 2.3) + 500);
+      const maxOut = Math.min(24000, Math.round(plano.palavras * 2.6) + 800);
+      const tokensExegese = tempoMin <= 15 ? 2500 : tempoMin <= 30 ? 4000 : 6000;
 
-      let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg), 4000, "fase 1 (exegese)");
+      let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg, tempoMin, plano), tokensExegese, "fase 1 (exegese)");
       if (!exegese.trim()) {
         exegese =
           "(Exegese prévia indisponível — realize internamente todas as etapas antes de escrever: texto e limites da perícope, gênero, contexto histórico e literário, argumento do autor, palavras-chave, sentido original, movimentos reais do texto, ideia central, proposição, princípios teológicos, referências cruzadas pertinentes e riscos de eisegese.)";
