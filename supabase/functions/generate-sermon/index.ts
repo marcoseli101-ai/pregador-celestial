@@ -145,7 +145,7 @@ Cada parágrafo precisa acrescentar informação que ainda não foi dita. É pro
 - reformular a proposição em cada ponto;
 - reabrir na conclusão o que já foi explicado, além de um resumo curto;
 - empilhar adjetivos, parágrafos de transição vazios ou alongar para atingir o tempo.
-A extensão-alvo é um TETO, não uma meta: se o conteúdo bíblico terminou antes, conclua imediatamente. Um material mais curto e denso é melhor que um material longo e repetitivo.
+A profundidade acompanha a duração escolhida: mensagens longas são mais aprofundadas (mais contexto, mais exegese, mais fundamentação, mais desenvolvimento do argumento), nunca mais repetitivas; mensagens curtas nascem curtas, com menos matéria tratada por inteiro, nunca uma mensagem grande truncada. Um material denso é sempre melhor que um material inflado.
 PROIBIDO conteúdo motivacional: frases de efeito, encorajamento genérico, linguagem de superação ou vitória pessoal sem sustentação no texto.
 
 ## SEM "PREGADOR AUTOMÁTICO"
@@ -274,31 +274,53 @@ const REFERENCIAS: Record<string, string> = {
     "COMPLETAS — referências pertinentes em várias categorias (contextuais, paralelas, doutrinárias, AT/NT), cada uma explicada. Nunca transforme a mensagem em lista de versículos.",
 };
 
-/* ---------- Tempo: extensão real de pregação (~120 palavras/minuto) ----------
-   O tempo é TETO de conteúdo. Curto = condensado (mesma estrutura, menos
-   desenvolvimento). Longo = mais profundidade exegética, nunca mais enchimento. */
+/* ---------- Tempo: ARQUITETURA por duração (~120 palavras/minuto) ------------
+   O tempo NÃO é limite para cortar texto: é o que define a ARQUITETURA da
+   mensagem ANTES de escrever. Cada faixa tem estrutura própria — uma mensagem
+   de 60 min é substancialmente mais APROFUNDADA que uma de 15, nunca a mesma
+   mensagem esticada; uma de 15 min é construída curta desde a origem, nunca
+   uma mensagem grande truncada. */
 const PPM = 120;
 
-function planoDeTempo(min: number) {
-  const palavras = Math.round(min * PPM);
-  const minimo = Math.round(palavras * 0.8);
-  let regra: string;
-  if (min <= 5) {
-    regra = "Formato mínimo condensado: introdução de 2–3 frases (texto + contexto essencial), UM movimento do texto exposto com clareza, aplicação breve derivada dele e conclusão de 2–3 frases. Nada de contexto ampliado, nada de referências cruzadas extensas.";
-  } else if (min <= 10) {
-    regra = "Formato compacto: introdução breve, um a dois movimentos do texto, aplicação e conclusão curtas. Corte referências cruzadas secundárias e detalhes de contexto não indispensáveis.";
-  } else if (min <= 15) {
-    regra = "Condensado, porém completo: introdução ~2 min (texto e contexto essencial), desenvolvimento ~10 min (todos os movimentos, cada um em profundidade média), conclusão ~2 min. Um só parágrafo de explicação por ideia; no máximo uma referência cruzada por ponto.";
-  } else if (min <= 20) {
-    regra = "Desenvolvimento médio: cada movimento com explicação mais trabalhada e uma a duas referências cruzadas, sem ampliar o número de pontos.";
-  } else if (min <= 30) {
-    regra = "Aprofundamento proporcional: contexto histórico e literário desenvolvidos, exegese de cada movimento, referências cruzadas explicadas e aplicação bem derivada. A profundidade cresce, a quantidade de pontos NÃO.";
-  } else if (min <= 45) {
-    regra = "Aprofundamento amplo: contexto detalhado, exegese verso a verso nos trechos decisivos, termos originais quando esclarecem, comparações bíblicas pertinentes explicadas. Se não houver material bíblico real para preencher, entregue material menor em vez de repetir.";
-  } else {
-    regra = "Estudo extenso: contexto histórico e literário detalhados, exegese de cada unidade, desenvolvimento teológico das implicações doutrinárias e aplicação ampla. Todo acréscimo deve ser INFORMAÇÃO NOVA sobre o texto; jamais reexplique o que já foi explicado.";
+type Faixa = {
+  nome: string;
+  arquitetura: string;
+  exegese: string;
+};
+
+function faixaDeTempo(min: number): Faixa {
+  if (min <= 15) {
+    return {
+      nome: "CURTA (10–15 min) — mensagem objetiva",
+      arquitetura:
+        "ARQUITETURA CURTA (construída curta desde a origem, jamais uma mensagem longa cortada): introdução bíblica breve (texto + o mínimo de contexto necessário para entender a passagem), 1 a 2 pontos apenas — os movimentos mais decisivos do texto —, somente as informações essenciais de exegese, uma aplicação por ponto e conclusão curta. Início, meio e fim completos. Não abra frentes que não caibam: escolha menos matéria e trate-a inteira, em vez de tratar muita matéria pela metade.",
+      exegese:
+        "Profundidade da exegese: essencial. Contexto apenas no que for indispensável, poucas palavras-chave, poucas referências cruzadas — todas realmente decisivas.",
+    };
   }
-  return { palavras, minimo, regra };
+  if (min <= 30) {
+    return {
+      nome: "MÉDIA (20–30 min) — desenvolvimento equilibrado",
+      arquitetura:
+        "ARQUITETURA MÉDIA: introdução bíblica com contexto histórico e literário resumidos, 2 a 4 pontos conforme os movimentos reais do texto, cada ponto com explicação do que o texto diz, exegese do que é decisivo, referência cruzada pertinente explicada e aplicação derivada dos versículos daquele ponto; conclusão que retoma o argumento. Equilíbrio entre exposição e aplicação.",
+      exegese:
+        "Profundidade da exegese: média. Contexto histórico e literário resumidos, palavras-chave que mudam o sentido, referências cruzadas pertinentes explicadas.",
+    };
+  }
+  return {
+    nome: "LONGA (40–60 min) — estudo aprofundado",
+    arquitetura:
+      "ARQUITETURA LONGA: a profundidade cresce, não a repetição. Introdução bíblica com contexto histórico-cultural e literário desenvolvidos e a questão que a passagem responde; desenvolvimento com os movimentos reais do texto (podem ser 3 a 5), cada um com exegese unidade por unidade nos trechos decisivos, termos originais quando esclarecem de fato, argumento do autor, referências cruzadas explicadas, desenvolvimento doutrinário das implicações e aplicação derivada; conclusão que resume o raciocínio inteiro. Todo acréscimo em relação a uma mensagem curta deve ser INFORMAÇÃO NOVA sobre o texto (mais contexto, mais exegese, mais fundamentação, mais desenvolvimento do argumento) — nunca a mesma verdade dita outra vez com outras palavras.",
+    exegese:
+      "Profundidade da exegese: máxima. Contexto histórico, cultural e literário detalhados; argumento do autor unidade por unidade; termos originais quando esclarecem; referências cruzadas que confirmam ou esclarecem o argumento; implicações doutrinárias desenvolvidas.",
+  };
+}
+
+function planoDeTempo(min: number) {
+  const faixa = faixaDeTempo(min);
+  const palavras = Math.round(min * PPM);
+  const minimo = Math.round(palavras * 0.85);
+  return { palavras, minimo, faixa, regra: faixa.arquitetura };
 }
 
 function pick(map: Record<string, string>, key: string | undefined, fallback: string) {
@@ -315,9 +337,12 @@ function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo)
       ? `- **Texto base:** ${cfg.textoBase.trim()} — ESTA passagem controla a mensagem e não pode ser substituída.`
       : "- **Texto base:** não informado — use o texto principal definido na exegese e declare-o no início.",
   );
-  L.push(`- **Tempo:** ${tempoMin} minutos = entre ${plano.minimo} e ${plano.palavras} palavras (${PPM} palavras/min). ${plano.palavras} palavras é TETO ABSOLUTO — ultrapassá-lo é erro. ${plano.regra} O tempo controla a quantidade de conteúdo: reduza desenvolvimento e referências, nunca a coerência (introdução, desenvolvimento e conclusão sempre presentes).`);
-  L.push(`- **Estilo da mensagem:** ${pick(ESTILO, cfg.nivel, "ensino")}`);
+  L.push(`- **Duração (obrigatória):** ${tempoMin} minutos — faixa ${plano.faixa.nome}. Extensão correspondente: ${plano.minimo}–${plano.palavras} palavras (${PPM} palavras/min).`);
+  L.push(`- **Arquitetura exigida por esta duração:** ${plano.regra}`);
+  L.push("- **Regra central do tempo:** a duração determina a PROFUNDIDADE e é definida ANTES de escrever. Nunca escreva material maior e depois corte, e nunca interrompa um raciocínio para caber no tempo: redimensione a estrutura (quantos pontos, quanta exegese, quanto contexto, quantas referências) antes da primeira linha.");
+  L.push(`- **Estilo/tipo de pregação:** ${pick(ESTILO, cfg.nivel, "ensino")}`);
   L.push(`- **Estrutura homilética:** ${pick(ESTRUTURA, cfg.estrutura, "textual")}`);
+  L.push("- **Não misturar modelos:** obedeça ao tipo escolhido. Expositiva/Textual = tudo nasce da passagem selecionada, na sua sequência e intenção. Temática = o tema é desenvolvido com textos realmente pertinentes, cada um no seu contexto. Só recorra a outro modelo quando o próprio texto exigir.");
   L.push(`- **Público-alvo:** ${pick(PUBLICO, cfg.publico, "igreja")} A adaptação é de linguagem e aplicação, nunca de doutrina ou do sentido do texto.`);
   if (cfg.ocasiao && OCASIAO[cfg.ocasiao]) L.push(`- **Ocasião:** ${OCASIAO[cfg.ocasiao]} A ocasião molda ênfase e aplicação, nunca o significado do texto.`);
   if (cfg.tom && TOM[cfg.tom]) L.push(`- **Tom:** ${TOM[cfg.tom]} O tom molda a forma, não substitui a exposição.`);
@@ -326,7 +351,7 @@ function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo)
   return L.join("\n");
 }
 
-function promptExegese(cfg: GenerationConfig): string {
+function promptExegese(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo): string {
   const L: string[] = [];
   L.push("Prepare a EXEGESE PRÉVIA (não escreva pregação) para o seguinte trabalho:");
   L.push(`- Tema informado: ${cfg.tema.trim()}`);
@@ -335,10 +360,12 @@ function promptExegese(cfg: GenerationConfig): string {
       ? `- Texto base informado: ${cfg.textoBase.trim()} — estude ESTA passagem.`
       : "- Texto base: não informado. Escolha UMA passagem que trate realmente do tema e declare-a como texto principal.",
   );
+  L.push(`- Duração da mensagem: ${tempoMin} minutos (${plano.faixa.nome}). ${plano.faixa.exegese}`);
   L.push(`- Estrutura que será usada depois: ${pick(ESTRUTURA, cfg.estrutura, "textual")}`);
   L.push(`- Nível de referências pedido: ${pick(REFERENCIAS, cfg.referencias, "moderadas")}`);
   L.push("");
   L.push("Liste apenas os movimentos que o texto realmente apresenta e descreva a progressão do argumento com precisão.");
+  L.push("A passagem principal tem prioridade. Referências cruzadas só entram se confirmarem ou esclarecerem o argumento — nunca por semelhança de palavras. Não invente dado histórico nem significado teológico.");
   return L.join("\n");
 }
 
@@ -350,7 +377,9 @@ function promptPlano(cfg: GenerationConfig, exegese: string, tempoMin: number, p
     "## CONFIGURAÇÃO ESCOLHIDA PELO PREGADOR (cada campo é instrução obrigatória)",
     blocoConfig(cfg, tempoMin, plano),
     "",
-    `Monte agora a ARQUITETURA da mensagem para ${tempoMin} minutos (máximo ${plano.palavras} palavras). A quantidade de pontos nasce dos movimentos reais do texto — nunca fixe em três. Distribua o teto de palavras entre introdução, pontos e conclusão e declare quantas palavras cabem a cada parte.`,
+    `Monte agora a ARQUITETURA própria desta duração: ${tempoMin} minutos (${plano.faixa.nome}), ${plano.minimo}–${plano.palavras} palavras.`,
+    `${plano.regra}`,
+    "Dimensione a estrutura ANTES de escrever: decida quantos pontos, quanta exegese, quanto contexto histórico-cultural e literário, quantas referências cruzadas e quanta doutrina cabem nesta duração — de modo que a mensagem seja escrita completa desde a origem, sem precisar ser cortada depois. A quantidade de pontos nasce dos movimentos reais do texto e da duração — nunca fixe em três. Declare quantas palavras cabem à introdução, a cada ponto e à conclusão.",
   ].join("\n");
 }
 
@@ -376,10 +405,10 @@ function promptRedacao(cfg: GenerationConfig, exegese: string, planoHomiletico: 
   L.push("## ✅ Conclusão — retomada do argumento central, sem oração e sem apelo.");
   L.push("");
   L.push(
-    `## ORÇAMENTO DE PALAVRAS (obrigatório)\nAlvo: ${plano.minimo}–${plano.palavras} palavras no total, TETO RÍGIDO de ${plano.palavras}. Antes de escrever, distribua esse orçamento entre introdução (~10%), cada ponto do plano (partes iguais de ~80%) e conclusão (~10%), e escreva cada seção dentro da sua cota — conte as palavras à medida que escreve.\nSe o material passar do teto, corte explicações secundárias, referências cruzadas opcionais e frases redundantes ANTES de entregar; nunca entregue acima do teto.\nSe ficar abaixo do mínimo, faltou exegese, contexto ou referência cruzada explicada — aprofunde o TEXTO, jamais repita o já dito nem acrescente material motivacional.`,
+    `## DURAÇÃO E PROFUNDIDADE (obrigatório)\nEsta mensagem é de ${tempoMin} minutos — faixa ${plano.faixa.nome} — e deve ser ESCRITA ASSIM DESDE A PRIMEIRA LINHA, com a arquitetura já dimensionada no plano: ${plano.minimo}–${plano.palavras} palavras.\n${plano.regra}\nNunca interrompa um raciocínio para caber no tempo e nunca escreva material maior para depois cortar: a estrutura já foi redimensionada. Se o material estiver ficando maior que a faixa, é porque há explicação repetida ou matéria que não deveria ter entrado nesta duração — não corte no meio, feche cada raciocínio já iniciado.\nSe estiver ficando abaixo da faixa, aprofunde o TEXTO (mais contexto histórico-cultural e literário, mais exegese, mais referências cruzadas explicadas, mais desenvolvimento doutrinário e argumentativo) — jamais repita o já dito nem acrescente material motivacional.`,
   );
   L.push("");
-  L.push(`Antes de responder, revise em silêncio: extensão entre ${plano.minimo} e ${plano.palavras} palavras (${tempoMin} min) — nunca acima do teto; toda afirmação teológica com referência que a sustenta; toda aplicação derivada dos versículos do próprio ponto; pontos iguais em ordem e quantidade aos do plano; introdução exclusivamente bíblica/contextual, sem história e sem oração; nenhuma oração e nenhum apelo em parte alguma; nenhuma verdade repetida entre explicação, verdade bíblica e aplicação; nada motivacional sem base textual; conclusão que resume sem abrir assunto novo. Corrija antes de entregar.`);
+  L.push(`Antes de responder, revise em silêncio: a profundidade corresponde a ${tempoMin} min (${plano.minimo}–${plano.palavras} palavras) e nenhum raciocínio ficou pela metade; toda afirmação teológica com referência que a sustenta; toda aplicação derivada dos versículos do próprio ponto; pontos iguais em ordem e quantidade aos do plano; o tipo de pregação escolhido foi respeitado sem mistura de modelos; introdução exclusivamente bíblica/contextual, sem história e sem oração e sem virar aula histórica; nenhuma oração, apelo evangelístico, apelo final ou frase genérica de encerramento em parte alguma; nenhuma verdade repetida entre pontos ou entre explicação, verdade bíblica e aplicação; nada motivacional sem base textual; conclusão com começo, meio e fim que resume sem abrir novo grande argumento. Corrija antes de entregar.`);
   L.push("");
   L.push("Escreva agora somente o material final em markdown.");
   return L.join("\n");
@@ -440,16 +469,17 @@ serve(async (req) => {
 
     // Monta as mensagens da redação (fases internas). Roda DENTRO do stream
     // para que a conexão comece imediatamente e não expire.
-    const prepare = async (): Promise<{ messages: { role: string; content: string }[]; maxOut: number }> => {
+    const prepare = async (): Promise<{ messages: { role: string; content: string }[]; maxOut: number; minWords: number }> => {
       if (mode === "chat") {
-        return { messages: [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])], maxOut: 8000 };
+        return { messages: [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])], maxOut: 8000, minWords: 0 };
       }
       const cfg: GenerationConfig = { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias };
       const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
       const plano = planoDeTempo(tempoMin);
-      const maxOut = Math.min(16000, Math.round(plano.palavras * 2.3) + 500);
+      const maxOut = Math.min(24000, Math.round(plano.palavras * 2.6) + 800);
+      const tokensExegese = tempoMin <= 15 ? 2500 : tempoMin <= 30 ? 4000 : 6000;
 
-      let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg), 4000, "fase 1 (exegese)");
+      let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg, tempoMin, plano), tokensExegese, "fase 1 (exegese)");
       if (!exegese.trim()) {
         exegese =
           "(Exegese prévia indisponível — realize internamente todas as etapas antes de escrever: texto e limites da perícope, gênero, contexto histórico e literário, argumento do autor, palavras-chave, sentido original, movimentos reais do texto, ideia central, proposição, princípios teológicos, referências cruzadas pertinentes e riscos de eisegese.)";
@@ -467,6 +497,7 @@ serve(async (req) => {
           { role: "user", content: promptRedacao(cfg, exegese, planoHomiletico, tempoMin, plano) },
         ],
         maxOut,
+        minWords: plano.minimo,
       };
     };
 
@@ -529,7 +560,7 @@ serve(async (req) => {
         };
 
         try {
-          const { messages, maxOut } = await prepare();
+          const { messages, maxOut, minWords } = await prepare();
           clearInterval(ping);
 
           const MAX_TOKENS = maxOut;
@@ -575,6 +606,34 @@ serve(async (req) => {
             full += cont.text;
             finishReason = cont.finishReason;
             if (!cont.text.trim()) break;
+          }
+
+          // Profundidade insuficiente para a duração pedida: aprofunda o TEXTO
+          // (mais exegese/contexto/referências), nunca repetindo o já escrito.
+          const conta = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+          let deep = 0;
+          while (mode !== "chat" && minWords > 0 && conta(full) < minWords && deep < 3) {
+            deep++;
+            const faltam = minWords - conta(full);
+            const deepResp = await callAI(
+              [
+                ...messages,
+                { role: "assistant", content: full },
+                {
+                  role: "user",
+                  content:
+                    `O material está raso para a duração pedida: faltam cerca de ${faltam} palavras de profundidade. NÃO reescreva e NÃO repita nada já escrito, NÃO reintroduza títulos já usados e NÃO escreva oração nem apelo. Continue o mesmo material aprofundando o TEXTO: amplie o contexto histórico-cultural e literário, a exegese das unidades decisivas, o argumento do autor, termos originais quando esclarecem, referências cruzadas pertinentes explicadas, implicações doutrinárias e aplicações derivadas dos versículos já expostos. Se a conclusão já foi escrita, reescreva-a apenas ao final, depois do material acrescentado, retomando a verdade central de forma resumida.`,
+                },
+              ],
+              { stream: true, maxTokens: Math.min(MAX_TOKENS, Math.round(faltam * 2.6) + 800) },
+            );
+            if (!deepResp.ok) {
+              console.error("deepening error:", deepResp.status, await deepResp.text());
+              break;
+            }
+            const extra = await pump(deepResp);
+            if (!extra.text.trim()) break;
+            full += extra.text;
           }
 
           raw("data: [DONE]\n\n");
