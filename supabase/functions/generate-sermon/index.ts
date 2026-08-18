@@ -469,9 +469,9 @@ serve(async (req) => {
 
     // Monta as mensagens da redação (fases internas). Roda DENTRO do stream
     // para que a conexão comece imediatamente e não expire.
-    const prepare = async (): Promise<{ messages: { role: string; content: string }[]; maxOut: number }> => {
+    const prepare = async (): Promise<{ messages: { role: string; content: string }[]; maxOut: number; minWords: number }> => {
       if (mode === "chat") {
-        return { messages: [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])], maxOut: 8000 };
+        return { messages: [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])], maxOut: 8000, minWords: 0 };
       }
       const cfg: GenerationConfig = { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias };
       const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
@@ -497,6 +497,7 @@ serve(async (req) => {
           { role: "user", content: promptRedacao(cfg, exegese, planoHomiletico, tempoMin, plano) },
         ],
         maxOut,
+        minWords: plano.minimo,
       };
     };
 
