@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ContentActions } from "@/components/ContentActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
 import { BibleTextContent } from "@/components/BibleVerseLink";
 import { usePersistedState, clearPersistedState } from "@/hooks/usePersistedState";
 
@@ -28,6 +29,7 @@ interface SavedSermon {
 
 const GeradorPregacoes = () => {
   const [tema, setTema] = usePersistedState("ger:tema", "");
+  const [textoBase, setTextoBase] = usePersistedState("ger:textoBase", "");
   const [publico, setPublico] = usePersistedState("ger:publico", "");
   const [tempo, setTempo] = usePersistedState("ger:tempo", "");
   const [nivel, setNivel] = usePersistedState("ger:nivel", "");
@@ -35,6 +37,7 @@ const GeradorPregacoes = () => {
   const [ocasiao, setOcasiao] = usePersistedState("ger:ocasiao", "");
   const [tom, setTom] = usePersistedState("ger:tom", "");
   const [referencias, setReferencias] = usePersistedState("ger:referencias", "");
+  const [incluirApelo, setIncluirApelo] = usePersistedState<boolean>("ger:incluirApelo", false);
   const [result, setResult] = usePersistedState<string>("ger:result", "");
   const [resultTema, setResultTema] = usePersistedState<string>("ger:resultTema", "");
   const [loading, setLoading] = useState(false);
@@ -93,7 +96,7 @@ const GeradorPregacoes = () => {
     let accumulated = "";
     const currentTema = tema;
     await streamSermon({
-      tema, publico, tempo, nivel, estrutura, ocasiao, tom, referencias,
+      tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, incluirApelo,
       onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
       onDone: () => { setLoading(false); autoSaveSermon(accumulated, currentTema); },
       onError: (msg) => { toast.error(msg); setLoading(false); },
@@ -183,6 +186,11 @@ const GeradorPregacoes = () => {
                 <input type="text" value={tema} onChange={(e) => setTema(e.target.value)} placeholder="Ex: O poder da fé, A volta de Jesus..." className="mt-1 w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
               </div>
               <div>
+                <Label>Texto Base (opcional)</Label>
+                <input type="text" value={textoBase} onChange={(e) => setTextoBase(e.target.value)} placeholder="Ex: Romanos 8:35-39" className="mt-1 w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+                <p className="mt-1 text-[11px] text-muted-foreground">A exposição partirá desta passagem (contexto, exegese e estrutura).</p>
+              </div>
+              <div>
                 <Label>Público-Alvo</Label>
                 <Select value={publico} onValueChange={setPublico}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
@@ -218,11 +226,12 @@ const GeradorPregacoes = () => {
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="exortacao">Exortação</SelectItem>
-                    <SelectItem value="avivamento">Avivamento</SelectItem>
                     <SelectItem value="ensino">Ensino Expositivo</SelectItem>
+                    <SelectItem value="tematico">Temático</SelectItem>
+                    <SelectItem value="textual">Textual</SelectItem>
+                    <SelectItem value="doutrinario">Doutrinário</SelectItem>
                     <SelectItem value="evangelismo">Evangelismo</SelectItem>
                     <SelectItem value="devocional">Devocional</SelectItem>
-                    <SelectItem value="profetico">Profético</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -234,6 +243,7 @@ const GeradorPregacoes = () => {
                     <SelectItem value="textual">Textual</SelectItem>
                     <SelectItem value="tematica">Temática</SelectItem>
                     <SelectItem value="expositiva">Expositiva</SelectItem>
+                    <SelectItem value="doutrinaria">Doutrinária</SelectItem>
                     <SelectItem value="narrativa">Narrativa</SelectItem>
                     <SelectItem value="topica">Tópica</SelectItem>
                   </SelectContent>
@@ -278,6 +288,8 @@ const GeradorPregacoes = () => {
                 <Select value={referencias} onValueChange={setReferencias}>
                   <SelectTrigger className="mt-1"><SelectValue placeholder="Selecione (opcional)" /></SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="poucas">Poucas (somente as necessárias)</SelectItem>
+                    <SelectItem value="moderadas">Moderadas</SelectItem>
                     <SelectItem value="at_nt">AT ↔ NT (Tipologias e Profecias)</SelectItem>
                     <SelectItem value="tematicas">Referências Temáticas</SelectItem>
                     <SelectItem value="paralelas">Passagens Paralelas (Sinóticos)</SelectItem>
@@ -285,6 +297,13 @@ const GeradorPregacoes = () => {
                     <SelectItem value="completas">Completas (todas as categorias)</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-input px-3 py-2.5">
+                <div className="pr-3">
+                  <Label className="cursor-pointer">Incluir oração e apelo</Label>
+                  <p className="text-[11px] text-muted-foreground">Desativado por padrão: o material termina com conclusão bíblica.</p>
+                </div>
+                <Switch checked={incluirApelo} onCheckedChange={setIncluirApelo} />
               </div>
               <Button onClick={handleGenerate} disabled={loading} className="w-full bg-gradient-gold text-background hover:opacity-90 gap-2 text-base" size="lg">
                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
