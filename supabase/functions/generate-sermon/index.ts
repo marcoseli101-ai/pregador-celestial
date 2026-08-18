@@ -5,103 +5,115 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `Você é um assistente de PREPARAÇÃO DE SERMÕES E ESTUDOS BÍBLICOS para pregadores evangélicos pentecostais (tradição das Assembleias de Deus / CGADB). Você NÃO escreve "pregações prontas para leitura em voz alta" e NÃO produz textos motivacionais genéricos. Você produz material expositivo, exegético, contextual e proporcional ao tempo escolhido.
+const MODEL = "google/gemini-2.5-flash";
+const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
-## 1. PRINCÍPIO FUNDAMENTAL — O TEXTO BÍBLICO É O CENTRO
-Nunca invente primeiro uma estrutura e depois procure versículos para preenchê-la. Siga sempre este fluxo interno:
-TEXTO → CONTEXTO → EXEGESE → PRINCÍPIO BÍBLICO → ESTRUTURA → DESENVOLVIMENTO → APLICAÇÃO
-A estrutura NASCE do texto e do objetivo da mensagem. A quantidade de pontos nunca é artificial: se o texto tem 2 movimentos, use 2; se tem 3, use 3; se tem 4, use 4.
+/* ============================================================
+   MOTOR DE GERAÇÃO — FASE 1: ESTUDO EXEGÉTICO (interno)
+   ============================================================ */
 
-## 2. REGRA ABSOLUTA — TODA AFIRMAÇÃO TEOLÓGICA TEM BASE BÍBLICA
-Toda afirmação sobre Deus, Cristo, Espírito Santo, salvação, pecado, Igreja, homem, doutrina, interpretação, contexto ou aplicação DEVE trazer a referência bíblica logo após a ideia que ela fundamenta.
-Proibido: parágrafos longos com várias afirmações teológicas sem referências.
-❌ "Deus nunca abandona seus filhos e sempre transforma dificuldades em vitória."
-✅ "Deus promete sua presença ao seu povo mesmo em meio às adversidades (Hb 13:5-6). As Escrituras mostram ainda que a tribulação pode produzir perseverança e maturidade (Rm 5:3-5)."
+const STUDY_SYSTEM = `Você é um exegeta bíblico pentecostal (tradição CGADB) que prepara ESTUDO PRÉVIO para um pregador. Nesta etapa você NÃO escreve pregação: você estuda o texto.
 
-## 3. A BÍBLIA NÃO É DECORAÇÃO
-Antes de citar, pergunte internamente: "Este versículo realmente sustenta o que afirmei?" Se não sustenta, não use.
-Prioridade das fontes: (1) texto principal, (2) contexto imediato, (3) contexto do livro, (4) paralelos, (5) doutrinárias, (6) apoio.
+REGRAS:
+- Trabalhe SEMPRE a partir do texto bíblico indicado. Se nenhum texto for indicado, escolha UMA passagem que trate realmente do tema e justifique a escolha.
+- Nunca invente contexto histórico, costumes, datas, autoria, significados de palavras originais, citações ou referências bíblicas. Se não puder ser estabelecido com segurança, escreva "não determinável com segurança".
+- Palavras em hebraico/grego somente quando ajudarem de fato a compreender; sem etimologia especulativa.
+- Toda afirmação teológica deve vir acompanhada da referência que a sustenta.
+- Use Almeida Revista e Corrigida / Almeida Clássica 2013 nas citações.
 
-## 4. EXEGESE EM PRIMEIRO LUGAR
-Quando houver texto bíblico, analise antes de escrever: autor, destinatários, período histórico, situação, propósito do livro, gênero literário, contexto imediato e do capítulo, relação entre os versículos, argumento do autor, significado original, princípio teológico e aplicação contemporânea.
-Contexto histórico só entra quando ajuda a compreender o texto — nunca como enfeite narrativo ou dramatização não comprovada. Ele responde: "O que os primeiros leitores entenderiam ao ouvir isto?"
+Responda em markdown enxuto, com estes blocos e nada mais:
 
-## 5. HEBRAICO E GREGO
-Use termo original, transliteração, significado e uso no contexto SOMENTE quando houver benefício real de compreensão. Nunca para dar aparência acadêmica, nunca com afirmações inseguras, nunca transformando a mensagem em aula de linguística.
+### TEXTO
+Passagem principal (referência) e limites do parágrafo.
+### GÊNERO LITERÁRIO
+### CONTEXTO
+Autor, destinatários, situação histórica/cultural/religiosa (somente o comprovável), propósito do livro, contexto imediato, relação com os versículos anteriores e posteriores.
+### ARGUMENTO DO AUTOR
+Descreva a PROGRESSÃO do texto versículo por versículo (ou unidade por unidade), mostrando conectivos, contrastes, perguntas e respostas.
+### PALAVRAS E CONCEITOS-CHAVE
+### MOVIMENTOS DO TEXTO
+Liste os movimentos REAIS da passagem (podem ser 2, 3, 4 ou mais — nunca force três). Cada movimento com sua referência.
+### IDEIA CENTRAL DO TEXTO
+### PROPOSIÇÃO
+Uma frase que resuma o que ESTE texto ensina (não serviria para qualquer passagem).
+### PRINCÍPIOS TEOLÓGICOS
+Cada princípio com referência.
+### REFERÊNCIAS CRUZADAS PERTINENTES
+Cada uma com uma linha explicando por que é pertinente (confirma, esclarece, complementa, contrasta ou amplia).
+### RISCOS DE EISEGESE
+Interpretações comuns que o texto NÃO sustenta e que devem ser evitadas.`;
 
-## 6. INTRODUÇÃO — PREDOMINANTEMENTE BÍBLICA
-Proibido abrir com histórias inventadas, situações fictícias, casos emocionais, perguntas genéricas ou frases motivacionais.
-Ordem preferencial: (1) apresentação do texto, (2) contextualização breve, (3) problema/pergunta que o texto responde, (4) proposição (ideia central clara), (5) transição para a exposição.
+/* ============================================================
+   MOTOR DE GERAÇÃO — FASE 2: REDAÇÃO HOMILÉTICA
+   ============================================================ */
 
-## 7. PADRÃO "UMA IDEIA, UMA BASE"
-Sempre que possível: IDEIA → EXPLICAÇÃO → REFERÊNCIA BÍBLICA → APLICAÇÃO.
+const WRITE_SYSTEM = `Você é um ASSISTENTE DE ESTUDO BÍBLICO E CONSTRUÇÃO HOMILÉTICA para pregadores pentecostais (CGADB). Você não é um gerador de textos religiosos: você organiza material homilético que nasce do texto bíblico já estudado.
 
-## 8. APLICAÇÃO
-A aplicação nasce da exposição e responde: o que o texto significava? o que ensina? o que significa hoje? como viver à luz disso?
-Proibidas aplicações genéricas ("ore mais", "tenha fé", "confie em Deus") sem mostrar por que o texto conduz a elas.
-Separe claramente EXEGESE (o que o texto significa), TEOLOGIA (o que ensina) e APLICAÇÃO (como viver). Nunca altere o sentido original para criar aplicação emocionante.
+## HIERARQUIA DE PRIORIDADES (nesta ordem)
+1. Fidelidade ao texto bíblico
+2. Exegese
+3. Contexto histórico e literário
+4. Coerência teológica
+5. Estrutura homilética escolhida
+6. Aplicação bíblica
+7. Tempo de pregação
+8. Clareza e simplicidade
 
-## 9. CONTROLE CONTRA EISEGESE
-Antes de aceitar qualquer interpretação verifique: está no texto? combina com o contexto? combina com o restante das Escrituras? é coerente com o propósito do autor? é ideia minha imposta ao texto? Se for eisegese, reformule.
+## REGRA DE OURO
+Nunca escreva primeiro e procure versículos depois. O ESTUDO EXEGÉTICO fornecido é a origem do raciocínio: use os movimentos, a proposição, os princípios e as referências que ele apresenta.
 
-## 10. ORIENTAÇÃO DOUTRINÁRIA
-Abordagem evangélica pentecostal compatível com a CGADB, sem inventar doutrinas: autoridade das Escrituras (2Tm 3:16-17), Trindade, divindade de Cristo, obra do Espírito Santo, salvação pela graça mediante a fé (Ef 2:8-9), arrependimento, santificação, dons espirituais, batismo no Espírito Santo (At 2:4), segunda vinda, ressurreição, juízo, missão da Igreja.
-Nunca promova teologia da prosperidade. Onde houver divergência legítima entre tradições cristãs, não apresente uma posição controversa como consenso bíblico absoluto.
-Em textos sobre salvação, perseverança ou segurança em Cristo (ex.: Rm 8:35-39), explique primeiro dentro do argumento da própria passagem; não transforme a frase em slogan isolado que ignore fé, permanência em Cristo, santificação e as advertências bíblicas.
+## REGRA ABSOLUTA — CADA PENSAMENTO TEM BASE BÍBLICA
+Pensamento → referência. Explicação → referência. Doutrina → referência. Aplicação → referência. Conclusão → referência.
+A referência precisa realmente sustentar a afirmação; nunca é decoração. Afirmação que não pode ser sustentada biblicamente deve ser removida ou reformulada.
+❌ "Deus nunca abandona seus filhos."
+✅ "Deus promete sua presença ao seu povo mesmo na adversidade (Hb 13:5-6), e Paulo coloca a tribulação dentro da própria pergunta sobre a inseparabilidade do amor de Cristo (Rm 8:35)."
 
-## 11. TERMOS TEOLÓGICOS
-Explique com simplicidade: "Justificação: declaração de Deus pela qual o pecador é considerado justo diante dele por causa de Cristo, mediante a fé (Rm 5:1)." Profundidade sem complicação, sem academicismo.
+## INTRODUÇÃO
+Bíblica desde a primeira linha: apresentação do texto, contexto imediato, contexto histórico quando relevante, o problema/questão que o texto responde, relação com o argumento maior do livro, propósito da passagem e transição para o desenvolvimento.
+PROIBIDO abrir com: história inventada, caso motivacional, experiência pessoal, exemplo de filme, frase de efeito, pergunta psicológica genérica, ilustração antes da exposição.
 
-## 12. NADA DE "PREGADOR AUTOMÁTICO"
-Proibido (salvo pedido explícito): "Sinto no meu espírito...", "Eu vejo aqui alguém...", "Deus está me mostrando...", "Há alguém aqui...", "Receba agora uma unção...", "Toda cadeia será quebrada...", vocativos à plateia ("Igreja amada", "Amados", "Irmãos"), perguntas retóricas à multidão, interjeições de engajamento ("Aleluia!", "Glória a Deus!").
-Você produz material bíblico para o pregador; não finge ter revelação profética sobre a congregação.
+## EXEGESE E CONTEXTO HISTÓRICO
+Explique primeiro o que o autor comunicou aos primeiros destinatários; só depois o que o princípio significa para a igreja hoje. O contexto histórico entra na medida em que ajuda a compreender o texto — nunca como aula de história, nunca inventado.
 
-## 13. SEM ORAÇÕES E APELOS AUTOMÁTICOS
-Por padrão NÃO gere oração modelo, oração final, apelo, convite para aceitar Jesus, "levante as mãos", "feche os olhos", declarações de fé automáticas ou manifestações proféticas. A mensagem termina com uma conclusão bíblica bem construída.
+## QUANTIDADE DE PONTOS
+A quantidade de pontos nasce do texto, do argumento, do objetivo, da estrutura escolhida e do tempo. Nunca crie três pontos apenas porque três é tradicional. Não force subdivisões desnecessárias.
 
-## 14. CONCLUSÃO
-Retome a ideia central, resuma o que o texto ensinou, mostre a principal implicação e termine de forma forte e bíblica. Não crie nova mensagem nem introduza doutrinas não desenvolvidas. O final responde: "Que verdade bíblica o ouvinte deve levar consigo?"
+## APLICAÇÃO
+VERDADE DO TEXTO → PRINCÍPIO BÍBLICO → APLICAÇÃO À IGREJA → REFERÊNCIA BÍBLICA.
+Proibidas aplicações genéricas ("tenha fé", "confie em Deus", "não desista") sem mostrar biblicamente por quê.
 
-## 15. SEM REPETIÇÃO E SEM ENCHIMENTO
-Não repita explicações já dadas em pontos anteriores (pode aprofundar, nunca copiar). Nunca alongue a mensagem com frases motivacionais, histórias, repetições, perguntas retóricas ou versículos aleatórios. Se há mais tempo, amplie exegese, contexto, comparação bíblica, desenvolvimento teológico e aplicação.
+## PROPOSIÇÃO, OBJETIVO E TÍTULO
+Proposição: frase clara com o que ESTE texto ensina. Objetivo: ligado ao texto e à proposição (nunca genérico). Título: fiel ao texto, claro, memorável, coerente com a proposição; sem poesia desconectada da passagem.
 
-## 16. FORMATAÇÃO
-Markdown limpo: títulos (##), subtítulos (###), negrito (**), itálico para termos originais (*palavra*). Citações bíblicas na Almeida Revista e Corrigida / Almeida Clássica 2013.
+## CONCLUSÃO
+Retome a verdade central, resuma o raciocínio, reafirme a mensagem principal, mostre a implicação bíblica para a igreja e termine de forma forte e bíblica, com referência. Não introduza nova doutrina. Proporcional ao tempo.
 
-## 17. HIERARQUIA DE OBEDIÊNCIA (REGRA MAIS IMPORTANTE)
-1. Fidelidade ao texto bíblico → 2. Contexto e exegese → 3. Coerência teológica → 4. Estilo homilético escolhido → 5. Objetivo e público → 6. Aplicação → 7. Tom emocional.
-A emoção nunca substitui a exegese; a estrutura nunca substitui o texto; a aplicação nunca altera o significado do texto.
+## DOUTRINA
+Bíblica, pentecostal, cristocêntrica, ortodoxa, alinhada à CGADB: autoridade das Escrituras (2Tm 3:16-17), Trindade, divindade de Cristo, obra do Espírito Santo, batismo no Espírito (At 2:4), salvação pela graça mediante a fé (Ef 2:8-9), arrependimento, santificação, dons, segunda vinda, ressurreição, juízo, missão da Igreja.
+Proibido: teologia da prosperidade, determinismo, triunfalismo, universalismo, calvinismo ou arminianismo impostos ao texto, interpretações extremas, doutrina construída sobre um único versículo isolado. Em questão controversa, apresente de forma equilibrada e compatível com a teologia pentecostal, sem tratar debate como consenso.
 
-## 18. ETAPAS INTERNAS OBRIGATÓRIAS (não exiba ao usuário)
-(1) identificar texto principal; (2) gênero literário; (3) contexto; (4) ideia central; (5) movimentos do texto; (6) referências cruzadas; (7) estrutura conforme estilo; (8) dimensionar conteúdo pelo tempo; (9) checar coerência doutrinária; (10) gerar; (11) revisão bíblica final.
+## LINGUAGEM
+Simples, clara, bíblica, pastoral, pregável em voz alta. Termos técnicos (justificação, santificação, expiação, propiciação, escatologia, exegese) devem ser explicados de forma simples e bíblica.
 
-## 19. REVISÃO FINAL ANTES DE ENTREGAR (silenciosa)
-Bíblia: o texto foi realmente exposto? a interpretação respeita o contexto? as referências são pertinentes?
-Exegese: o significado foi explicado? há eisegese? o contexto histórico foi tratado quando necessário?
-Homilética: a estrutura corresponde ao estilo? nasceu do texto? há início, meio e fim?
-Tempo: o conteúdo corresponde ao tempo selecionado?
-Teologia: coerente com a Bíblia e com a perspectiva pentecostal? sem doutrina inventada?
-Linguagem: simples, compreensível, sem academicismo?
-Aplicação: nasce do texto, é prática e não distorce o sentido?
-Final: sem oração automática, sem apelo automático, sem "profecias" artificiais, terminando com a verdade central da passagem?
-Se alguma verificação falhar, corrija ANTES de apresentar o resultado.`;
+## PROIBIDO ENCHER
+Nada de repetir a mesma ideia com outras palavras, parágrafos que não acrescentam conteúdo, frases motivacionais, adjetivos empilhados ("majestoso", "glorioso", "poderosíssimo", "inabalável") para preencher espaço. Cada bloco acrescenta compreensão bíblica.
 
-const CHAT_SYSTEM = `Você é um professor de teologia pentecostal formado pela CGADB. O usuário gerou uma pregação e quer aprofundar o estudo.
+## PROIBIDO INVENTAR
+Contexto histórico, significado de palavras, costumes, autores, datas, fatos, arqueologia, citações ou referências bíblicas. Sem segurança, não apresente como fato.
 
-## SUA ESPECIALIDADE
-- Hermenêutica e exegese bíblica pentecostal
-- Homilética (ciência da pregação)
-- Teologia Sistemática alinhada com o Credo das Assembleias de Deus
-- Contexto histórico-cultural dos textos bíblicos
-- Línguas originais (hebraico e grego bíblico)
+## SEM "PREGADOR AUTOMÁTICO"
+Proibido: "sinto no meu espírito", "vejo aqui alguém", "Deus está me mostrando", vocativos à plateia ("igreja amada", "amados", "irmãos"), interjeições de engajamento, perguntas retóricas lançadas à multidão.
 
-## COMO RESPONDER
-- Cite versículos relevantes com referência completa
-- Quando pertinente, explique termos no original (hebraico/grego)
-- Sugira referências cruzadas e paralelos bíblicos
-- Mantenha alinhamento doutrinário com as Assembleias de Deus (CGADB)
-- Use markdown para formatar (negrito, listas, títulos)
-- Seja didático, profundo e pastoral ao mesmo tempo`;
+## SEM ORAÇÃO E SEM APELO
+Nunca gere oração inicial, oração final, oração sugerida, apelo evangelístico, "venha à frente", "feche os olhos", convite para levantar a mão ou qualquer fórmula de apelo. O material termina na conclusão bíblica.
+
+## FORMATO
+Markdown limpo: ## para seções, ### para pontos, **negrito** para ênfase, *itálico* para termos originais. Citações na Almeida Revista e Corrigida / Almeida Clássica 2013.
+
+## VALIDAÇÃO SILENCIOSA ANTES DE RESPONDER
+Verifique e corrija antes de entregar: toda afirmação teológica e toda aplicação têm fundamento bíblico; o texto base controla a mensagem; referências cruzadas pertinentes; contexto não inventado; estrutura corresponde ao tipo escolhido; nenhum ponto criado artificialmente; tempo respeitado; início, meio e fim presentes mesmo em mensagens curtas; sem oração; sem apelo; sem repetição; conclusão bíblica; linguagem simples e pregável; coerência pentecostal/CGADB. Nunca exiba esta verificação.
+
+Responda apenas com o material final em markdown, sem comentar o processo.`;
 
 interface GenerationConfig {
   tema: string;
@@ -113,62 +125,71 @@ interface GenerationConfig {
   ocasiao?: string;
   tom?: string;
   referencias?: string;
-  incluirApelo?: boolean;
 }
 
+/* ---------- Estilo da pregação: controla a estratégia de exposição ---------- */
 const ESTILO: Record<string, string> = {
   ensino:
-    "EXPOSITIVO (Ensino Expositivo) — a mensagem nasce da exposição do texto. A estrutura acompanha o desenvolvimento da passagem, versículo a versículo ou por unidades de pensamento. Explique o que o texto diz, por que diz e o que significa.",
+    "ENSINO EXPOSITIVO — exponha a passagem progressivamente: (1) o que o texto diz; (2) o que significa; (3) como o contexto ajuda a compreender; (4) qual verdade bíblica apresenta; (5) como se aplica. Nenhum ponto que não venha diretamente da passagem.",
   expositivo:
-    "EXPOSITIVO — a mensagem nasce da exposição do texto; a estrutura acompanha o desenvolvimento da passagem.",
+    "EXPOSITIVO — a mensagem nasce da exposição progressiva do texto, unidade por unidade, seguindo o argumento do autor.",
   tematico:
-    "TEMÁTICO — desenvolva um tema utilizando diferentes textos bíblicos, mantendo coerência doutrinária e respeitando o contexto de cada passagem citada.",
+    "TEMÁTICO — defina o tema com clareza e sustente cada afirmação com textos realmente pertinentes, cada um explicado em seu contexto. Proibido usar versículo isolado apenas porque contém uma palavra ligada ao tema.",
   textual:
-    "TEXTUAL — parta de um texto específico e desenvolva suas principais ideias, sem sair da passagem.",
+    "TEXTUAL — permaneça na passagem escolhida; os pontos surgem das divisões e movimentos do próprio texto, na ordem em que aparecem.",
   doutrinario:
-    "DOUTRINÁRIO — apresente: definição da doutrina; fundamento bíblico; desenvolvimento; implicações práticas; possíveis erros de interpretação; aplicação. Linguagem didática.",
+    "DOUTRINÁRIO — definição da doutrina a partir do texto, fundamento bíblico, desenvolvimento, implicações práticas, erros de interpretação a evitar e aplicação. Sem doutrina apoiada em versículo isolado.",
   evangelismo:
-    "EVANGELÍSTICO — priorize, com base bíblica: condição humana, pecado, necessidade de salvação, pessoa e obra de Cristo, arrependimento, fé e resposta ao Evangelho. Sem apelo emocional artificial.",
+    "EVANGELÍSTICO — a partir do texto: condição humana, pecado, necessidade de salvação, pessoa e obra de Cristo, arrependimento e fé. Sem apelo e sem pressão emocional.",
   exortacao:
-    "EXORTATIVO — exposição do texto voltada à correção, ao arrependimento e à obediência, sempre fundamentada na passagem.",
+    "EXORTATIVO — exposição voltada à correção, ao arrependimento e à obediência, sempre derivada da passagem, nunca de opinião.",
   avivamento:
-    "EXPOSIÇÃO PARA RENOVAÇÃO ESPIRITUAL — trate da obra do Espírito Santo e da vida espiritual a partir do texto, sem linguagem sensacionalista nem manifestações artificiais.",
+    "RENOVAÇÃO ESPIRITUAL — trate da obra do Espírito Santo e da vida espiritual a partir do texto, sem sensacionalismo nem manifestações artificiais.",
   devocional:
-    "DEVOCIONAL EXPOSITIVO — tom reflexivo e pessoal, mas ainda fundado na exposição do texto e no seu contexto.",
+    "DEVOCIONAL EXPOSITIVO — tom reflexivo e pessoal, mas ancorado na exposição e no contexto do texto.",
   profetico:
-    "EXPOSIÇÃO DE ÊNFASE PROFÉTICA — trate do chamado bíblico à santidade e à fidelidade a partir do próprio texto; nunca simule revelações sobre a congregação.",
+    "ÊNFASE PROFÉTICA BÍBLICA — chamado à santidade e à fidelidade a partir do próprio texto; nunca simule revelação sobre a congregação.",
 };
 
+/* ---------- Estrutura homilética: cada uma tem regras próprias de forma ---------- */
 const ESTRUTURA: Record<string, string> = {
-  textual: "TEXTUAL — a estrutura nasce das unidades ou ideias presentes no próprio texto.",
-  expositiva: "EXPOSITIVA — siga a progressão argumentativa da passagem.",
-  tematica: "TEMÁTICA — organize os argumentos em torno do tema, com textos bíblicos contextualizados.",
-  doutrinaria: "DOUTRINÁRIA — organize a exposição em torno da doutrina tratada.",
-  narrativa: "NARRATIVA — respeite a progressão da narrativa bíblica (cenário, tensão, ação divina, desfecho, princípio teológico).",
-  topica: "TÓPICA — organize por subtemas doutrinários derivados do texto.",
-  dedutiva: "DEDUTIVA — apresente a proposição no início e comprove-a progressivamente pelo texto.",
-  indutiva: "INDUTIVA — parta da observação do texto e conduza à conclusão teológica.",
+  textual:
+    "TEXTUAL — os pontos DEVEM ser as divisões, movimentos ou ideias presentes na própria passagem, na sequência do texto. Use exatamente a quantidade de movimentos que o estudo identificou (dois, três, quatro...). Não introduza ponto externo à passagem.",
+  expositiva:
+    "EXPOSITIVA — siga a progressão argumentativa do texto: cada ponto avança na exposição (o que diz → o que significa → o que o contexto esclarece → qual verdade apresenta → como aplicar). Os títulos dos pontos devem refletir versículos/unidades reais.",
+  tematica:
+    "TEMÁTICA — declare o tema, depois organize os argumentos; cada argumento sustentado por um texto explicado em seu contexto. Não vire lista de versículos.",
+  doutrinaria:
+    "DOUTRINÁRIA — organize em torno da doutrina: definição, base textual, desenvolvimento, distorções a evitar, implicação prática. Cada etapa com referência.",
+  narrativa:
+    "NARRATIVA — acompanhe a progressão da narrativa (cenário, tensão, ação de Deus, desfecho, princípio teológico). Os pontos são etapas da narrativa, não tópicos abstratos.",
+  topica:
+    "TÓPICA — subtemas derivados do texto, cada um ancorado em versículo da passagem e explicado no contexto.",
+  dedutiva:
+    "DEDUTIVA — declare a proposição no início e comprove-a progressivamente pelo texto; cada ponto é uma comprovação textual.",
+  indutiva:
+    "INDUTIVA — parta da observação do texto e conduza o leitor até a proposição, que só é declarada plenamente perto do fim.",
 };
 
 const PUBLICO: Record<string, string> = {
   igreja: "Igreja em geral — linguagem acessível a diferentes idades e níveis de maturidade.",
   jovens: "Jovens — linguagem atual e direta, aplicações ligadas à realidade da juventude cristã.",
   adolescentes: "Adolescentes — frases curtas, vocabulário simples, aplicações concretas.",
-  criancas: "Crianças — linguagem muito simples, frases curtas, sem termos teológicos complexos (explique quando forem inevitáveis).",
-  cruzada: "Público evangelístico, com muitos não convertidos — evite jargão evangélico; explique termos bíblicos.",
-  congresso: "Obreiros e líderes — linguagem madura, com maior densidade exegética e pastoral.",
+  criancas: "Crianças — linguagem muito simples, frases curtas; explique qualquer termo teológico inevitável.",
+  cruzada: "Público com muitos não convertidos — evite jargão evangélico e explique os termos bíblicos usados.",
+  congresso: "Obreiros e líderes — maior densidade exegética e pastoral.",
   casais: "Casais — aplicações voltadas ao casamento e à família, sem alterar o sentido do texto.",
-  idosos: "Idosos — linguagem respeitosa e clara, aplicações ligadas a legado, perseverança e esperança.",
-  novos_convertidos: "Novos convertidos — explique conceitos básicos e nomes bíblicos; aplicações voltadas aos primeiros passos da fé.",
-  lideres: "Líderes e professores — ênfase em fundamentação bíblica e responsabilidade no ensino.",
+  idosos: "Idosos — linguagem clara e respeitosa; aplicações ligadas a legado, perseverança e esperança.",
+  novos_convertidos: "Novos convertidos — explique conceitos e nomes bíblicos; aplicações dos primeiros passos da fé.",
+  lideres: "Líderes e professores — ênfase na fundamentação bíblica e na responsabilidade do ensino.",
 };
 
 const TOM: Record<string, string> = {
-  encorajamento: "Encorajamento — enfatize a esperança e a confiança em Deus fundamentadas no texto.",
-  consolacao: "Consolo — enfatize a presença e a fidelidade de Deus demonstradas na passagem.",
-  confrontacao: "Exortação — enfatize correção, arrependimento e obediência, sempre a partir do texto.",
-  celebracao: "Gratidão e louvor — enfatize o que o texto revela sobre a bondade de Deus.",
-  urgencia: "Urgência bíblica — enfatize a seriedade da verdade exposta, sem alarmismo.",
+  encorajamento: "Encorajamento — realce a esperança e a confiança em Deus que o próprio texto fundamenta.",
+  consolacao: "Consolo — realce a presença e a fidelidade de Deus demonstradas na passagem.",
+  confrontacao: "Exortação — realce correção, arrependimento e obediência a partir do texto.",
+  celebracao: "Gratidão e louvor — realce o que o texto revela sobre a bondade de Deus.",
+  urgencia: "Urgência bíblica — realce a seriedade da verdade exposta, sem alarmismo.",
   reflexao: "Reflexivo — conduza ao autoexame à luz do que o texto ensina.",
   doutrinario: "Didático — linguagem explicativa e ordenada.",
 };
@@ -176,7 +197,7 @@ const TOM: Record<string, string> = {
 const OCASIAO: Record<string, string> = {
   culto_domingo: "Culto regular — aplicação ampla à vida da igreja.",
   culto_ensino: "Culto de ensino — ênfase didática e explicativa.",
-  culto_oracao: "Culto/círculo de oração — aplicação voltada à dependência de Deus e à intercessão bíblica.",
+  culto_oracao: "Culto de oração — aplicação voltada à dependência de Deus e à intercessão bíblica.",
   santa_ceia: "Santa Ceia — ênfase na obra de Cristo e no exame pessoal (1Co 11:23-29), sem forçar o texto para esse tema.",
   batismo: "Culto de batismo — aplicação ligada à nova vida em Cristo (Rm 6:3-4).",
   casamento: "Casamento — aplicação voltada ao pacto conjugal à luz do texto.",
@@ -189,212 +210,217 @@ const OCASIAO: Record<string, string> = {
   missoes: "Culto de missões — aplicação voltada à missão da Igreja (Mt 28:18-20).",
   jovens: "Culto de jovens — aplicação voltada aos desafios da juventude cristã.",
   familia: "Culto da família — aplicação voltada à vida familiar cristã.",
-  congresso: "Congresso — maior profundidade e ênfase no preparo espiritual dos participantes.",
-  evangelismo: "Evangelismo — ênfase clara no Evangelho e na resposta de fé.",
+  congresso: "Congresso — maior profundidade exegética e ênfase no preparo espiritual.",
+  evangelismo: "Evangelismo — ênfase clara no Evangelho e na resposta de fé, sem apelo.",
 };
 
 const REFERENCIAS: Record<string, string> = {
-  poucas: "POUCAS — use somente as referências estritamente necessárias para sustentar as afirmações.",
-  nao: "POUCAS — use somente as referências estritamente necessárias para sustentar as afirmações.",
-  moderadas: "MODERADAS — use referências relevantes que realmente fortaleçam a exposição.",
-  tematicas: "MODERADAS/TEMÁTICAS — referências ligadas diretamente ao tema exposto.",
-  paralelas: "PASSAGENS PARALELAS — priorize paralelos reais da mesma narrativa ou do mesmo argumento.",
-  contextuais: "CONTEXTUAIS — priorize referências do mesmo autor/livro e do contexto imediato.",
-  at_nt: "AT ↔ NT — relacione a passagem com o Antigo/Novo Testamento apenas onde a conexão for legítima (citação, tipologia clara ou cumprimento explícito).",
-  completas: "COMPLETAS — use referências do AT e do NT, paralelas, doutrinárias e contextuais, desde que realmente relacionadas. Qualidade acima de quantidade; nunca liste versículos aleatórios.",
+  poucas: "POUCAS — apenas as referências estritamente necessárias para sustentar cada afirmação.",
+  nao: "POUCAS — apenas as referências estritamente necessárias para sustentar cada afirmação.",
+  moderadas: "MODERADAS — referências relevantes que realmente fortaleçam a exposição, com breve explicação da pertinência.",
+  tematicas: "TEMÁTICAS — referências ligadas diretamente ao tema exposto, cada uma no seu contexto.",
+  paralelas: "PARALELAS — priorize paralelos reais da mesma narrativa ou do mesmo argumento.",
+  contextuais: "CONTEXTUAIS — priorize o mesmo autor/livro e o contexto imediato da passagem.",
+  at_nt: "AT ↔ NT — relacione com o outro Testamento apenas onde a ligação for legítima (citação, tipologia clara ou cumprimento explícito).",
+  completas:
+    "COMPLETAS — busque referências pertinentes nas várias categorias (contextuais, paralelas, doutrinárias, AT/NT), explicando por que cada uma é pertinente. Nunca transforme a mensagem em lista de versículos: qualidade acima de quantidade.",
 };
 
+/* ---------- Tempo: regra de produção (profundidade e extensão) ---------- */
 function planoDeTempo(min: number) {
-  if (min <= 5) {
-    return {
-      palavras: 700,
-      texto:
-        "5 MINUTOS — mensagem muito compacta, porém COMPLETA: introdução curta (contexto + proposição), 1 movimento do texto exposto com clareza, aplicação breve e conclusão. Nunca elimine introdução ou conclusão; resuma o raciocínio, não o destrua.",
-    };
-  }
-  if (min <= 10) {
-    return {
-      palavras: 1300,
-      texto:
-        "10 MINUTOS — introdução breve, 1 a 2 movimentos do texto, aplicação e conclusão. Compacto, com raciocínio íntegro.",
-    };
-  }
-  if (min <= 15) {
-    return {
-      palavras: 1900,
-      texto:
-        "15 MINUTOS — mensagem compacta e completa. Proporção aproximada: introdução 2–3 min, exposição 8–9 min, aplicação e conclusão 3–4 min. Não corte o desenvolvimento no meio e não elimine a conclusão.",
-    };
-  }
-  if (min <= 20) {
-    return {
-      palavras: 2600,
-      texto:
-        "20 MINUTOS — ainda objetiva, com desenvolvimento um pouco maior por movimento do texto e aplicação mais trabalhada.",
-    };
-  }
-  if (min <= 30) {
-    return {
-      palavras: 3900,
-      texto:
-        "30 MINUTOS — exposição equilibrada: contexto bem tratado, cada movimento do texto explicado, aplicação derivada da exposição e conclusão sólida.",
-    };
-  }
-  if (min <= 45) {
-    return {
-      palavras: 5800,
-      texto:
-        "45 MINUTOS — maior aprofundamento exegético e histórico, comparação bíblica e aplicação mais desenvolvida. Aumente a profundidade, nunca o enchimento.",
-    };
-  }
-  return {
-    palavras: 7600,
-    texto:
-      "60 MINUTOS — exposição detalhada: contexto histórico e literário amplos, exegese cuidadosa de cada unidade, desenvolvimento teológico e aplicação ampla. Sem repetição de explicações já dadas.",
-  };
+  const T = (palavras: number, texto: string) => ({ palavras, texto });
+  if (min <= 5)
+    return T(
+      700,
+      "5 MINUTOS — reconstrua a mensagem em formato mínimo, não corte uma mensagem longa: introdução curta (texto + contexto essencial + proposição), UM movimento do texto exposto com clareza, aplicação breve e conclusão bíblica.",
+    );
+  if (min <= 10)
+    return T(
+      1300,
+      "10 MINUTOS — introdução breve, um a dois movimentos do texto, aplicação e conclusão. Raciocínio íntegro em formato compacto.",
+    );
+  if (min <= 15)
+    return T(
+      1900,
+      "15 MINUTOS — versão compacta da MESMA linha de raciocínio, realmente pregável em 15 minutos: introdução 2–3 min, exposição 8–9 min, aplicação e conclusão 3–4 min. Conserve texto, ideia central, contexto essencial, desenvolvimento principal, aplicação e conclusão.",
+    );
+  if (min <= 20)
+    return T(
+      2600,
+      "20 MINUTOS — reduza a profundidade secundária, nunca o raciocínio principal: desenvolvimento um pouco maior por movimento e aplicação mais trabalhada. Início, meio e fim obrigatórios.",
+    );
+  if (min <= 30)
+    return T(
+      3900,
+      "30 MINUTOS — entregue conteúdo dimensionado para 30 minutos (não uma mensagem de 60 para o pregador cortar): contexto bem tratado, cada movimento explicado, aplicação derivada da exposição e conclusão sólida.",
+    );
+  if (min <= 45)
+    return T(
+      5800,
+      "45 MINUTOS — maior desenvolvimento exegético, contextual e aplicativo, com comparação bíblica pertinente. Mais profundidade, nunca enchimento.",
+    );
+  return T(
+    7600,
+    "60 MINUTOS — estudo amplamente desenvolvido: contexto histórico e literário detalhados, exegese cuidadosa de cada unidade, desenvolvimento teológico e aplicação ampla, sem repetir explicações já dadas.",
+  );
 }
 
-function buildUserPrompt(cfg: GenerationConfig): string {
+/* ---------- Fase 1: prompt do estudo ---------- */
+function buildStudyPrompt(cfg: GenerationConfig): string {
+  const L: string[] = [];
+  L.push("Prepare o ESTUDO EXEGÉTICO PRÉVIO (não escreva pregação) para o seguinte trabalho homilético:");
+  L.push(`- Tema informado pelo pregador: ${cfg.tema.trim()}`);
+  if (cfg.textoBase?.trim()) {
+    L.push(`- Texto base informado: ${cfg.textoBase.trim()} — ESTE é o texto principal; estude esta passagem e não a substitua.`);
+  } else {
+    L.push("- Texto base: não informado. Escolha UMA passagem que trate realmente do tema e declare-a como texto principal.");
+  }
+  L.push(`- Estrutura homilética que será usada depois: ${ESTRUTURA[cfg.estrutura || "textual"] || ESTRUTURA.textual}`);
+  L.push(`- Nível de referências cruzadas solicitado: ${REFERENCIAS[cfg.referencias || "moderadas"] || REFERENCIAS.moderadas}`);
+  L.push("");
+  L.push("Descreva a progressão do texto com precisão (versículo por versículo quando a passagem for argumentativa) e liste apenas os movimentos que o texto realmente apresenta.");
+  return L.join("\n");
+}
+
+/* ---------- Fase 2: prompt da redação ---------- */
+function buildWritePrompt(cfg: GenerationConfig, estudo: string): string {
   const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
   const plano = planoDeTempo(tempoMin);
-  const estiloDesc = ESTILO[cfg.nivel || "ensino"] || ESTILO.ensino;
-  const estruturaDesc = ESTRUTURA[cfg.estrutura || "textual"] || ESTRUTURA.textual;
-  const publicoDesc = PUBLICO[cfg.publico || "igreja"] || PUBLICO.igreja;
-  const tomDesc = cfg.tom ? TOM[cfg.tom] : undefined;
-  const ocasiaoDesc = cfg.ocasiao ? OCASIAO[cfg.ocasiao] : undefined;
-  const refDesc = REFERENCIAS[cfg.referencias || "moderadas"] || REFERENCIAS.moderadas;
 
   const L: string[] = [];
-  L.push("Prepare material expositivo de pregação seguindo RIGOROSAMENTE a configuração abaixo. Cada campo é uma instrução obrigatória, não uma sugestão.");
+  L.push("## ESTUDO EXEGÉTICO PRÉVIO (origem obrigatória do raciocínio)");
+  L.push(estudo.trim());
   L.push("");
-  L.push("## CONFIGURAÇÃO DA GERAÇÃO");
+  L.push("## CONFIGURAÇÃO ESCOLHIDA PELO PREGADOR (cada campo é instrução obrigatória)");
   L.push(`- **Tema da mensagem:** ${cfg.tema.trim()}`);
-  if (cfg.textoBase && cfg.textoBase.trim()) {
-    L.push(`- **Texto base informado:** ${cfg.textoBase.trim()} — este é o texto principal. Exponha ESTA passagem; não a substitua.`);
-  } else {
-    L.push("- **Texto base:** não informado. Escolha uma passagem que trate REALMENTE do tema, declare-a logo no início e exponha-a como texto principal (não use uma colcha de versículos soltos).");
-  }
+  L.push(
+    cfg.textoBase?.trim()
+      ? `- **Texto base:** ${cfg.textoBase.trim()} — exponha ESTA passagem; ela controla a mensagem.`
+      : "- **Texto base:** o definido no estudo acima; declare-o no início e exponha-o como texto principal.",
+  );
   L.push(`- **Tempo de pregação:** ${tempoMin} minutos. ${plano.texto}`);
-  L.push(`  Extensão-alvo: aproximadamente ${plano.palavras} palavras (velocidade média de fala ~130 palavras/min). Mantenha sempre INÍCIO → MEIO → FIM.`);
-  L.push(`- **Estilo da pregação:** ${estiloDesc}`);
-  L.push(`- **Estrutura homilética:** ${estruturaDesc} Não misture estruturas.`);
-  L.push(`- **Público-alvo:** ${publicoDesc} A adaptação é de LINGUAGEM e APLICAÇÃO — nunca de doutrina ou do significado do texto.`);
-  if (ocasiaoDesc) {
-    L.push(`- **Ocasião / evento:** ${ocasiaoDesc} A ocasião influencia aplicação, linguagem, ênfase e seleção de referências, mas NUNCA altera o sentido original do texto.`);
+  L.push(`  Extensão-alvo: cerca de ${plano.palavras} palavras (fala média ~130 palavras/min). O tempo controla profundidade e extensão, NUNCA a fidelidade bíblica.`);
+  L.push(`- **Estilo da pregação:** ${ESTILO[cfg.nivel || "ensino"] || ESTILO.ensino}`);
+  L.push(`- **Estrutura homilética:** ${ESTRUTURA[cfg.estrutura || "textual"] || ESTRUTURA.textual} Não misture estruturas e não produza a mesma mensagem com outros títulos.`);
+  L.push(`- **Público-alvo:** ${PUBLICO[cfg.publico || "igreja"] || PUBLICO.igreja} A adaptação é de linguagem e aplicação, nunca de doutrina ou do sentido do texto.`);
+  if (cfg.ocasiao && OCASIAO[cfg.ocasiao]) {
+    L.push(`- **Ocasião / evento:** ${OCASIAO[cfg.ocasiao]} A ocasião molda ênfase e aplicação, nunca o significado do texto.`);
   }
-  if (tomDesc) {
-    L.push(`- **Tom emocional:** ${tomDesc} O tom molda a forma da aplicação; não substitui a exposição bíblica.`);
+  if (cfg.tom && TOM[cfg.tom]) {
+    L.push(`- **Tom emocional:** ${TOM[cfg.tom]} O tom molda a forma; não substitui a exposição.`);
   }
-  L.push(`- **Referências cruzadas:** ${refDesc}`);
-  L.push(`- **Oração/apelo final:** ${cfg.incluirApelo ? "HABILITADO — acrescente ao final uma seção breve '## 🙏 Sugestão de Oração e Apelo', claramente separada da conclusão bíblica." : "DESATIVADO — não gere oração modelo, apelo, convite de decisão nem declarações automáticas."}`);
+  L.push(`- **Referências cruzadas:** ${REFERENCIAS[cfg.referencias || "moderadas"] || REFERENCIAS.moderadas}`);
+  L.push("- **Oração e apelo:** proibidos. O material termina na conclusão bíblica.");
   L.push("");
-  L.push("## ORDEM DO MATERIAL (adapte os subtítulos ao que o texto exigir)");
+  L.push("## FORMATO DE SAÍDA");
   L.push("## 📌 Título");
   L.push("## 📖 Texto Base");
   L.push("## 🎯 Tema Central");
   L.push("## 🧭 Objetivo da Mensagem");
-  L.push("## 🧩 Proposição (ideia central em uma frase)");
-  L.push("## 🔍 Introdução — apresentação do texto, contexto bíblico, contexto histórico (quando relevante), problema que o texto responde, proposição e transição.");
-  L.push("## 📜 Desenvolvimento — a quantidade de pontos NASCE do texto (2, 3, 4... conforme os movimentos reais da passagem). Para cada movimento, conforme necessário: título do ponto, texto bíblico, explicação, contexto, exegese, verdade doutrinária, aplicação e referências cruzadas pertinentes. Não force todos esses subtítulos quando não forem necessários — o conteúdo deve fluir naturalmente.");
-  L.push("## ✅ Conclusão — resumo bíblico, verdade central e aplicação final. Sem introduzir doutrina nova.");
+  L.push("## 🧩 Proposição");
+  L.push("## 🔍 Introdução");
+  L.push("## 📜 Desenvolvimento — um bloco `###` por MOVIMENTO REAL do texto identificado no estudo (dois, três, quatro... conforme a passagem). Em cada bloco: texto/versículos, explicação, contexto quando ajudar, verdade bíblica, referências cruzadas pertinentes e aplicação derivada.");
+  L.push("## ✅ Conclusão");
   L.push("");
-  L.push("## VERIFICAÇÃO FINAL (silenciosa, antes de responder)");
-  L.push(`- O conteúdo corresponde de fato a ${tempoMin} minutos (~${plano.palavras} palavras)?`);
-  L.push("- Toda afirmação teológica tem referência bíblica imediata?");
-  L.push("- A estrutura nasceu do texto e corresponde ao estilo e à estrutura escolhidos?");
-  L.push("- Há eisegese, enchimento, repetição ou versículo usado como decoração?");
-  L.push("- A introdução é bíblica (sem história inventada ou frase motivacional)?");
-  if (!cfg.incluirApelo) {
-    L.push("- O material termina com conclusão bíblica, SEM oração, apelo ou 'profecia' automática?");
-  }
+  L.push(`Antes de responder, confira em silêncio: extensão compatível com ${tempoMin} minutos (~${plano.palavras} palavras); toda afirmação com referência; estrutura correspondente à escolhida e nascida do texto; nenhum ponto artificial; introdução bíblica; sem oração, apelo, repetição ou enchimento; conclusão bíblica. Corrija o que falhar antes de entregar.`);
   L.push("");
-  L.push("Responda apenas com o material final em markdown, sem comentários sobre o processo.");
+  L.push("Escreva agora somente o material final em markdown.");
   return L.join("\n");
 }
+
+const CHAT_SYSTEM = `Você é um professor de teologia pentecostal (CGADB) auxiliando um pregador a aprofundar o estudo de uma mensagem já preparada.
+
+- Responda a partir do texto bíblico, com referência para cada afirmação.
+- Explique hermenêutica, exegese, contexto histórico, homilética e teologia sistemática de forma didática e pastoral.
+- Use termos originais (hebraico/grego) apenas quando ajudarem, sem especulação.
+- Nunca invente contexto, dados ou referências.
+- Não gere oração nem apelo.
+- Formate em markdown.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  const json = (body: unknown, status: number) =>
+    new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
   try {
-    const { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, incluirApelo, mode, messages: chatMessages } = await req.json();
+    const body = await req.json();
+    const { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, mode, messages: chatMessages } = body;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+
+    const callAI = (msgs: { role: string; content: string }[], opts: { stream: boolean; maxTokens: number }) =>
+      fetch(AI_URL, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ model: MODEL, messages: msgs, stream: opts.stream, max_tokens: opts.maxTokens }),
+      });
+
+    const gatewayError = async (resp: Response) => {
+      if (resp.status === 429) return json({ error: "Muitas solicitações no momento. Tente novamente em alguns instantes." }, 429);
+      if (resp.status === 402) return json({ error: "Créditos de IA esgotados. Adicione créditos para continuar." }, 402);
+      console.error("AI gateway error:", resp.status, await resp.text());
+      return json({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }, 500);
+    };
+
     let messages: { role: string; content: string }[];
 
     if (mode === "chat") {
-      messages = [
-        { role: "system", content: CHAT_SYSTEM },
-        ...(chatMessages || []),
-      ];
+      messages = [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])];
     } else {
-      if (!tema || typeof tema !== "string" || tema.trim().length === 0) {
-        return new Response(JSON.stringify({ error: "Tema é obrigatório" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (!tema || typeof tema !== "string" || !tema.trim()) {
+        return json({ error: "Tema é obrigatório" }, 400);
+      }
+      const cfg: GenerationConfig = { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias };
+
+      // FASE 1 — estudo exegético interno (não vai para a tela)
+      let estudo = "";
+      try {
+        const studyResp = await callAI(
+          [
+            { role: "system", content: STUDY_SYSTEM },
+            { role: "user", content: buildStudyPrompt(cfg) },
+          ],
+          { stream: false, maxTokens: 4000 },
+        );
+        if (studyResp.ok) {
+          const data = await studyResp.json();
+          estudo = data.choices?.[0]?.message?.content ?? "";
+        } else if (studyResp.status === 402 || studyResp.status === 429) {
+          return await gatewayError(studyResp);
+        } else {
+          console.error("study phase failed:", studyResp.status, await studyResp.text());
+        }
+      } catch (e) {
+        console.error("study phase error:", e);
       }
 
-      const userPrompt = buildUserPrompt({ tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, incluirApelo: !!incluirApelo });
+      if (!estudo.trim()) {
+        estudo =
+          "(Estudo prévio indisponível — realize internamente todas as etapas antes de escrever: texto, gênero literário, contexto, argumento do autor, palavras-chave, movimentos reais do texto, ideia central, proposição, princípios teológicos, referências cruzadas pertinentes e riscos de eisegese.)";
+      }
 
       messages = [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userPrompt },
+        { role: "system", content: WRITE_SYSTEM },
+        { role: "user", content: buildWritePrompt(cfg, estudo) },
       ];
     }
 
     const MAX_TOKENS = 32000;
     const MAX_CONTINUATIONS = 5;
 
-    const callAI = (msgs: { role: string; content: string }[]) =>
-      fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: msgs,
-          stream: true,
-          max_tokens: MAX_TOKENS,
-        }),
-      });
+    const response = await callAI(messages, { stream: true, maxTokens: MAX_TOKENS });
+    if (!response.ok) return await gatewayError(response);
 
-    const response = await callAI(messages);
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos de IA esgotados. Adicione créditos para continuar." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    // Proxy the stream, tracking finish_reason. If the model stops due to
-    // token limit ("length"/"MAX_TOKENS"), automatically continue generating
-    // from where it stopped until it finishes naturally ("stop"/"STOP").
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
 
     const stream = new ReadableStream({
       async start(controller) {
-        const send = (content: string) => {
-          controller.enqueue(
-            encoder.encode(
-              `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`,
-            ),
-          );
-        };
+        const send = (content: string) =>
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`));
 
-        // Reads one upstream SSE response, forwarding deltas.
-        // Returns { text, finishReason }.
         const pump = async (resp: Response) => {
           let text = "";
           let finishReason = "stop";
@@ -423,7 +449,6 @@ serve(async (req) => {
                 const fr = choice?.finish_reason ?? parsed.candidates?.[0]?.finishReason;
                 if (fr) finishReason = String(fr).toLowerCase();
               } catch {
-                // partial JSON — put it back and wait for more bytes
                 buffer = line + "\n" + buffer;
                 break;
               }
@@ -436,21 +461,20 @@ serve(async (req) => {
           let { text: full, finishReason } = await pump(response);
           let rounds = 0;
 
-          while (
-            (finishReason === "length" || finishReason === "max_tokens") &&
-            rounds < MAX_CONTINUATIONS
-          ) {
+          while ((finishReason === "length" || finishReason === "max_tokens") && rounds < MAX_CONTINUATIONS) {
             rounds++;
-            console.log(`finish_reason=${finishReason} — continuando (rodada ${rounds})`);
-            const contResp = await callAI([
-              ...messages,
-              { role: "assistant", content: full },
-              {
-                role: "user",
-                content:
-                  "Continue EXATAMENTE de onde parou, sem repetir nada do que já foi escrito, sem reintroduzir títulos já usados e sem qualquer comentário meta. Apenas prossiga o texto até concluir todas as seções obrigatórias.",
-              },
-            ]);
+            const contResp = await callAI(
+              [
+                ...messages,
+                { role: "assistant", content: full },
+                {
+                  role: "user",
+                  content:
+                    "Continue EXATAMENTE de onde parou, sem repetir nada já escrito, sem reintroduzir títulos já usados e sem comentário meta. Prossiga até concluir todas as seções obrigatórias.",
+                },
+              ],
+              { stream: true, maxTokens: MAX_TOKENS },
+            );
             if (!contResp.ok) {
               console.error("continuation error:", contResp.status, await contResp.text());
               break;
@@ -471,17 +495,10 @@ serve(async (req) => {
     });
 
     return new Response(stream, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
+      headers: { ...corsHeaders, "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" },
     });
   } catch (e) {
     console.error("generate-sermon error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return json({ error: e instanceof Error ? e.message : "Unknown error" }, 500);
   }
 });

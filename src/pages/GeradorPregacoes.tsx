@@ -12,7 +12,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ContentActions } from "@/components/ContentActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Switch } from "@/components/ui/switch";
 import { BibleTextContent } from "@/components/BibleVerseLink";
 import { usePersistedState, clearPersistedState } from "@/hooks/usePersistedState";
 
@@ -37,7 +36,6 @@ const GeradorPregacoes = () => {
   const [ocasiao, setOcasiao] = usePersistedState("ger:ocasiao", "");
   const [tom, setTom] = usePersistedState("ger:tom", "");
   const [referencias, setReferencias] = usePersistedState("ger:referencias", "");
-  const [incluirApelo, setIncluirApelo] = usePersistedState<boolean>("ger:incluirApelo", false);
   const [result, setResult] = usePersistedState<string>("ger:result", "");
   const [resultTema, setResultTema] = usePersistedState<string>("ger:resultTema", "");
   const [loading, setLoading] = useState(false);
@@ -96,7 +94,7 @@ const GeradorPregacoes = () => {
     let accumulated = "";
     const currentTema = tema;
     await streamSermon({
-      tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, incluirApelo,
+      tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias,
       onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
       onDone: () => { setLoading(false); autoSaveSermon(accumulated, currentTema); },
       onError: (msg) => { toast.error(msg); setLoading(false); },
@@ -297,13 +295,6 @@ const GeradorPregacoes = () => {
                     <SelectItem value="completas">Completas (todas as categorias)</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="flex items-center justify-between rounded-lg border border-input px-3 py-2.5">
-                <div className="pr-3">
-                  <Label className="cursor-pointer">Incluir oração e apelo</Label>
-                  <p className="text-[11px] text-muted-foreground">Desativado por padrão: o material termina com conclusão bíblica.</p>
-                </div>
-                <Switch checked={incluirApelo} onCheckedChange={setIncluirApelo} />
               </div>
               <Button onClick={handleGenerate} disabled={loading} className="w-full bg-gradient-gold text-background hover:opacity-90 gap-2 text-base" size="lg">
                 {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
