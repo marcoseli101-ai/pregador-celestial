@@ -55,7 +55,7 @@ Somente os que mudam a compreensão do texto, cada um com a referência.
 ### SENTIDO ORIGINAL
 O que o autor comunicou aos primeiros destinatários.
 ### MOVIMENTOS DO TEXTO
-Os movimentos REAIS da passagem — podem ser 2, 3, 4, 5. Nunca force três. Cada movimento com referência.
+Os movimentos REAIS da passagem — podem ser 1, 2, 3, 4 ou 5. Nunca force três; três só se o texto realmente tiver três. Cada movimento com os versículos exatos que o delimitam e uma frase dizendo por que ele é uma unidade distinta.
 ### IDEIA CENTRAL
 ### PROPOSIÇÃO
 Uma frase que só serviria para ESTA passagem.
@@ -73,10 +73,11 @@ const SYSTEM_PLANO = `Você é homileta pentecostal (CGADB). Recebe um ESTUDO EX
 ${ANTI_INVENCAO}
 
 REGRAS:
-- A estrutura NASCE do texto: os pontos são os movimentos reais identificados no estudo. Nunca crie pontos para chegar a três, nunca elimine um movimento essencial para caber em três.
-- A quantidade de pontos é definida pelo texto, pelo objetivo e pelo tempo disponível.
-- Distribua o tempo entre introdução, desenvolvimento e conclusão de modo pregável.
-- Cada ponto deve ter referência própria e a verdade bíblica que sustenta.
+- A estrutura NASCE do texto: os pontos SÃO os movimentos reais identificados no estudo, na mesma ordem. Nunca crie ponto para chegar a três, nunca elimine movimento essencial para caber em três. Se o texto tem 2 movimentos, o plano tem 2 pontos; se tem 5, tem 5.
+- O tempo controla a PROFUNDIDADE de cada ponto, não a quantidade de pontos inventados. Em tempos curtos, agrupe movimentos secundários dentro do movimento principal em vez de criar pontos novos.
+- Distribua o tempo entre introdução, desenvolvimento e conclusão de modo pregável e respeite o teto de palavras informado.
+- Cada ponto deve ter referência própria, verdade bíblica distinta das dos outros pontos e aplicação derivada dos versículos daquele ponto.
+- Nenhuma verdade pode aparecer em dois pontos diferentes. Se dois movimentos ensinam a mesma coisa, funda-os em um só.
 - Nada de oração, apelo ou ilustração inventada.
 
 Responda em markdown com este formato e nada mais:
@@ -86,9 +87,10 @@ Responda em markdown com este formato e nada mais:
 ### PROPOSIÇÃO
 ### OBJETIVO
 ### PLANO DA INTRODUÇÃO
-Como apresentar o texto, o contexto e a questão que ele responde (sem história, sem ilustração, sem oração). Minutos previstos.
+Como apresentar o texto, o contexto histórico/literário e a questão que a passagem responde. PROIBIDO: história, ilustração, caso pessoal, notícia, frase de efeito, oração. Minutos previstos.
 ### PONTOS
-Para cada ponto: número, título derivado do texto, versículos, verdade bíblica, exegese necessária, referências cruzadas pertinentes, aplicação que nasce do texto, minutos previstos.
+Para cada ponto: número, título derivado do texto, versículos, verdade bíblica (única, não repetida em outro ponto), exegese necessária, referências cruzadas pertinentes, aplicação que nasce daqueles versículos, minutos previstos.
+Declare também: **QUANTIDADE DE PONTOS E POR QUÊ** — justifique o número a partir dos movimentos do texto.
 ### PLANO DA CONCLUSÃO
 Como retomar o argumento central (sem oração, sem apelo, sem nova mensagem). Minutos previstos.
 ### CONTROLE DE TEMPO
@@ -113,15 +115,22 @@ Bíblica desde a primeira linha: apresente o texto, seu contexto histórico e li
 PROIBIDO na introdução: história, narrativa, ilustração, caso pessoal, filme, frase de efeito, pergunta motivacional genérica, oração.
 
 ## DESENVOLVIMENTO
-Siga o PLANO recebido: um bloco por ponto, na ordem definida. Em cada ponto, conforme o texto exigir:
-texto bíblico → explicação → contexto/exegese → verdade bíblica ou doutrinária → aplicação bíblica.
-Não repita mecanicamente o mesmo formato quando a passagem pedir outra organização. Não crie pontos além dos do plano.
+Siga o PLANO recebido: um bloco por ponto, na ordem e na QUANTIDADE definidas. Nunca acrescente, funda ou divida pontos.
+O número de pontos nasce dos movimentos reais do texto: pode ser 1, 2, 3, 4 ou 5. NÃO existe padrão de três pontos; três só aparece quando o texto realmente tem três movimentos.
+Dentro de cada ponto a progressão é de CONTEÚDO NOVO a cada etapa:
+1. o que o texto diz (citação/paráfrase fiel com referência);
+2. o que o texto significa — só informação que a citação não deu: contexto, conectivo, termo original, argumento do autor;
+3. que verdade bíblica ou doutrinária decorre disso — formulada em nível diferente da explicação, com referência;
+4. o que essa verdade exige/produz na prática — uma implicação concreta, nunca a repetição da verdade em outras palavras.
+Se uma etapa não tiver conteúdo novo a acrescentar, ELIMINE a etapa em vez de reescrever a anterior.
 
 ## APLICAÇÃO
-Nasce do texto: verdade do texto → princípio bíblico → implicação para a igreja → referência. Proibida aplicação motivacional sem fundamento textual.
+Toda aplicação é DERIVADA do texto exposto no próprio ponto: precisa ser possível apontar o versículo de onde ela sai. Verdade do texto → princípio bíblico → implicação concreta para a igreja → referência.
+PROIBIDO: aplicação motivacional, autoajuda, promessa genérica, frase de encorajamento sem base textual, aplicação que serviria igualmente a qualquer outra passagem.
 
 ## CONCLUSÃO
 Retoma a verdade central, resume o raciocínio e reafirma as principais verdades bíblicas com referência. Sem doutrina nova, sem segunda mensagem, SEM ORAÇÃO, SEM APELO.
+Nunca escreva oração, apelo, convite, chamada à frente ou palavras dirigidas em oração a Deus em NENHUMA parte do material — nem na introdução, nem entre os pontos, nem no fim.
 
 ${DOUTRINA}
 
@@ -130,8 +139,14 @@ ${ANTI_INVENCAO}
 ## LINGUAGEM
 Simples de compreender e teologicamente consistente. Sem academicismo desnecessário. Termos técnicos (justificação, expiação, propiciação, santificação, escatologia) explicados em uma frase simples e bíblica. Texto pregável em voz alta.
 
-## PROIBIDO ENCHER
-Sem repetir a mesma ideia com outras palavras, sem parágrafos que não acrescentam compreensão, sem adjetivos empilhados, sem alongar artificialmente para atingir o tempo. Se o conteúdo bíblico acabou, conclua.
+## PROIBIDO ENCHER E PROIBIDO REPETIR
+Cada parágrafo precisa acrescentar informação que ainda não foi dita. É proibido:
+- dizer a mesma verdade na explicação, na "verdade bíblica" e na aplicação;
+- reformular a proposição em cada ponto;
+- reabrir na conclusão o que já foi explicado, além de um resumo curto;
+- empilhar adjetivos, parágrafos de transição vazios ou alongar para atingir o tempo.
+A extensão-alvo é um TETO, não uma meta: se o conteúdo bíblico terminou antes, conclua imediatamente. Um material mais curto e denso é melhor que um material longo e repetitivo.
+PROIBIDO conteúdo motivacional: frases de efeito, encorajamento genérico, linguagem de superação ou vitória pessoal sem sustentação no texto.
 
 ## SEM "PREGADOR AUTOMÁTICO"
 Proibido: "sinto no meu espírito", "vejo aqui alguém", "Deus está me mostrando", vocativos à plateia ("amados", "igreja"), interjeições de engajamento, perguntas retóricas lançadas à congregação, oração inicial ou final, apelo, "venha à frente", "feche os olhos".
@@ -140,7 +155,7 @@ Proibido: "sinto no meu espírito", "vejo aqui alguém", "Deus está me mostrand
 Markdown limpo: ## para seções, ### para pontos, **negrito** para ênfase, *itálico* para termos originais.
 
 ## REVISÃO SILENCIOSA ANTES DE ENTREGAR
-Confira e corrija: cada afirmação tem referência que a sustenta; a estrutura corresponde ao tipo escolhido e nasceu do texto; nenhum ponto artificial; contexto não inventado; referências no contexto; extensão compatível com o tempo pedido; introdução, desenvolvimento e conclusão presentes; sem oração; sem apelo; sem repetição; sem enchimento. Nunca exiba esta verificação.
+Confira e corrija: (1) cada afirmação teológica tem referência que realmente a sustenta; (2) cada aplicação sai de um versículo exposto no próprio ponto; (3) a introdução é bíblica/contextual, sem história e sem oração; (4) não há oração nem apelo em parte alguma; (5) nenhuma verdade aparece repetida em explicação, verdade bíblica e aplicação — se aparecer, apague as ocorrências redundantes; (6) o número de pontos é o do plano e nasceu dos movimentos do texto; (7) a extensão não ultrapassa o teto de palavras pedido; (8) não há trecho motivacional sem base textual. Nunca exiba esta verificação.
 
 Responda apenas com o material final em markdown, sem comentar o processo.`;
 
@@ -161,13 +176,13 @@ const ESTILO: Record<string, string> = {
   ensino:
     "ENSINO EXPOSITIVO — exponha a passagem progressivamente: o que o texto diz, o que significa, o que o contexto esclarece, qual verdade apresenta e como se aplica. Nenhum ponto que não venha da passagem.",
   expositivo:
-    "EXPOSITIVA — a mensagem segue o desenvolvimento e a intenção do texto, unidade por unidade, acompanhando o argumento do autor.",
+    "EXPOSITIVA — exposição SEQUENCIAL da passagem: percorra o texto na ordem em que ele se apresenta, unidade por unidade / versículo por versículo, explicando o que cada parte diz e como avança o argumento do autor. Não reorganize o texto em tópicos temáticos.",
   tematico:
-    "TEMÁTICA — construa o tema com textos bíblicos coerentes, cada um explicado em seu próprio contexto. Proibido usar versículo apenas porque contém uma palavra ligada ao tema.",
+    "TEMÁTICA — desenvolva o tema com VÁRIOS textos bíblicos, e cada texto é explicado dentro do SEU próprio contexto (autor, destinatários, argumento) antes de ser aplicado ao tema. Proibido usar versículo apenas porque contém uma palavra ligada ao tema, e proibido empilhar referências sem explicação.",
   textual:
-    "TEXTUAL — desenvolva as verdades presentes na passagem selecionada, na ordem em que aparecem no texto.",
+    "TEXTUAL — desenvolva as DIVISÕES encontradas dentro da própria passagem: identifique as partes que o texto já traz e faça de cada divisão um desenvolvimento próprio, na ordem do texto. Os pontos são as divisões do texto, não temas trazidos de fora.",
   doutrinario:
-    "DOUTRINÁRIA — conceito, fundamento bíblico, desenvolvimento, distorções a evitar e implicações práticas, cada etapa com referência.",
+    "DOUTRINÁRIA — para cada bloco, nesta ordem: CONCEITO (definição precisa) → FUNDAMENTAÇÃO BÍBLICA (textos que estabelecem a doutrina, explicados) → EXPLICAÇÃO (o que significa e o que não significa) → IMPLICAÇÕES (consequências para fé e prática). Cada etapa com referência.",
   evangelismo:
     "EVANGELÍSTICA — a partir do texto: condição humana, pecado, necessidade de salvação, pessoa e obra de Cristo, arrependimento e fé. Sem apelo e sem pressão emocional.",
   exortacao:
@@ -179,7 +194,7 @@ const ESTILO: Record<string, string> = {
   profetico:
     "ÊNFASE PROFÉTICA BÍBLICA — chamado à santidade e à fidelidade a partir do próprio texto; nunca simule revelação sobre a congregação.",
   estudo:
-    "ESTUDO BÍBLICO — priorize explicação, contexto, exegese e referências, com organização didática.",
+    "ESTUDO BÍBLICO — prioridade MÁXIMA para contexto histórico/literário e exegese: a maior parte do material é explicação do texto (autor, destinatários, gênero, conectivos, termos originais quando esclarecem). Aplicação existe, mas é secundária em relação à compreensão do texto.",
 };
 
 /* ---------- Estrutura homilética ---------- */
@@ -259,35 +274,40 @@ const REFERENCIAS: Record<string, string> = {
     "COMPLETAS — referências pertinentes em várias categorias (contextuais, paralelas, doutrinárias, AT/NT), cada uma explicada. Nunca transforme a mensagem em lista de versículos.",
 };
 
-/* ---------- Tempo: extensão real de pregação (~130 palavras/minuto) ---------- */
-const PPM = 130;
+/* ---------- Tempo: extensão real de pregação (~120 palavras/minuto) ----------
+   O tempo é TETO de conteúdo. Curto = condensado (mesma estrutura, menos
+   desenvolvimento). Longo = mais profundidade exegética, nunca mais enchimento. */
+const PPM = 120;
 
 function planoDeTempo(min: number) {
   const palavras = Math.round(min * PPM);
+  const minimo = Math.round(palavras * 0.8);
   let regra: string;
   if (min <= 5) {
-    regra = "Formato mínimo, reconstruído (não é uma mensagem longa cortada): introdução curta com texto e contexto essencial, UM movimento exposto com clareza, aplicação breve e conclusão bíblica.";
+    regra = "Formato mínimo condensado: introdução de 2–3 frases (texto + contexto essencial), UM movimento do texto exposto com clareza, aplicação breve derivada dele e conclusão de 2–3 frases. Nada de contexto ampliado, nada de referências cruzadas extensas.";
   } else if (min <= 10) {
-    regra = "Formato compacto: introdução breve, um a dois movimentos do texto, aplicação e conclusão. Raciocínio íntegro.";
+    regra = "Formato compacto: introdução breve, um a dois movimentos do texto, aplicação e conclusão curtas. Corte referências cruzadas secundárias e detalhes de contexto não indispensáveis.";
   } else if (min <= 15) {
-    regra = "Introdução 2–3 min, exposição 8–9 min, aplicação e conclusão 3–4 min. Mantenha texto, contexto essencial, desenvolvimento principal, aplicação e conclusão.";
+    regra = "Condensado, porém completo: introdução ~2 min (texto e contexto essencial), desenvolvimento ~10 min (todos os movimentos, cada um em profundidade média), conclusão ~2 min. Um só parágrafo de explicação por ideia; no máximo uma referência cruzada por ponto.";
   } else if (min <= 20) {
-    regra = "Reduza a profundidade secundária, nunca o raciocínio principal: desenvolvimento maior por movimento e aplicação mais trabalhada.";
+    regra = "Desenvolvimento médio: cada movimento com explicação mais trabalhada e uma a duas referências cruzadas, sem ampliar o número de pontos.";
   } else if (min <= 30) {
-    regra = "Contexto bem tratado, cada movimento explicado, aplicação derivada da exposição e conclusão sólida — dimensionado para 30 minutos, não para 60.";
+    regra = "Aprofundamento proporcional: contexto histórico e literário desenvolvidos, exegese de cada movimento, referências cruzadas explicadas e aplicação bem derivada. A profundidade cresce, a quantidade de pontos NÃO.";
   } else if (min <= 45) {
-    regra = "Maior desenvolvimento exegético, contextual e aplicativo, com comparação bíblica pertinente. Mais profundidade, nunca enchimento.";
+    regra = "Aprofundamento amplo: contexto detalhado, exegese verso a verso nos trechos decisivos, termos originais quando esclarecem, comparações bíblicas pertinentes explicadas. Se não houver material bíblico real para preencher, entregue material menor em vez de repetir.";
   } else {
-    regra = "Estudo amplamente desenvolvido: contexto histórico e literário detalhados, exegese de cada unidade, desenvolvimento teológico e aplicação ampla, sem repetir explicações.";
+    regra = "Estudo extenso: contexto histórico e literário detalhados, exegese de cada unidade, desenvolvimento teológico das implicações doutrinárias e aplicação ampla. Todo acréscimo deve ser INFORMAÇÃO NOVA sobre o texto; jamais reexplique o que já foi explicado.";
   }
-  return { palavras, regra };
+  return { palavras, minimo, regra };
 }
 
 function pick(map: Record<string, string>, key: string | undefined, fallback: string) {
   return (key && map[key]) || map[fallback];
 }
 
-function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: { palavras: number; regra: string }) {
+type PlanoTempo = ReturnType<typeof planoDeTempo>;
+
+function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: PlanoTempo) {
   const L: string[] = [];
   L.push(`- **Tema:** ${cfg.tema.trim()}`);
   L.push(
@@ -295,7 +315,7 @@ function blocoConfig(cfg: GenerationConfig, tempoMin: number, plano: { palavras:
       ? `- **Texto base:** ${cfg.textoBase.trim()} — ESTA passagem controla a mensagem e não pode ser substituída.`
       : "- **Texto base:** não informado — use o texto principal definido na exegese e declare-o no início.",
   );
-  L.push(`- **Tempo:** ${tempoMin} minutos ≈ ${plano.palavras} palavras (${PPM} palavras/min). ${plano.regra} Reduza a QUANTIDADE de conteúdo, nunca a coerência do raciocínio.`);
+  L.push(`- **Tempo:** ${tempoMin} minutos = entre ${plano.minimo} e ${plano.palavras} palavras (${PPM} palavras/min). ${plano.palavras} palavras é TETO ABSOLUTO — ultrapassá-lo é erro. ${plano.regra} O tempo controla a quantidade de conteúdo: reduza desenvolvimento e referências, nunca a coerência (introdução, desenvolvimento e conclusão sempre presentes).`);
   L.push(`- **Estilo da mensagem:** ${pick(ESTILO, cfg.nivel, "ensino")}`);
   L.push(`- **Estrutura homilética:** ${pick(ESTRUTURA, cfg.estrutura, "textual")}`);
   L.push(`- **Público-alvo:** ${pick(PUBLICO, cfg.publico, "igreja")} A adaptação é de linguagem e aplicação, nunca de doutrina ou do sentido do texto.`);
@@ -322,7 +342,7 @@ function promptExegese(cfg: GenerationConfig): string {
   return L.join("\n");
 }
 
-function promptPlano(cfg: GenerationConfig, exegese: string, tempoMin: number, plano: { palavras: number; regra: string }): string {
+function promptPlano(cfg: GenerationConfig, exegese: string, tempoMin: number, plano: PlanoTempo): string {
   return [
     "## EXEGESE (base obrigatória)",
     exegese.trim(),
@@ -330,11 +350,11 @@ function promptPlano(cfg: GenerationConfig, exegese: string, tempoMin: number, p
     "## CONFIGURAÇÃO ESCOLHIDA PELO PREGADOR (cada campo é instrução obrigatória)",
     blocoConfig(cfg, tempoMin, plano),
     "",
-    `Monte agora a ARQUITETURA da mensagem para ${tempoMin} minutos (~${plano.palavras} palavras). A quantidade de pontos nasce do texto e do tempo — nunca fixe em três.`,
+    `Monte agora a ARQUITETURA da mensagem para ${tempoMin} minutos (máximo ${plano.palavras} palavras). A quantidade de pontos nasce dos movimentos reais do texto — nunca fixe em três. Distribua o teto de palavras entre introdução, pontos e conclusão e declare quantas palavras cabem a cada parte.`,
   ].join("\n");
 }
 
-function promptRedacao(cfg: GenerationConfig, exegese: string, planoHomiletico: string, tempoMin: number, plano: { palavras: number; regra: string }): string {
+function promptRedacao(cfg: GenerationConfig, exegese: string, planoHomiletico: string, tempoMin: number, plano: PlanoTempo): string {
   const L: string[] = [];
   L.push("## EXEGESE (origem do raciocínio)");
   L.push(exegese.trim());
@@ -355,7 +375,11 @@ function promptRedacao(cfg: GenerationConfig, exegese: string, planoHomiletico: 
   L.push("## 📜 Desenvolvimento — um bloco `###` por ponto do plano, na mesma ordem e quantidade. Em cada bloco: texto bíblico, explicação, contexto/exegese, verdade bíblica ou doutrinária, referências cruzadas pertinentes e aplicação derivada do texto.");
   L.push("## ✅ Conclusão — retomada do argumento central, sem oração e sem apelo.");
   L.push("");
-  L.push(`Antes de responder, revise em silêncio: extensão próxima de ${plano.palavras} palavras (${tempoMin} min); toda afirmação com referência que a sustenta; pontos iguais aos do plano; introdução bíblica sem ilustração; sem oração; sem apelo; sem repetição; sem enchimento; conclusão bíblica. Corrija antes de entregar.`);
+  L.push(
+    `## ORÇAMENTO DE PALAVRAS (obrigatório)\nAlvo: ${plano.minimo}–${plano.palavras} palavras no total, TETO RÍGIDO de ${plano.palavras}. Antes de escrever, distribua esse orçamento entre introdução (~10%), cada ponto do plano (partes iguais de ~80%) e conclusão (~10%), e escreva cada seção dentro da sua cota — conte as palavras à medida que escreve.\nSe o material passar do teto, corte explicações secundárias, referências cruzadas opcionais e frases redundantes ANTES de entregar; nunca entregue acima do teto.\nSe ficar abaixo do mínimo, faltou exegese, contexto ou referência cruzada explicada — aprofunde o TEXTO, jamais repita o já dito nem acrescente material motivacional.`,
+  );
+  L.push("");
+  L.push(`Antes de responder, revise em silêncio: extensão entre ${plano.minimo} e ${plano.palavras} palavras (${tempoMin} min) — nunca acima do teto; toda afirmação teológica com referência que a sustenta; toda aplicação derivada dos versículos do próprio ponto; pontos iguais em ordem e quantidade aos do plano; introdução exclusivamente bíblica/contextual, sem história e sem oração; nenhuma oração e nenhum apelo em parte alguma; nenhuma verdade repetida entre explicação, verdade bíblica e aplicação; nada motivacional sem base textual; conclusão que resume sem abrir assunto novo. Corrija antes de entregar.`);
   L.push("");
   L.push("Escreva agora somente o material final em markdown.");
   return L.join("\n");
@@ -424,6 +448,8 @@ serve(async (req) => {
     };
 
     let messages: { role: string; content: string }[];
+    // teto de saída da redação (chat mantém teto amplo)
+    let maxOut = 8000;
 
     if (mode === "chat") {
       messages = [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])];
@@ -434,6 +460,8 @@ serve(async (req) => {
       const cfg: GenerationConfig = { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias };
       const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
       const plano = planoDeTempo(tempoMin);
+      // ~2.2 tokens por palavra em português + margem de formatação
+      maxOut = Math.min(16000, Math.round(plano.palavras * 2.3) + 500);
 
       // FASE 1 — exegese
       let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg), 4000, "fase 1 (exegese)");
@@ -458,8 +486,9 @@ serve(async (req) => {
       ];
     }
 
-    const MAX_TOKENS = 32000;
-    const MAX_CONTINUATIONS = 5;
+    const MAX_TOKENS = maxOut;
+    // continuação só existe para fechar um material cortado, não para alongar
+    const MAX_CONTINUATIONS = mode === "chat" ? 2 : 1;
 
     const response = await callAI(messages, { stream: true, maxTokens: MAX_TOKENS });
     if (!response.ok) return await gatewayError(response);
@@ -521,10 +550,10 @@ serve(async (req) => {
                 {
                   role: "user",
                   content:
-                    "Continue EXATAMENTE de onde parou, sem repetir nada já escrito, sem reintroduzir títulos já usados e sem comentário meta. Prossiga até concluir todas as seções obrigatórias.",
+                    "Continue EXATAMENTE de onde parou e FECHE o material o mais rápido possível: complete apenas o que falta das seções obrigatórias e escreva a conclusão. Não repita nada já escrito, não reintroduza títulos, não abra assunto novo, não escreva oração nem apelo.",
                 },
               ],
-              { stream: true, maxTokens: MAX_TOKENS },
+              { stream: true, maxTokens: Math.min(MAX_TOKENS, 4000) },
             );
             if (!contResp.ok) {
               console.error("continuation error:", contResp.status, await contResp.text());
