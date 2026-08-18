@@ -414,13 +414,6 @@ serve(async (req) => {
         body: JSON.stringify({ model: MODEL, messages: msgs, stream: opts.stream, max_tokens: opts.maxTokens }),
       });
 
-    const gatewayError = async (resp: Response) => {
-      if (resp.status === 429) return json({ error: "Muitas solicitações no momento. Tente novamente em alguns instantes." }, 429);
-      if (resp.status === 402) return json({ error: "Créditos de IA esgotados. Adicione créditos para continuar." }, 402);
-      console.error("AI gateway error:", resp.status, await resp.text());
-      return json({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }, 500);
-    };
-
     // fase interna (não streaming) — devolve texto ou "" em falha recuperável
     const runPhase = async (system: string, user: string, maxTokens: number, label: string) => {
       try {
