@@ -274,31 +274,53 @@ const REFERENCIAS: Record<string, string> = {
     "COMPLETAS — referências pertinentes em várias categorias (contextuais, paralelas, doutrinárias, AT/NT), cada uma explicada. Nunca transforme a mensagem em lista de versículos.",
 };
 
-/* ---------- Tempo: extensão real de pregação (~120 palavras/minuto) ----------
-   O tempo é TETO de conteúdo. Curto = condensado (mesma estrutura, menos
-   desenvolvimento). Longo = mais profundidade exegética, nunca mais enchimento. */
+/* ---------- Tempo: ARQUITETURA por duração (~120 palavras/minuto) ------------
+   O tempo NÃO é limite para cortar texto: é o que define a ARQUITETURA da
+   mensagem ANTES de escrever. Cada faixa tem estrutura própria — uma mensagem
+   de 60 min é substancialmente mais APROFUNDADA que uma de 15, nunca a mesma
+   mensagem esticada; uma de 15 min é construída curta desde a origem, nunca
+   uma mensagem grande truncada. */
 const PPM = 120;
 
-function planoDeTempo(min: number) {
-  const palavras = Math.round(min * PPM);
-  const minimo = Math.round(palavras * 0.8);
-  let regra: string;
-  if (min <= 5) {
-    regra = "Formato mínimo condensado: introdução de 2–3 frases (texto + contexto essencial), UM movimento do texto exposto com clareza, aplicação breve derivada dele e conclusão de 2–3 frases. Nada de contexto ampliado, nada de referências cruzadas extensas.";
-  } else if (min <= 10) {
-    regra = "Formato compacto: introdução breve, um a dois movimentos do texto, aplicação e conclusão curtas. Corte referências cruzadas secundárias e detalhes de contexto não indispensáveis.";
-  } else if (min <= 15) {
-    regra = "Condensado, porém completo: introdução ~2 min (texto e contexto essencial), desenvolvimento ~10 min (todos os movimentos, cada um em profundidade média), conclusão ~2 min. Um só parágrafo de explicação por ideia; no máximo uma referência cruzada por ponto.";
-  } else if (min <= 20) {
-    regra = "Desenvolvimento médio: cada movimento com explicação mais trabalhada e uma a duas referências cruzadas, sem ampliar o número de pontos.";
-  } else if (min <= 30) {
-    regra = "Aprofundamento proporcional: contexto histórico e literário desenvolvidos, exegese de cada movimento, referências cruzadas explicadas e aplicação bem derivada. A profundidade cresce, a quantidade de pontos NÃO.";
-  } else if (min <= 45) {
-    regra = "Aprofundamento amplo: contexto detalhado, exegese verso a verso nos trechos decisivos, termos originais quando esclarecem, comparações bíblicas pertinentes explicadas. Se não houver material bíblico real para preencher, entregue material menor em vez de repetir.";
-  } else {
-    regra = "Estudo extenso: contexto histórico e literário detalhados, exegese de cada unidade, desenvolvimento teológico das implicações doutrinárias e aplicação ampla. Todo acréscimo deve ser INFORMAÇÃO NOVA sobre o texto; jamais reexplique o que já foi explicado.";
+type Faixa = {
+  nome: string;
+  arquitetura: string;
+  exegese: string;
+};
+
+function faixaDeTempo(min: number): Faixa {
+  if (min <= 15) {
+    return {
+      nome: "CURTA (10–15 min) — mensagem objetiva",
+      arquitetura:
+        "ARQUITETURA CURTA (construída curta desde a origem, jamais uma mensagem longa cortada): introdução bíblica breve (texto + o mínimo de contexto necessário para entender a passagem), 1 a 2 pontos apenas — os movimentos mais decisivos do texto —, somente as informações essenciais de exegese, uma aplicação por ponto e conclusão curta. Início, meio e fim completos. Não abra frentes que não caibam: escolha menos matéria e trate-a inteira, em vez de tratar muita matéria pela metade.",
+      exegese:
+        "Profundidade da exegese: essencial. Contexto apenas no que for indispensável, poucas palavras-chave, poucas referências cruzadas — todas realmente decisivas.",
+    };
   }
-  return { palavras, minimo, regra };
+  if (min <= 30) {
+    return {
+      nome: "MÉDIA (20–30 min) — desenvolvimento equilibrado",
+      arquitetura:
+        "ARQUITETURA MÉDIA: introdução bíblica com contexto histórico e literário resumidos, 2 a 4 pontos conforme os movimentos reais do texto, cada ponto com explicação do que o texto diz, exegese do que é decisivo, referência cruzada pertinente explicada e aplicação derivada dos versículos daquele ponto; conclusão que retoma o argumento. Equilíbrio entre exposição e aplicação.",
+      exegese:
+        "Profundidade da exegese: média. Contexto histórico e literário resumidos, palavras-chave que mudam o sentido, referências cruzadas pertinentes explicadas.",
+    };
+  }
+  return {
+    nome: "LONGA (40–60 min) — estudo aprofundado",
+    arquitetura:
+      "ARQUITETURA LONGA: a profundidade cresce, não a repetição. Introdução bíblica com contexto histórico-cultural e literário desenvolvidos e a questão que a passagem responde; desenvolvimento com os movimentos reais do texto (podem ser 3 a 5), cada um com exegese unidade por unidade nos trechos decisivos, termos originais quando esclarecem de fato, argumento do autor, referências cruzadas explicadas, desenvolvimento doutrinário das implicações e aplicação derivada; conclusão que resume o raciocínio inteiro. Todo acréscimo em relação a uma mensagem curta deve ser INFORMAÇÃO NOVA sobre o texto (mais contexto, mais exegese, mais fundamentação, mais desenvolvimento do argumento) — nunca a mesma verdade dita outra vez com outras palavras.",
+    exegese:
+      "Profundidade da exegese: máxima. Contexto histórico, cultural e literário detalhados; argumento do autor unidade por unidade; termos originais quando esclarecem; referências cruzadas que confirmam ou esclarecem o argumento; implicações doutrinárias desenvolvidas.",
+  };
+}
+
+function planoDeTempo(min: number) {
+  const faixa = faixaDeTempo(min);
+  const palavras = Math.round(min * PPM);
+  const minimo = Math.round(palavras * 0.85);
+  return { palavras, minimo, faixa, regra: faixa.arquitetura };
 }
 
 function pick(map: Record<string, string>, key: string | undefined, fallback: string) {
