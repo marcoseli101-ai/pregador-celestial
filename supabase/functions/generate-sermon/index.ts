@@ -145,7 +145,7 @@ Cada parágrafo precisa acrescentar informação que ainda não foi dita. É pro
 - reformular a proposição em cada ponto;
 - reabrir na conclusão o que já foi explicado, além de um resumo curto;
 - empilhar adjetivos, parágrafos de transição vazios ou alongar para atingir o tempo.
-A extensão-alvo é um TETO, não uma meta: se o conteúdo bíblico terminou antes, conclua imediatamente. Um material mais curto e denso é melhor que um material longo e repetitivo.
+A profundidade acompanha a duração escolhida: mensagens longas são mais aprofundadas (mais contexto, mais exegese, mais fundamentação, mais desenvolvimento do argumento), nunca mais repetitivas; mensagens curtas nascem curtas, com menos matéria tratada por inteiro, nunca uma mensagem grande truncada. Um material denso é sempre melhor que um material inflado.
 PROIBIDO conteúdo motivacional: frases de efeito, encorajamento genérico, linguagem de superação ou vitória pessoal sem sustentação no texto.
 
 ## SEM "PREGADOR AUTOMÁTICO"
