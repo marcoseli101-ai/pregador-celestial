@@ -376,7 +376,7 @@ function promptRedacao(cfg: GenerationConfig, exegese: string, planoHomiletico: 
   L.push("## ✅ Conclusão — retomada do argumento central, sem oração e sem apelo.");
   L.push("");
   L.push(
-    `## ORÇAMENTO DE PALAVRAS (obrigatório)\nAlvo: ${plano.minimo}–${plano.palavras} palavras no total. Antes de escrever, distribua esse orçamento entre introdução (~10%), cada ponto do plano (partes iguais de ~80%) e conclusão (~10%), e escreva cada seção dentro da sua cota. Ficar abaixo do mínimo significa que faltou exegese, contexto ou referência cruzada explicada — aprofunde o TEXTO, jamais repita o que já foi dito nem acrescente material motivacional.`,
+    `## ORÇAMENTO DE PALAVRAS (obrigatório)\nAlvo: ${plano.minimo}–${plano.palavras} palavras no total, TETO RÍGIDO de ${plano.palavras}. Antes de escrever, distribua esse orçamento entre introdução (~10%), cada ponto do plano (partes iguais de ~80%) e conclusão (~10%), e escreva cada seção dentro da sua cota — conte as palavras à medida que escreve.\nSe o material passar do teto, corte explicações secundárias, referências cruzadas opcionais e frases redundantes ANTES de entregar; nunca entregue acima do teto.\nSe ficar abaixo do mínimo, faltou exegese, contexto ou referência cruzada explicada — aprofunde o TEXTO, jamais repita o já dito nem acrescente material motivacional.`,
   );
   L.push("");
   L.push(`Antes de responder, revise em silêncio: extensão entre ${plano.minimo} e ${plano.palavras} palavras (${tempoMin} min) — nunca acima do teto; toda afirmação teológica com referência que a sustenta; toda aplicação derivada dos versículos do próprio ponto; pontos iguais em ordem e quantidade aos do plano; introdução exclusivamente bíblica/contextual, sem história e sem oração; nenhuma oração e nenhum apelo em parte alguma; nenhuma verdade repetida entre explicação, verdade bíblica e aplicação; nada motivacional sem base textual; conclusão que resume sem abrir assunto novo. Corrija antes de entregar.`);
@@ -461,7 +461,7 @@ serve(async (req) => {
       const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
       const plano = planoDeTempo(tempoMin);
       // ~2.2 tokens por palavra em português + margem de formatação
-      maxOut = Math.min(16000, Math.round(plano.palavras * 2.6) + 800);
+      maxOut = Math.min(16000, Math.round(plano.palavras * 2.3) + 500);
 
       // FASE 1 — exegese
       let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg), 4000, "fase 1 (exegese)");
