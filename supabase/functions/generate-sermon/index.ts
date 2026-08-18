@@ -422,7 +422,6 @@ serve(async (req) => {
     };
 
     // fase interna (não streaming) — devolve texto ou "" em falha recuperável
-    let blockingError: Response | null = null;
     const runPhase = async (system: string, user: string, maxTokens: number, label: string) => {
       try {
         const resp = await callAI(
@@ -436,10 +435,6 @@ serve(async (req) => {
           const data = await resp.json();
           return (data.choices?.[0]?.message?.content as string) ?? "";
         }
-        if (resp.status === 402 || resp.status === 429) {
-          blockingError = await gatewayError(resp);
-          return "";
-        }
         console.error(`${label} failed:`, resp.status, await resp.text());
       } catch (e) {
         console.error(`${label} error:`, e);
@@ -447,59 +442,62 @@ serve(async (req) => {
       return "";
     };
 
-    let messages: { role: string; content: string }[];
-    // teto de saída da redação (chat mantém teto amplo)
-    let maxOut = 8000;
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
 
-    if (mode === "chat") {
-      messages = [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])];
-    } else {
-      if (!tema || typeof tema !== "string" || !tema.trim()) {
-        return json({ error: "Tema é obrigatório" }, 400);
+    // Monta as mensagens da redação (fases internas). Roda DENTRO do stream
+    // para que a conexão comece imediatamente e não expire.
+    const prepare = async (): Promise<{ messages: { role: string; content: string }[]; maxOut: number }> => {
+      if (mode === "chat") {
+        return { messages: [{ role: "system", content: CHAT_SYSTEM }, ...(chatMessages || [])], maxOut: 8000 };
       }
       const cfg: GenerationConfig = { tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias };
       const tempoMin = parseInt(cfg.tempo || "30", 10) || 30;
       const plano = planoDeTempo(tempoMin);
-      // ~2.2 tokens por palavra em português + margem de formatação
-      maxOut = Math.min(16000, Math.round(plano.palavras * 2.3) + 500);
+      const maxOut = Math.min(16000, Math.round(plano.palavras * 2.3) + 500);
 
-      // FASE 1 — exegese
       let exegese = await runPhase(SYSTEM_EXEGESE, promptExegese(cfg), 4000, "fase 1 (exegese)");
-      if (blockingError) return blockingError;
       if (!exegese.trim()) {
         exegese =
           "(Exegese prévia indisponível — realize internamente todas as etapas antes de escrever: texto e limites da perícope, gênero, contexto histórico e literário, argumento do autor, palavras-chave, sentido original, movimentos reais do texto, ideia central, proposição, princípios teológicos, referências cruzadas pertinentes e riscos de eisegese.)";
       }
 
-      // FASE 2 — plano homilético
       let planoHomiletico = await runPhase(SYSTEM_PLANO, promptPlano(cfg, exegese, tempoMin, plano), 3000, "fase 2 (plano)");
-      if (blockingError) return blockingError;
       if (!planoHomiletico.trim()) {
         planoHomiletico =
           "(Plano indisponível — derive a arquitetura diretamente dos movimentos reais identificados na exegese, definindo título, proposição, objetivo, pontos com suas referências e distribuição de tempo antes de escrever.)";
       }
 
-      // FASE 3 — redação
-      messages = [
-        { role: "system", content: SYSTEM_REDACAO },
-        { role: "user", content: promptRedacao(cfg, exegese, planoHomiletico, tempoMin, plano) },
-      ];
+      return {
+        messages: [
+          { role: "system", content: SYSTEM_REDACAO },
+          { role: "user", content: promptRedacao(cfg, exegese, planoHomiletico, tempoMin, plano) },
+        ],
+        maxOut,
+      };
+    };
+
+    if (mode !== "chat" && (!tema || typeof tema !== "string" || !tema.trim())) {
+      return json({ error: "Tema é obrigatório" }, 400);
     }
-
-    const MAX_TOKENS = maxOut;
-    // continuação só existe para fechar um material cortado, não para alongar
-    const MAX_CONTINUATIONS = mode === "chat" ? 2 : 1;
-
-    const response = await callAI(messages, { stream: true, maxTokens: MAX_TOKENS });
-    if (!response.ok) return await gatewayError(response);
-
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
 
     const stream = new ReadableStream({
       async start(controller) {
+        let closed = false;
+        const raw = (chunk: string) => {
+          if (closed) return;
+          try {
+            controller.enqueue(encoder.encode(chunk));
+          } catch {
+            closed = true;
+          }
+        };
         const send = (content: string) =>
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`));
+          raw(`data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`);
+
+        // heartbeat: mantém a conexão viva durante as fases internas
+        raw(": start\n\n");
+        const ping = setInterval(() => raw(": ping\n\n"), 5000);
 
         const pump = async (resp: Response) => {
           let text = "";
@@ -538,6 +536,27 @@ serve(async (req) => {
         };
 
         try {
+          const { messages, maxOut } = await prepare();
+          clearInterval(ping);
+
+          const MAX_TOKENS = maxOut;
+          const MAX_CONTINUATIONS = mode === "chat" ? 2 : 1;
+
+          const response = await callAI(messages, { stream: true, maxTokens: MAX_TOKENS });
+          if (!response.ok) {
+            const detail = await response.text().catch(() => "");
+            console.error("AI gateway error:", response.status, detail);
+            send(
+              response.status === 429
+                ? "⚠️ Muitas solicitações no momento. Tente novamente em alguns instantes."
+                : response.status === 402
+                  ? "⚠️ Créditos de IA esgotados. Adicione créditos para continuar."
+                  : "⚠️ Não foi possível gerar agora. Tente novamente.",
+            );
+            raw("data: [DONE]\n\n");
+            return;
+          }
+
           let { text: full, finishReason } = await pump(response);
           let rounds = 0;
 
@@ -565,11 +584,17 @@ serve(async (req) => {
             if (!cont.text.trim()) break;
           }
 
-          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          raw("data: [DONE]\n\n");
         } catch (err) {
           console.error("stream error:", err);
+          send("⚠️ Ocorreu um erro ao gerar. Tente novamente.");
+          raw("data: [DONE]\n\n");
         } finally {
-          controller.close();
+          clearInterval(ping);
+          if (!closed) {
+            closed = true;
+            try { controller.close(); } catch { /* já fechado */ }
+          }
         }
       },
     });
