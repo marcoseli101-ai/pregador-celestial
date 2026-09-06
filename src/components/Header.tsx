@@ -9,7 +9,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const navItems = [
   { label: "Início", path: "/" },
-  { label: "Estudo Bíblico", path: "/estudo-biblico" },
+  { label: "Bíblia", path: "/estudo-biblico" },
   { label: "Plano de Leitura", path: "/plano-leitura" },
   { label: "Gerador de Esboços", path: "/gerador-pregacoes" },
   { label: "Biblioteca", path: "/biblioteca" },

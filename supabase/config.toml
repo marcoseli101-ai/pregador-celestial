@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.theology-chat]
 verify_jwt = false
+
+[functions.bible-verse-tools]
+verify_jwt = false

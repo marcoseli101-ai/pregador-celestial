@@ -1,6 +1,9 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { AnnouncementBanner } from "../../bible-engine/AnnouncementBanner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 import bgSpiritualLight from "@/assets/bg-spiritual-light.jpg";
 import bgBibleWarm from "@/assets/bg-bible-warm.jpg";
@@ -21,6 +24,7 @@ const bgMap: Record<string, string> = {
 
 export function Layout() {
   const { pathname } = useLocation();
+  const { user } = useAuth();
   const bg = bgMap[pathname] || bgSpiritualLight;
 
   return (
@@ -66,6 +70,7 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <AnnouncementBanner supabase={supabase} userId={user?.id ?? null} />
     </div>
   );
 }
