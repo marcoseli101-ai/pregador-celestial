@@ -27,26 +27,112 @@ import {
 const AI_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const MODEL = "google/gemini-2.5-flash";
 
-async function callModel(
+async function callOpenAIDirect(
   systemPrompt: string,
   userPrompt: string,
   apiKey: string,
   maxTokens = 2048
 ): Promise<string> {
-  const isDirectGemini = apiKey.startsWith("AIza");
-  const url = isDirectGemini
-    ? "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-    : "https://ai.gateway.lovable.dev/v1/chat/completions";
-  const model = isDirectGemini ? "gemini-2.0-flash" : "google/gemini-2.5-flash";
+  const models = ["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo"];
+  let lastError = "";
 
-  const response = await fetch(url, {
+  for (const model of models) {
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          max_tokens: maxTokens,
+          temperature: 0.3,
+        }),
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        lastError = `${response.status} - ${errText}`;
+        continue;
+      }
+
+      const data = await response.json();
+      const text = data?.choices?.[0]?.message?.content?.trim() ?? "";
+      if (text) return text;
+    } catch (e: any) {
+      lastError = e?.message || String(e);
+    }
+  }
+
+  throw new Error(`Falha ao chamar OpenAI (ChatGPT): ${lastError}`);
+}
+
+async function callGeminiDirect(
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey: string,
+  maxTokens = 2048
+): Promise<string> {
+  const models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-3.6-flash"];
+  let lastError = "";
+
+  for (const model of models) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: systemPrompt }],
+          },
+          contents: [
+            { role: "user", parts: [{ text: userPrompt }] },
+          ],
+          generationConfig: {
+            maxOutputTokens: maxTokens,
+            temperature: 0.3,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        lastError = `${response.status} - ${errText}`;
+        continue;
+      }
+
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+      if (text) return text;
+    } catch (e: any) {
+      lastError = e?.message || String(e);
+    }
+  }
+
+  throw new Error(`Falha ao chamar Google Gemini: ${lastError}`);
+}
+
+async function callLovableGateway(
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey: string,
+  maxTokens = 2048
+): Promise<string> {
+  const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: model,
+      model: "google/gemini-2.5-flash",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -57,17 +143,41 @@ async function callModel(
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`Falha ao chamar o modelo: ${response.status} ${errText}`);
+    throw new Error(`Falha ao chamar Lovable AI Gateway (${response.status}): ${errText}`);
   }
 
   const data = await response.json();
   const text = data?.choices?.[0]?.message?.content?.trim() ?? "";
-
   if (!text) {
-    throw new Error("O modelo não retornou texto (possível bloqueio de segurança ou resposta vazia).");
+    throw new Error("O modelo não retornou texto.");
+  }
+  return text;
+}
+
+async function callModel(
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey: string,
+  maxTokens = 2048
+): Promise<string> {
+  const cleanKey = apiKey.replace(/^["']|["']$/g, "").trim();
+
+  // OpenAI / ChatGPT key pattern
+  if (cleanKey.startsWith("sk-proj-") || cleanKey.startsWith("sk-")) {
+    try {
+      return await callOpenAIDirect(systemPrompt, userPrompt, cleanKey, maxTokens);
+    } catch (openAiErr: any) {
+      // Fallback to Lovable Gateway if OpenAI fails
+      try {
+        return await callLovableGateway(systemPrompt, userPrompt, cleanKey, maxTokens);
+      } catch {
+        throw openAiErr;
+      }
+    }
   }
 
-  return text;
+  // Google Gemini default
+  return await callGeminiDirect(systemPrompt, userPrompt, cleanKey, maxTokens);
 }
 
 // O modelo às vezes envolve JSON em ```json ... ``` mesmo quando
@@ -134,18 +244,27 @@ export async function getOrCreateExplanation(
   client: SupabaseLikeClient,
   ref: VerseRef,
   translationCode: string,
-  apiKey: string
+  apiKey: string,
+  providedText?: string
 ): Promise<VerseExplanation> {
   const refKey = buildCacheKey(ref, translationCode);
 
   const cached = await getCachedExplanation(client, refKey);
   if (cached) return cached;
 
-  const verse = await fetchVerseText(ref, translationCode);
+  let text = providedText || "";
+  if (!text) {
+    try {
+      const verse = await fetchVerseText(ref, translationCode);
+      text = verse.text;
+    } catch {
+      text = "";
+    }
+  }
 
   const raw = await callModel(
     buildExplanationSystemPrompt(),
-    buildExplanationUserPrompt(ref, translationCode, verse.text),
+    buildExplanationUserPrompt(ref, translationCode, text),
     apiKey
   );
 
@@ -180,18 +299,27 @@ export async function getOrCreateCrossReferences(
   client: SupabaseLikeClient,
   ref: VerseRef,
   translationCode: string,
-  apiKey: string
+  apiKey: string,
+  providedText?: string
 ): Promise<CrossReferenceSet> {
   const refKey = buildCacheKey(ref, translationCode);
 
   const cached = await getCachedCrossReferences(client, refKey);
   if (cached) return cached;
 
-  const verse = await fetchVerseText(ref, translationCode);
+  let text = providedText || "";
+  if (!text) {
+    try {
+      const verse = await fetchVerseText(ref, translationCode);
+      text = verse.text;
+    } catch {
+      text = "";
+    }
+  }
 
   const raw = await callModel(
     buildCrossReferenceSystemPrompt(),
-    buildCrossReferenceUserPrompt(ref, verse.text),
+    buildCrossReferenceUserPrompt(ref, text),
     apiKey
   );
 
@@ -225,18 +353,27 @@ export async function getOrCreateThemeSuggestions(
   client: SupabaseLikeClient,
   ref: VerseRef,
   translationCode: string,
-  apiKey: string
+  apiKey: string,
+  providedText?: string
 ): Promise<ThemeSuggestionSet> {
   const refKey = buildCacheKey(ref, translationCode);
 
   const cached = await getCachedThemes(client, refKey);
   if (cached) return cached;
 
-  const verse = await fetchVerseText(ref, translationCode);
+  let text = providedText || "";
+  if (!text) {
+    try {
+      const verse = await fetchVerseText(ref, translationCode);
+      text = verse.text;
+    } catch {
+      text = "";
+    }
+  }
 
   const raw = await callModel(
     buildThemeSuggestionSystemPrompt(),
-    buildThemeSuggestionUserPrompt(ref, verse.text),
+    buildThemeSuggestionUserPrompt(ref, text),
     apiKey
   );
 

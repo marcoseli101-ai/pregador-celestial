@@ -28,16 +28,21 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("LOVABLE_API_KEY");
+    const apiKey =
+      Deno.env.get("GEMINI_API_CHATGPT") ||
+      Deno.env.get("OPENAI_API_KEY") ||
+      Deno.env.get("CHATGPT_API_KEY") ||
+      Deno.env.get("GEMINI_API_KEY") ||
+      Deno.env.get("LOVABLE_API_KEY");
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!apiKey || !supabaseUrl || !serviceRoleKey) {
-      throw new Error("Chave de IA não configurada no Supabase. Configure o secret GEMINI_API_KEY ou LOVABLE_API_KEY no painel do Supabase.");
+      throw new Error("Chave de IA não configurada no Supabase. Configure o secret (OPENAI_API_KEY, GEMINI_API_KEY ou LOVABLE_API_KEY) no painel do Supabase.");
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const body = await req.json();
-    const { action, book, bookLabel, chapter, verse, verseEnd, translationCode, compareWith, compareAll } = body;
+    const { action, book, bookLabel, chapter, verse, verseEnd, translationCode, verseText, compareWith, compareAll } = body;
 
     const ref = parseVerseRef({ book, bookLabel, chapter, verse, verseEnd });
 
@@ -58,15 +63,15 @@ serve(async (req) => {
       }
 
       case "explain":
-        result = await getOrCreateExplanation(supabase, ref, translationCode, apiKey);
+        result = await getOrCreateExplanation(supabase, ref, translationCode, apiKey, verseText);
         break;
 
       case "cross_references":
-        result = await getOrCreateCrossReferences(supabase, ref, translationCode, apiKey);
+        result = await getOrCreateCrossReferences(supabase, ref, translationCode, apiKey, verseText);
         break;
 
       case "suggest_themes":
-        result = await getOrCreateThemeSuggestions(supabase, ref, translationCode, apiKey);
+        result = await getOrCreateThemeSuggestions(supabase, ref, translationCode, apiKey, verseText);
         break;
 
       default:
