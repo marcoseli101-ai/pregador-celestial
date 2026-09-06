@@ -33,14 +33,20 @@ async function callModel(
   apiKey: string,
   maxTokens = 2048
 ): Promise<string> {
-  const response = await fetch(AI_URL, {
+  const isDirectGemini = apiKey.startsWith("AIza");
+  const url = isDirectGemini
+    ? "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+    : "https://ai.gateway.lovable.dev/v1/chat/completions";
+  const model = isDirectGemini ? "gemini-2.0-flash" : "google/gemini-2.5-flash";
+
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: model,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

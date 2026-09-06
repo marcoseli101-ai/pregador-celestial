@@ -28,11 +28,11 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
+    const apiKey = Deno.env.get("GEMINI_API_KEY") || Deno.env.get("LOVABLE_API_KEY");
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!apiKey || !supabaseUrl || !serviceRoleKey) {
-      throw new Error("Variáveis de ambiente ausentes (LOVABLE_API_KEY / SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY).");
+      throw new Error("Chave de IA não configurada no Supabase. Configure o secret GEMINI_API_KEY ou LOVABLE_API_KEY no painel do Supabase.");
     }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
