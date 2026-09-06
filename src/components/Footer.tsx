@@ -22,7 +22,7 @@ export function Footer() {
             <h4 className="mb-3 font-serif text-sm font-semibold">Ferramentas</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/gerador-pregacoes" className="hover:text-foreground transition-colors">Gerador de Pregações</Link></li>
-              <li><Link to="/estudo-biblico" className="hover:text-foreground transition-colors">Estudo Bíblico</Link></li>
+              <li><Link to="/estudo-biblico" className="hover:text-foreground transition-colors">Bíblia</Link></li>
               <li><Link to="/multimidia" className="hover:text-foreground transition-colors">Multimídia</Link></li>
               <li><Link to="/dicionario" className="hover:text-foreground transition-colors">Dicionário Bíblico</Link></li>
             </ul>
