@@ -16,6 +16,7 @@ import {
   getOrCreateCrossReferences,
   getOrCreateExplanation,
   getOrCreateThemeSuggestions,
+  getVerseComparisons,
 } from "../../../bible-engine/core/explanationEngine.ts";
 import { parseVerseRef } from "../../../bible-engine/core/verseRef.ts";
 
@@ -54,11 +55,10 @@ serve(async (req) => {
         break;
 
       case "compare": {
-        // Regra do usuário: comparação é sempre incremental — só
-        // compara com "todas" se compareAll vier explicitamente true.
         const { listTranslationCodes } = await import("../../../bible-engine/config/translations.ts");
         const codes = compareAll ? listTranslationCodes() : (compareWith || []);
-        result = { ref, versions: await fetchVerseInMultipleTranslations(ref, [translationCode, ...codes]) };
+        const versions = await getVerseComparisons(ref, translationCode, verseText, codes, apiKey);
+        result = { ref, versions };
         break;
       }
 

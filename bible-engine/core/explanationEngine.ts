@@ -394,3 +394,80 @@ export async function getOrCreateThemeSuggestions(
   await saveThemes(client, set);
   return set;
 }
+
+// ------------------------------------------------------------
+// Comparação de versículos em múltiplas traduções
+// ------------------------------------------------------------
+export async function getVerseComparisons(
+  ref: VerseRef,
+  currentTranslation: string,
+  currentVerseText: string | undefined,
+  requestedCodes: string[],
+  apiKey: string
+): Promise<{ translationCode: string; text: string }[]> {
+  const versions: { translationCode: string; text: string }[] = [];
+
+  // Se o texto atual estiver disponível, já inclui a tradução base
+  if (currentVerseText) {
+    versions.push({
+      translationCode: currentTranslation.toUpperCase(),
+      text: currentVerseText,
+    });
+  }
+
+  // Filtrar códigos que precisam ser buscados (excluindo a já inclusa)
+  const codesToFetch = requestedCodes.filter(
+    (c) => c.toUpperCase() !== currentTranslation.toUpperCase()
+  );
+
+  if (codesToFetch.length === 0) {
+    return versions;
+  }
+
+  const systemPrompt = `Você é um especialista em manuscritos e traduções bíblicas em língua portuguesa e outros idiomas.
+Sua tarefa é fornecer o texto exato e fiel do versículo solicitado nas traduções bíblicas especificadas.
+Traduções conhecidas:
+- ARC: Almeida Revista e Corrigida
+- ACF: Almeida Corrigida Fiel
+- ARA: Almeida Revista e Atualizada
+- NAA: Nova Almeida Atualizada
+- NVI: Nova Versão Internacional
+- NVT: Nova Versão Transformadora
+- NTLH: Nova Tradução na Linguagem de Hoje
+- KJA: King James Atualizada
+- AME: Ave Maria
+- KJV: King James Version (Inglês)
+- BBE: Bible in Basic English (Inglês)
+- RVR: Reina-Valera (Espanhol)
+
+Retorne estritamente um JSON no seguinte formato (sem nenhum texto fora do JSON e sem cercados markdown adicionais):
+{
+  "versions": [
+    { "translationCode": "NVI", "text": "Texto exato na NVI..." }
+  ]
+}`;
+
+  const userPrompt = `Versículo: ${ref.bookLabel} ${ref.chapter}:${ref.verse}
+Traduções solicitadas: ${codesToFetch.join(", ")}
+
+Forneça o texto bíblico exato para cada uma das traduções listadas acima.`;
+
+  try {
+    const raw = await callModel(systemPrompt, userPrompt, apiKey, 2048);
+    const parsed = JSON.parse(stripJsonFences(raw));
+    if (Array.isArray(parsed.versions)) {
+      for (const v of parsed.versions) {
+        if (v.translationCode && v.text) {
+          versions.push({
+            translationCode: v.translationCode.toUpperCase(),
+            text: v.text,
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.error("Erro ao buscar comparações com IA:", e);
+  }
+
+  return versions;
+}
