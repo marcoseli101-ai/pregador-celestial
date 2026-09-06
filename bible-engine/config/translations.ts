@@ -1,4 +1,4 @@
-import { TranslationInfo } from "../types";
+import { TranslationInfo } from "../types.ts";
 
 // ============================================================
 // TRADUÇÕES DISPONÍVEIS

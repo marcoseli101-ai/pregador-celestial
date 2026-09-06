@@ -1,6 +1,6 @@
-import { CrossReferenceSet, ThemeSuggestionSet, VerseExplanation, VerseRef } from "../types";
-import { buildCacheKey, verseRefLabel } from "./verseRef";
-import { fetchVerseText } from "./bibleApiClient";
+import { CrossReferenceSet, ThemeSuggestionSet, VerseExplanation, VerseRef } from "../types.ts";
+import { buildCacheKey, verseRefLabel } from "./verseRef.ts";
+import { fetchVerseText } from "./bibleApiClient.ts";
 import {
   buildCrossReferenceSystemPrompt,
   buildCrossReferenceUserPrompt,
@@ -8,7 +8,7 @@ import {
   buildExplanationUserPrompt,
   buildThemeSuggestionSystemPrompt,
   buildThemeSuggestionUserPrompt,
-} from "./promptBuilder";
+} from "./promptBuilder.ts";
 import {
   SupabaseLikeClient,
   getCachedCrossReferences,
@@ -17,7 +17,7 @@ import {
   saveCrossReferences,
   saveExplanation,
   saveThemes,
-} from "./cache";
+} from "./cache.ts";
 
 // ------------------------------------------------------------
 // Cliente LLM — mesmo motor de IA usado no restante do site

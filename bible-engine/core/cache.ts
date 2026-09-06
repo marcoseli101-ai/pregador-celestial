@@ -2,7 +2,7 @@ import {
   CrossReferenceSet,
   ThemeSuggestionSet,
   VerseExplanation,
-} from "../types";
+} from "../types.ts";
 
 // ============================================================
 // Interface mínima de um cliente Supabase, para não acoplar este

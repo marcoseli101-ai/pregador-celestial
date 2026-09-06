@@ -1,6 +1,6 @@
-import { VerseRef } from "../types";
-import { verseRefLabel } from "./verseRef";
-import { CITATION_POLICY, SUGGESTED_SOURCES, THEOLOGICAL_ALIGNMENT } from "../config/theology";
+import { VerseRef } from "../types.ts";
+import { verseRefLabel } from "./verseRef.ts";
+import { CITATION_POLICY, SUGGESTED_SOURCES, THEOLOGICAL_ALIGNMENT } from "../config/theology.ts";
 
 // ============================================================
 // "ME EXPLICA" — análise exegética no formato do exemplo de

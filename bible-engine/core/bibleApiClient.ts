@@ -1,5 +1,5 @@
-import { TranslationInfo, VerseRef, VerseText } from "../types";
-import { getTranslation } from "../config/translations";
+import { TranslationInfo, VerseRef, VerseText } from "../types.ts";
+import { getTranslation } from "../config/translations.ts";
 
 // ============================================================
 // Busca o texto de um versículo em uma tradução específica,

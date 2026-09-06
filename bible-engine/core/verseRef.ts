@@ -1,4 +1,4 @@
-import { VerseRef } from "../types";
+import { VerseRef } from "../types.ts";
 
 export function slugifyBook(bookLabel: string): string {
   return bookLabel
