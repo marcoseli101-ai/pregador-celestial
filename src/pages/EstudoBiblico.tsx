@@ -223,71 +223,128 @@ const EstudoBiblico = () => {
     }
   }, [highlightVerse, chapterData]);
 
-  // === CHAPTER READING VIEW ===
+  // === CHAPTER READING VIEW (PULPIT READING MODE) ===
   if (selectedBook && selectedChapter) {
     const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
     return (
-      <div className="container py-8 max-w-3xl">
-        <div className="flex items-center justify-between gap-2 mb-4">
-          <Button variant="ghost" onClick={handleBack} className="gap-1 text-xs sm:text-sm">
-            <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
+      <div className="relative min-h-[90vh] py-6 sm:py-10 px-4 sm:px-6">
+        {/* Floating Left Vertical Quick Dock (as shown in tablet mockup) */}
+        <aside className="hidden md:flex fixed left-6 top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-3 p-2.5 rounded-2xl glass-card border border-amber-500/20 shadow-2xl backdrop-blur-xl">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleBack}
+            className="rounded-xl h-10 w-10 text-amber-500 hover:bg-amber-500/20 hover:text-amber-400"
+            title="Voltar aos capítulos / livros"
+          >
+            <BookOpen className="h-5 w-5" />
           </Button>
+          <div className="w-5 h-px bg-border/60 my-1" />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setActiveTab("versiculos")}
+            className="rounded-xl h-10 w-10 text-muted-foreground hover:text-amber-500 hover:bg-amber-500/15"
+            title="Versículos em destaque"
+          >
+            <Sparkles className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setActiveTab("estudos")}
+            className="rounded-xl h-10 w-10 text-muted-foreground hover:text-amber-500 hover:bg-amber-500/15"
+            title="Estudos e Comentários Teológicos"
+          >
+            <ScrollText className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => document.documentElement.classList.toggle("dark")}
+            className="rounded-xl h-10 w-10 text-muted-foreground hover:text-amber-500 hover:bg-amber-500/15"
+            title="Alternar Tema Escuro / Claro"
+          >
+            <Star className="h-4 w-4" />
+          </Button>
+        </aside>
 
-          {/* Seletor de Versão da Bíblia */}
-          <div className="flex items-center gap-1.5" data-tour="bible-version-selector">
-            <Select value={selectedTranslation} onValueChange={setSelectedTranslation}>
-              <SelectTrigger className="w-[170px] sm:w-[220px] h-8 text-xs font-medium bg-card border-border/80 shadow-sm">
-                <SelectValue placeholder="Selecione a versão" />
-              </SelectTrigger>
-              <SelectContent>
-                {BIBLE_TRANSLATIONS.map((t) => (
-                  <SelectItem key={t.code} value={t.code} className="text-xs">
-                    <span className="font-bold text-accent mr-1.5">{t.code}</span>
-                    <span className="text-muted-foreground text-[11px]">· {t.label}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Central Sacred Reading Container */}
+        <div className="max-w-3xl mx-auto space-y-6">
+          {/* Top Bar with Back Link and Floating Version Selector */}
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              variant="ghost"
+              onClick={handleBack}
+              className="gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground rounded-full px-3"
+            >
+              <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
+            </Button>
+
+            {/* Floating Golden Version Selector */}
+            <div className="flex items-center gap-1.5" data-tour="bible-version-selector">
+              <Select value={selectedTranslation} onValueChange={setSelectedTranslation}>
+                <SelectTrigger className="w-[180px] sm:w-[230px] h-9 text-xs font-semibold glass-card-gold rounded-full border-amber-500/40 text-foreground shadow-sm">
+                  <SelectValue placeholder="Selecione a versão" />
+                </SelectTrigger>
+                <SelectContent className="glass-card border border-border/80 shadow-2xl rounded-2xl">
+                  {BIBLE_TRANSLATIONS.map((t) => (
+                    <SelectItem key={t.code} value={t.code} className="text-xs rounded-xl py-2 cursor-pointer">
+                      <span className="font-bold text-amber-500 mr-2">{t.code}</span>
+                      <span className="text-muted-foreground text-[11px]">{t.label}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </div>
 
-        <div className="mb-6 text-center">
-          <div className="inline-flex items-center gap-2 mb-1">
-            <h1 className="font-serif text-3xl font-bold">
+          {/* Chapter Title & Sacred Header */}
+          <div className="text-center pt-2 pb-4 border-b border-border/40">
+            <h1 className="font-serif text-3xl sm:text-5xl font-extrabold uppercase tracking-widest text-foreground mb-2">
               {selectedBook.name} <span className="text-gradient-gold">{selectedChapter}</span>
             </h1>
-            <Badge variant="outline" className="text-xs font-bold text-accent border-accent/30 py-0.5 px-2">
-              {selectedTranslation}
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground mt-0.5">{selectedBook.author} · {selectedBook.group}</p>
-          <div className="mt-3 max-w-xs mx-auto">
-            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>Progresso do livro</span>
-              <span>{bookProg.read}/{bookProg.total} capítulos ({bookProg.percent}%)</span>
-            </div>
-            <Progress value={bookProg.percent} className="h-2" />
-          </div>
-        </div>
+            <p className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider mb-4">
+              {selectedBook.name} · {selectedBook.group}
+            </p>
 
-        {chapterLoading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-accent" />
+            {/* Reading Progress with Gold Bar */}
+            <div className="max-w-xs mx-auto">
+              <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1.5 font-medium">
+                <span>Progresso do livro</span>
+                <span className="text-amber-500 font-semibold">{bookProg.read}/{bookProg.total} capítulos ({bookProg.percent}%)</span>
+              </div>
+              <div className="h-1.5 w-full bg-muted/60 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.6)] transition-all duration-500"
+                  style={{ width: `${bookProg.percent}%` }}
+                />
+              </div>
+            </div>
           </div>
-        ) : chapterError ? (
-          <Card className="mb-6 border-destructive/30">
-            <CardContent className="p-6 text-center space-y-3">
+
+          {/* Sacred Reading Card */}
+          {chapterLoading ? (
+            <div className="glass-card p-16 rounded-3xl text-center space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-amber-500 mx-auto" />
+              <p className="font-serif text-base text-muted-foreground">Carregando sagradas escrituras...</p>
+            </div>
+          ) : chapterError ? (
+            <Card className="glass-card border-destructive/30 rounded-3xl p-8 text-center space-y-3">
               <AlertCircle className="h-8 w-8 mx-auto text-destructive" />
               <p className="text-sm text-muted-foreground">{chapterError}</p>
-              <Button variant="outline" size="sm" onClick={() => { setSelectedChapter(null); setTimeout(() => setSelectedChapter(selectedChapter), 50); }}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => { setSelectedChapter(null); setTimeout(() => setSelectedChapter(selectedChapter), 50); }}
+                className="rounded-xl"
+              >
                 Tentar novamente
               </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <>
-            <Card className="mb-6 glass-card border border-border/80 shadow-xl rounded-2xl overflow-hidden">
-              <CardContent className="p-5 sm:p-8 space-y-4 font-reading text-lg leading-[1.85]">
+            </Card>
+          ) : (
+            <>
+              <div className="glass-card watermark-cross-bg border border-border/80 shadow-2xl rounded-3xl p-6 sm:p-10 md:p-12 space-y-5">
                 {(chapterData?.verses ?? []).map((v, vIdx) => {
                   const isHighlighted = highlightVerse === v.number;
                   const isToolsOpen = selectedToolsVerse === v.number;
@@ -295,18 +352,18 @@ const EstudoBiblico = () => {
                     <div key={v.number} data-tour={vIdx === 0 ? "bible-verse-item" : undefined}>
                       <p
                         id={`verse-${v.number}`}
-                        className={`rounded-xl transition-all duration-150 group/verse flex items-start gap-2 cursor-pointer select-text ${
+                        className={`rounded-2xl transition-all duration-150 group/verse flex items-start gap-3 cursor-pointer select-text font-reading text-lg sm:text-[20px] leading-[1.95] ${
                           isHighlighted
-                            ? "bg-amber-500/15 border-l-4 border-amber-500 px-4 py-3 shadow-sm text-foreground"
+                            ? "bg-amber-500/15 border-l-4 border-amber-500 px-5 py-4 shadow-sm text-foreground"
                             : isToolsOpen
-                            ? "bg-amber-500/10 border-l-4 border-amber-500/60 px-4 py-2 text-foreground"
+                            ? "bg-amber-500/10 border-l-4 border-amber-500/60 px-5 py-3 text-foreground"
                             : isBookmarked(v.number)
-                            ? "bg-amber-500/10 border-l-2 border-amber-400 px-3 py-1.5"
-                            : "px-2 py-1 hover:bg-accent/10 text-foreground/90 hover:text-foreground"
+                            ? "bg-amber-500/10 border-l-2 border-amber-400 px-4 py-2"
+                            : "px-3 py-1.5 hover:bg-accent/10 text-foreground/90 hover:text-foreground"
                         }`}
                         onClick={() => setSelectedToolsVerse(isToolsOpen ? null : v.number)}
                       >
-                        <span className={`font-mono font-bold text-xs sm:text-sm mt-1 shrink-0 ${isHighlighted ? "text-amber-500" : "text-amber-500/80"}`}>
+                        <span className={`font-mono font-bold text-xs sm:text-sm mt-1.5 shrink-0 ${isHighlighted ? "text-amber-500 font-black" : "text-amber-500/80"}`}>
                           {v.number}
                         </span>
                         <span className={`flex-1 ${isHighlighted ? "font-medium" : ""}`}>
@@ -314,7 +371,7 @@ const EstudoBiblico = () => {
                         </span>
                         <button
                           onClick={(e) => { e.stopPropagation(); toggleBookmark(v.number, v.text); }}
-                          className={`shrink-0 p-1 rounded-lg transition-all ${
+                          className={`shrink-0 p-1.5 rounded-lg transition-all ${
                             isBookmarked(v.number)
                               ? "text-amber-400 opacity-100"
                               : "text-muted-foreground/30 opacity-0 group-hover/verse:opacity-100 hover:text-amber-400"
@@ -325,7 +382,7 @@ const EstudoBiblico = () => {
                         </button>
                       </p>
                       {isToolsOpen && selectedBook && (
-                        <div className="my-2">
+                        <div className="my-3">
                           <VerseToolsMenu
                             bookName={selectedBook.name}
                             bookSlug={selectedBook.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}
@@ -341,10 +398,10 @@ const EstudoBiblico = () => {
                   );
                 })}
                 {chapterData?.verses?.length === 0 && (
-                  <p className="text-muted-foreground text-center py-6">Nenhum versículo encontrado.</p>
+                  <p className="text-muted-foreground text-center py-8">Nenhum versículo encontrado.</p>
                 )}
                 {chapterData?.verses && chapterData.verses.length > 0 && (
-                  <div className="pt-4 border-t border-border/60">
+                  <div className="pt-6 border-t border-border/50">
                     <ContentActions
                       content={chapterData.verses.map(v => `${v.number} ${v.text}`).join("\n")}
                       title={`${selectedBook.name} ${selectedChapter}`}
@@ -352,29 +409,30 @@ const EstudoBiblico = () => {
                     />
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
 
-            <div className="flex justify-between items-center gap-3">
-              <Button
-                variant="outline"
-                onClick={() => goToChapter(-1)}
-                disabled={selectedChapter <= 1}
-                className="gap-1.5 rounded-xl text-xs sm:text-sm"
-              >
-                <ChevronLeft className="h-4 w-4" /> Capítulo Anterior
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => goToChapter(1)}
-                disabled={selectedChapter >= selectedBook.chapters}
-                className="gap-1.5 rounded-xl text-xs sm:text-sm"
-              >
-                Próximo Capítulo <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </>
-        )}
+              {/* Bottom Pagination */}
+              <div className="flex justify-between items-center gap-3 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => goToChapter(-1)}
+                  disabled={selectedChapter <= 1}
+                  className="gap-2 rounded-2xl text-xs sm:text-sm px-5 py-5 glass-card"
+                >
+                  <ChevronLeft className="h-4 w-4" /> Capítulo Anterior
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => goToChapter(1)}
+                  disabled={selectedChapter >= selectedBook.chapters}
+                  className="gap-2 rounded-2xl text-xs sm:text-sm px-5 py-5 glass-card"
+                >
+                  Próximo Capítulo <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     );
   }

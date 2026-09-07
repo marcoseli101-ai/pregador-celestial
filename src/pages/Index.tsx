@@ -126,60 +126,56 @@ const Index = () => {
           ))}
         </div>
 
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 py-24">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 py-20 sm:py-28">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={stagger}
-            className="mx-auto max-w-3xl text-center"
+            className="mx-auto max-w-4xl text-center"
           >
-            <motion.div custom={0} variants={fadeUp} className="mb-5">
+            {/* Sacred Top Badge */}
+            <motion.div custom={0} variants={fadeUp} className="mb-6">
               <motion.span
-                className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-5 py-1.5 text-sm font-medium text-accent"
-                whileHover={{ scale: 1.05, boxShadow: "0 0 20px hsl(265 30% 55% / 0.3)" }}
+                className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-5 py-1.5 text-xs sm:text-sm font-semibold text-amber-500 shadow-sm backdrop-blur-md"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(245, 158, 11, 0.35)" }}
               >
-                <Star className="h-3.5 w-3.5 animate-[pulse_2s_ease-in-out_infinite]" /> Plataforma para Pregadores do Evangelho
+                <Star className="h-3.5 w-3.5 animate-[pulse_2s_ease-in-out_infinite]" /> Plataforma Oficial para Pregadores do Evangelho
               </motion.span>
             </motion.div>
 
-            <motion.h1
+            {/* Central Majestic Glass Panel */}
+            <motion.div
               custom={1}
               variants={fadeUp}
-              className="mb-6 font-serif text-4xl font-bold leading-[1.12] tracking-tight sm:text-5xl md:text-7xl text-foreground"
+              className="glass-card-gold p-8 sm:p-12 md:p-14 rounded-3xl relative overflow-hidden mb-8"
             >
-              Palavra que fortalece e{" "}
-              <motion.span
-                className="text-gradient-gold inline-block"
-                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-                style={{ backgroundSize: "200% 200%" }}
-              >
-                transforma vidas
-              </motion.span>
-            </motion.h1>
+              {/* Focused Volumetric Celestial Beam Behind Heading */}
+              <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[350px] sm:w-[500px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.22)_0%,rgba(99,102,241,0.1)_40%,transparent_70%)] pointer-events-none blur-xl" />
 
-            <motion.p
-              custom={2}
-              variants={fadeUp}
-              className="mb-10 text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto"
-            >
-              Um espaço de acolhimento e estudo para quem deseja aprofundar‑se
-              na Palavra de Deus e levar esperança a cada coração.
-            </motion.p>
+              <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight uppercase mb-6 text-foreground">
+                Palavra que <br className="hidden sm:inline" />
+                Fortalece e <br />
+                <span className="text-gradient-gold">Transforma Vidas</span>
+              </h1>
 
-            <motion.div custom={3} variants={fadeUp} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <p className="text-base sm:text-lg md:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto font-sans">
+                Um espaço de acolhimento e estudo para quem deseja aprofundar‑se na Palavra de Deus e levar esperança a cada coração.
+              </p>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div custom={2} variants={fadeUp} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link to="/biblioteca">
-                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
-                  <Button size="lg" className="bg-gradient-gold text-background hover:opacity-90 gap-2 text-base px-8 shadow-gold relative overflow-hidden group">
-                    <span className="absolute inset-0 bg-[hsl(0,0%,100%/0.15)] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-[-20deg]" />
+                <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
+                  <Button size="lg" className="glow-btn-gold text-background font-bold gap-2 text-base px-9 py-6 rounded-2xl relative overflow-hidden group">
                     <BookOpen className="h-5 w-5" /> Explorar pregações
                   </Button>
                 </motion.div>
               </Link>
               <Link to="/estudo-biblico">
-                <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
-                  <Button size="lg" variant="outline" className="gap-2 text-base border-border text-foreground hover:bg-muted">
-                    <Sparkles className="h-5 w-5" /> Estudar a Bíblia
+                <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
+                  <Button size="lg" variant="outline" className="gap-2 text-base border-border/80 glass-card text-foreground hover:bg-accent/15 px-8 py-6 rounded-2xl">
+                    <Sparkles className="h-5 w-5 text-amber-500" /> Estudar a Bíblia
                   </Button>
                 </motion.div>
               </Link>
@@ -187,17 +183,17 @@ const Index = () => {
 
             {/* Animated scroll indicator */}
             <motion.div
-              custom={4}
+              custom={3}
               variants={fadeUp}
-              className="mt-16 flex justify-center"
+              className="mt-14 flex justify-center"
             >
               <motion.div
-                className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2"
+                className="w-6 h-10 rounded-full border-2 border-amber-500/30 flex justify-center pt-2 backdrop-blur-sm"
                 animate={{ opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 <motion.div
-                  className="w-1.5 h-1.5 rounded-full bg-accent"
+                  className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]"
                   animate={{ y: [0, 12, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                 />
