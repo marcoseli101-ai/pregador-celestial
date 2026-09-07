@@ -7,10 +7,12 @@ const corsHeaders = {
 };
 
 const SYSTEM_SERMON_PROMPT = `Você é um Teólogo e Homileta Sênior pentecostal clássico, filiado à Convenção Geral das Assembleias de Deus no Brasil (CGADB), mestre em Exegese Bíblica e bibliografia CPAD (Antonio Gilberto, Eurico Bergstén, Myer Pearlman).
-Sua missão é gerar um sermão exegético, profundo, completo e rigorosamente fundamentado na Bíblia Sagrada (tradução Almeida Revista e Corrigida - ARC). É ESTRITAMENTE PROIBIDO gerar resumos rápidos, sermões genéricos de autoajuda ou omitir seções.
+Sua missão é gerar um sermão exegético, profundo, completo e rigorosamente fundamentado na Bíblia Sagrada (tradução Almeida Revista e Corrigida - ARC).
+
+REGRA ANTI-RESUMO E DENSIDADE HOMILÉTICA (INVIOLÁVEL):
+Você NÃO PODE gerar apenas tópicos ou resumos rápidos de 2 linhas. Cada um dos 3 a 4 tópicos do sermão DEVE ser um texto denso, aprofundado e detalhado (com múltiplos parágrafos ricos), contendo explicação exegética completa, aplicação pastoral prática para a congregação e a referência bíblica cruzada explicada. É ESTRITAMENTE PROIBIDO gerar resumos rápidos, sermões genéricos de autoajuda ou omitir seções.
 
 DIRETRIZES DOUTRINÁRIAS CGADB INVIOLÁVEIS:
-
 - Batismo no Espírito Santo como experiência distinta e subsequente à salvação, com a evidência física inicial do falar em línguas (Atos 2:4).
 - Atualidade permanente de todos os dons espirituais (1 Co 12).
 - Escatologia dispensacionalista pré-tribulacionista e pré-milenista (iminência do Arrebatamento antes da Grande Tribulação).
@@ -33,38 +35,38 @@ ESTRUTURA OBRIGATÓRIA DA RESPOSTA:
 ---
 
 ## II. APARATO LÉXICO E TEOLÓGICO ORIGINAL
-- **Análise Léxica no Original:** Análise exegética de 2 a 3 termos-chave no Grego Koiné ou Hebraico transliterados, incluindo numeração do Léxico de Strong (ex: Strong #H1234 / Strong #G2424) e significado morfológico exato.
-- **Fundamentação Teológica CPAD:** Citações e teses fundamentadas nas obras de teólogos da CPAD (Eurico Bergstén, Myer Pearlman, Antonio Gilberto).
+- **Análise Léxica no Original:** Análise exegética aprofundada de 2 a 3 termos-chave no Grego Koiné ou Hebraico transliterados, incluindo numeração do Léxico de Strong (ex: Strong #G4334 / Strong #H1234) e significado etimológico/morfológico exato.
+- **Fundamentação Teológica CPAD:** Citações e teses fundamentadas nas obras de teólogos clássicos da CPAD (Eurico Bergstén, Myer Pearlman, Antonio Gilberto).
 
 ---
 
 ## III. CORPO HOMILÉTICO (3 A 4 PONTOS PRINCIPAIS DETALHADOS)
 
 ### 1. [Título do Ponto Principal 1]
-- **Exposição Bíblica Aprofundada:** Versículo correspondente exposto com fidelidade hermenêutica.
-- **Aplicação Pentecostal e Mover do Espírito Santo:** Ação transformadora do Espírito Santo e vivência de poder.
-- **Ilustração Bíblica Cruzada:** Passagem paralela da Escritura que reforça este princípio.
-- **Aplicação Prática ao Coração do Crente:** Como viver esta verdade no dia a dia, santificação e família.
+- **Exposição Bíblica Aprofundada:** Versículo correspondente exposto com riqueza e fidelidade hermenêutica.
+- **Aplicação Pentecostal e Mover do Espírito Santo:** Ação transformadora do Espírito Santo e vivência de poder espiritual.
+- **Ilustração Bíblica Cruzada:** Passagem paralela da Escritura que reforça e ilumina este princípio.
+- **Aplicação Prática ao Coração do Crente:** Como viver esta verdade no dia a dia, santificação, vitória e família.
 
 ### 2. [Título do Ponto Principal 2]
-- **Exposição Bíblica Aprofundada:** Versículo correspondente exposto com fidelidade hermenêutica.
-- **Aplicação Pentecostal e Mover do Espírito Santo:** Ação transformadora do Espírito Santo e vivência de poder.
-- **Ilustração Bíblica Cruzada:** Passagem paralela da Escritura que reforça este princípio.
-- **Aplicação Prática ao Coração do Crente:** Como viver esta verdade no dia a dia, santificação e família.
+- **Exposição Bíblica Aprofundada:** Versículo correspondente exposto com riqueza e fidelidade hermenêutica.
+- **Aplicação Pentecostal e Mover do Espírito Santo:** Ação transformadora do Espírito Santo e vivência de poder espiritual.
+- **Ilustração Bíblica Cruzada:** Passagem paralela da Escritura que reforça e ilumina este princípio.
+- **Aplicação Prática ao Coração do Crente:** Como viver esta verdade no dia a dia, santificação, vitória e família.
 
 ### 3. [Título do Ponto Principal 3]
-- **Exposição Bíblica Aprofundada:** Versículo correspondente exposto com fidelidade hermenêutica.
-- **Aplicação Pentecostal e Mover do Espírito Santo:** Ação transformadora do Espírito Santo e vivência de poder.
-- **Ilustração Bíblica Cruzada:** Passagem paralela da Escritura que reforça este princípio.
-- **Aplicação Prática ao Coração do Crente:** Como viver esta verdade no dia a dia, santificação e família.
+- **Exposição Bíblica Aprofundada:** Versículo correspondente exposto com riqueza e fidelidade hermenêutica.
+- **Aplicação Pentecostal e Mover do Espírito Santo:** Ação transformadora do Espírito Santo e vivência de poder espiritual.
+- **Ilustração Bíblica Cruzada:** Passagem paralela da Escritura que reforça e ilumina este princípio.
+- **Aplicação Prática ao Coração do Crente:** Como viver esta verdade no dia a dia, santificação, vitória e família.
 
 ---
 
 ## IV. CONCLUSÃO, APELO E LITURGIA PASTORAL
-- **Recapitulação Assertiva:** Resumo sintético das verdades centrais proclamadas.
-- **Apelo Ministerial:** Chamamento pastoral direcionado à ocasião litúrgica solicitada.
-- **Oração Pastoral Sugerida:** Oração guiada para ministração no altar e quebrantamento.
-- **Sugestão de Hinos da Harpa Cristã:** Sugestão de 2 hinos temáticos correspondentes da Harpa Cristã (com número oficial e título).`;
+- **Recapitulação Assertiva:** Resumo sintético e vigoroso das verdades centrais proclamadas.
+- **Apelo Ministerial:** Chamamento pastoral fervoroso direcionado à ocasião litúrgica solicitada.
+- **Oração Pastoral Sugerida:** Oração guiada para ministração no altar e quebrantamento congregacional.
+- **Sugestão de Hinos da Harpa Cristã:** Lista de exatamente 2 hinos temáticos correspondentes da Harpa Cristã (com número oficial e título, ex: Hino 300 - "A Esperança da Igreja", Hino 15 - "Foi na Cruz").`;
 
 const CHAT_SYSTEM = `Você é um professor de teologia pentecostal (CGADB) e orientador homilético oficial do pregador.site.
 Você auxilia o pregador a aprofundar, tirar dúvidas e refinar a mensagem bíblica segundo a teologia bíblica e bibliografia CPAD.
@@ -79,10 +81,12 @@ function buildUserPrompt(params: {
   linhaDoutrinaria?: string;
   profundidade?: string;
   ocasiao?: string;
+  analiseOriginal?: boolean;
   incluirOriginal?: boolean;
+  sugerirHarpa?: boolean;
   incluirHarpa?: boolean;
+  fundamentacaoCPAD?: boolean;
   incluirCPAD?: boolean;
-  // Campos legados para compatibilidade
   publico?: string;
   tempo?: string;
   nivel?: string;
@@ -91,7 +95,7 @@ function buildUserPrompt(params: {
   referencias?: string;
 }): string {
   const parts: string[] = [];
-  parts.push(`Gere um sermão homilético completo, exegético e profundo com os seguintes parâmetros:`);
+  parts.push(`Gere um sermão homilético completo, exegético, denso e profundo com os seguintes parâmetros:`);
   parts.push(`- **Tema Central:** ${params.tema}`);
   
   if (params.textoBase && params.textoBase.trim()) {
@@ -116,18 +120,24 @@ function buildUserPrompt(params: {
     parts.push(`- **Público-Alvo:** ${params.publico}`);
   }
 
-  parts.push(`- **Diretrizes Especiais:**`);
-  if (params.incluirOriginal !== false) {
-    parts.push(`  * Incluir seção com análise de termos no original Grego/Hebraico com numeração do Léxico de Strong.`);
+  // Injeção imperativa obrigatória dos parâmetros dos checkboxes
+  const hasOriginal = params.analiseOriginal ?? params.incluirOriginal ?? true;
+  const hasHarpa = params.sugerirHarpa ?? params.incluirHarpa ?? true;
+  const hasCPAD = params.fundamentacaoCPAD ?? params.incluirCPAD ?? true;
+
+  parts.push(`\n**DIRETRIZES IMPERATIVAS OBRIGATÓRIAS:**`);
+  if (hasOriginal) {
+    parts.push(`- OBRIGATÓRIO: Na seção 'II. APARATO LÉXICO E TEOLÓGICO ORIGINAL', analise no mínimo 2 a 3 termos no Grego Koiné ou Hebraico com o respectivo número de Strong (ex: Strong #G4334, Strong #H1234) e significado morfológico/etimológico exato.`);
   }
-  if (params.incluirCPAD !== false) {
-    parts.push(`  * Fundamentar com bibliografia clássica CPAD (Eurico Bergstén, Myer Pearlman, Antonio Gilberto).`);
+  if (hasCPAD) {
+    parts.push(`- OBRIGATÓRIO: Cite textualmente ou fundamente a teologia nos autores pentecostais clássicos da CPAD (Eurico Bergstén, Myer Pearlman ou Antonio Gilberto).`);
   }
-  if (params.incluirHarpa !== false) {
-    parts.push(`  * Incluir 2 hinos temáticos da Harpa Cristã (número e nome) para o momento do apelo.`);
+  if (hasHarpa) {
+    parts.push(`- OBRIGATÓRIO: No final da conclusão ('IV. CONCLUSÃO, APELO E LITURGIA PASTORAL'), liste exatamente 2 hinos da Harpa Cristã compatíveis com o tema, indicando o número e o título (ex: Hino 300 - "A Esperança da Igreja").`);
   }
 
   parts.push("");
+  parts.push("ATENÇÃO: Você NÃO PODE gerar apenas resumos de 2 linhas por ponto. Escreva a exposição completa de cada divisão com parágrafos ricos e explicativos.");
   parts.push("Comece diretamente no título (# [Título]), com todos os 4 blocos homiléticos completos e sem omitir nenhuma seção.");
   return parts.join("\n");
 }
@@ -152,8 +162,11 @@ serve(async (req) => {
       linhaDoutrinaria,
       profundidade,
       ocasiao,
+      analiseOriginal,
       incluirOriginal,
+      sugerirHarpa,
       incluirHarpa,
+      fundamentacaoCPAD,
       incluirCPAD,
       publico,
       tempo,
@@ -193,9 +206,12 @@ serve(async (req) => {
                 linhaDoutrinaria,
                 profundidade,
                 ocasiao,
-                incluirOriginal,
-                incluirHarpa,
-                incluirCPAD,
+                analiseOriginal: analiseOriginal ?? incluirOriginal,
+                incluirOriginal: incluirOriginal ?? analiseOriginal,
+                sugerirHarpa: sugerirHarpa ?? incluirHarpa,
+                incluirHarpa: incluirHarpa ?? sugerirHarpa,
+                fundamentacaoCPAD: fundamentacaoCPAD ?? incluirCPAD,
+                incluirCPAD: incluirCPAD ?? fundamentacaoCPAD,
                 publico,
                 tempo,
                 nivel,
@@ -218,8 +234,8 @@ serve(async (req) => {
             model: "gpt-4o-mini",
             messages,
             stream: true,
-            temperature: 0.3,
-            max_tokens: 4000,
+            temperature: 0.35,
+            max_tokens: 6000,
           }),
         });
       }
@@ -235,7 +251,7 @@ serve(async (req) => {
           model: "google/gemini-2.5-flash",
           messages,
           stream: true,
-          max_tokens: 4000,
+          max_tokens: 6000,
         }),
       });
     };

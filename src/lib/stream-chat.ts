@@ -79,8 +79,11 @@ export interface GenerateSermonParams {
   linhaDoutrinaria?: string;
   profundidade?: string;
   ocasiao?: string;
+  analiseOriginal?: boolean;
   incluirOriginal?: boolean;
+  sugerirHarpa?: boolean;
   incluirHarpa?: boolean;
+  fundamentacaoCPAD?: boolean;
   incluirCPAD?: boolean;
   // Campos complementares
   publico?: string;
@@ -95,6 +98,18 @@ export async function streamSermon(
   params: GenerateSermonParams & SSECallbacks
 ) {
   const { onDelta, onDone, onError, ...bodyPayload } = params;
+
+  // Garantir que ambos os aliases estejam preenchidos
+  const payload = {
+    ...bodyPayload,
+    analiseOriginal: bodyPayload.analiseOriginal ?? bodyPayload.incluirOriginal ?? true,
+    incluirOriginal: bodyPayload.incluirOriginal ?? bodyPayload.analiseOriginal ?? true,
+    sugerirHarpa: bodyPayload.sugerirHarpa ?? bodyPayload.incluirHarpa ?? true,
+    incluirHarpa: bodyPayload.incluirHarpa ?? bodyPayload.sugerirHarpa ?? true,
+    fundamentacaoCPAD: bodyPayload.fundamentacaoCPAD ?? bodyPayload.incluirCPAD ?? true,
+    incluirCPAD: bodyPayload.incluirCPAD ?? bodyPayload.fundamentacaoCPAD ?? true,
+  };
+
   const token = await getAuthToken();
   const resp = await fetch(GENERATE_SERMON_URL, {
     method: "POST",
@@ -102,7 +117,7 @@ export async function streamSermon(
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(bodyPayload),
+    body: JSON.stringify(payload),
   });
   await parseSSEStream(resp, { onDelta, onDone, onError });
 }

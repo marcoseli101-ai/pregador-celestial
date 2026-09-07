@@ -209,8 +209,11 @@ const GeradorPregacoes = () => {
       linhaDoutrinaria,
       profundidade,
       ocasiao,
+      analiseOriginal: incluirOriginal,
       incluirOriginal,
+      sugerirHarpa: incluirHarpa,
       incluirHarpa,
+      fundamentacaoCPAD: incluirCPAD,
       incluirCPAD,
       onDelta: (chunk) => {
         accumulated += chunk;
