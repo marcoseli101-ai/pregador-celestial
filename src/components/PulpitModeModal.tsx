@@ -74,9 +74,9 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black text-white flex flex-col pulpit-mode select-text overflow-hidden animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] bg-[#080B11] text-[#F8FAFC] flex flex-col modo-pulpito select-text overflow-hidden animate-in fade-in duration-200">
       {/* Top Preacher Status Bar */}
-      <header className="h-16 px-4 sm:px-8 border-b border-white/15 bg-neutral-950/90 flex items-center justify-between shrink-0">
+      <header className="h-16 px-4 sm:px-8 border-b border-amber-500/20 bg-[#0B0F17] flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-amber-500 animate-pulse" />
@@ -85,16 +85,16 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
             </span>
           </div>
 
-          <div className="hidden sm:block text-xs text-neutral-400 truncate max-w-md">
+          <div className="hidden sm:block text-xs text-neutral-300 truncate max-w-md font-medium">
             {title}
           </div>
         </div>
 
         {/* Central Live Clock & Preaching Timer */}
-        <div className="flex items-center gap-4 bg-neutral-900 px-4 py-1.5 rounded-full border border-neutral-800">
+        <div className="flex items-center gap-4 bg-neutral-900/90 px-4 py-1.5 rounded-full border border-amber-500/30 shadow-sm">
           {/* Real Clock */}
-          <div className="flex items-center gap-1.5 text-neutral-400 font-mono text-xs sm:text-sm">
-            <Clock className="h-3.5 w-3.5 text-neutral-500" />
+          <div className="flex items-center gap-1.5 text-neutral-300 font-mono text-xs sm:text-sm">
+            <Clock className="h-3.5 w-3.5 text-amber-400" />
             <span>{currentTime}</span>
           </div>
 
@@ -108,7 +108,7 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-neutral-400 hover:text-white"
+              className="h-6 w-6 text-neutral-300 hover:text-white"
               onClick={() => setIsTimerRunning(!isTimerRunning)}
               title={isTimerRunning ? "Pausar Cronômetro" : "Iniciar Cronômetro"}
             >
@@ -117,7 +117,7 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-neutral-400 hover:text-white"
+              className="h-6 w-6 text-neutral-300 hover:text-white"
               onClick={() => setSecondsElapsed(0)}
               title="Zerar Cronômetro"
             >
@@ -133,18 +133,18 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-xs font-bold text-neutral-300 hover:text-white"
+              className="h-7 px-2 text-xs font-bold text-neutral-200 hover:text-white"
               onClick={() => setFontSize((prev) => Math.max(18, prev - 2))}
               title="Diminuir Fonte"
             >
               A-
             </Button>
-            <span className="text-xs font-mono text-neutral-400 px-1">{fontSize}px</span>
+            <span className="text-xs font-mono text-amber-400 px-1 font-bold">{fontSize}px</span>
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-xs font-bold text-neutral-300 hover:text-white"
-              onClick={() => setFontSize((prev) => Math.min(38, prev + 2))}
+              className="h-7 px-2 text-xs font-bold text-neutral-200 hover:text-white"
+              onClick={() => setFontSize((prev) => Math.min(42, prev + 2))}
               title="Aumentar Fonte"
             >
               A+
@@ -154,7 +154,7 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800"
+            className="rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800"
             onClick={onClose}
             title="Sair do Modo Púlpito (Esc)"
           >
@@ -164,21 +164,21 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
       </header>
 
       {/* Sermon Fullscreen Content */}
-      <main className="flex-1 overflow-y-auto px-4 sm:px-8 py-8 sm:py-12">
+      <main className="flex-1 overflow-y-auto px-4 sm:px-8 py-8 sm:py-12 bg-[#080B11]">
         <div className="max-w-4xl mx-auto space-y-8">
-          <div className="text-center border-b border-neutral-800 pb-6 mb-8">
+          <div className="text-center border-b border-amber-500/20 pb-6 mb-8">
             <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-amber-400 mb-3 tracking-wide">
               {title}
             </h1>
-            <p className="text-neutral-500 text-xs sm:text-sm uppercase tracking-widest">
-              Esboço Homilético de Exposição Bíblica
+            <p className="text-amber-400/80 text-xs sm:text-sm uppercase tracking-widest font-semibold">
+              Esboço Homilético de Exposição Bíblica • Versão ARC
             </p>
           </div>
 
           <SermonContentRenderer
             content={content}
             fontSize={fontSize}
-            className="text-neutral-100 selection:bg-amber-500 selection:text-black"
+            className="modo-pulpito text-[#F1F5F9] selection:bg-amber-500 selection:text-black"
           />
         </div>
       </main>

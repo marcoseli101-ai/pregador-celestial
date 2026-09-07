@@ -94,52 +94,95 @@ function buildUserPrompt(params: {
   tom?: string;
   referencias?: string;
 }): string {
-  const parts: string[] = [];
-  parts.push(`Gere um sermão homilético completo, exegético, denso e profundo com os seguintes parâmetros:`);
-  parts.push(`- **Tema Central:** ${params.tema}`);
-  
-  if (params.textoBase && params.textoBase.trim()) {
-    parts.push(`- **Texto Base Bíblico:** ${params.textoBase.trim()} (Transcrever na íntegra na versão ARC)`);
-  } else {
-    parts.push(`- **Texto Base Bíblico:** Escolha a passagem bíblica central mais adequada e transcreva na íntegra na versão ARC.`);
-  }
-
-  const metodo = params.metodoHomiletico || params.estrutura || "Expositivo (Versículo por versículo)";
-  parts.push(`- **Método Homilético:** ${metodo}`);
-
-  const linha = params.linhaDoutrinaria || "Pneumatologia & Avivamento Pentecostal";
-  parts.push(`- **Linha Doutrinária (CGADB):** ${linha}`);
-
-  const profundidade = params.profundidade || params.nivel || "Profundo / Acadêmico (Exegese no original com léxico Strong)";
-  parts.push(`- **Nível de Profundidade:** ${profundidade}`);
-
-  if (params.ocasiao) {
-    parts.push(`- **Ocasião Litúrgica:** ${params.ocasiao}`);
-  }
-  if (params.publico) {
-    parts.push(`- **Público-Alvo:** ${params.publico}`);
-  }
-
-  // Injeção imperativa obrigatória dos parâmetros dos checkboxes
   const hasOriginal = params.analiseOriginal ?? params.incluirOriginal ?? true;
   const hasHarpa = params.sugerirHarpa ?? params.incluirHarpa ?? true;
   const hasCPAD = params.fundamentacaoCPAD ?? params.incluirCPAD ?? true;
 
-  parts.push(`\n**DIRETRIZES IMPERATIVAS OBRIGATÓRIAS:**`);
+  const exigenciasObrigatorias: string[] = [];
+
   if (hasOriginal) {
-    parts.push(`- OBRIGATÓRIO: Na seção 'II. APARATO LÉXICO E TEOLÓGICO ORIGINAL', analise no mínimo 2 a 3 termos no Grego Koiné ou Hebraico com o respectivo número de Strong (ex: Strong #G4334, Strong #H1234) e significado morfológico/etimológico exato.`);
+    exigenciasObrigatorias.push(
+      "- SEÇÃO OBRIGATÓRIA (Aparato Léxico): Análise léxica e exegética de pelo menos 2 a 3 palavras-chave no Grego (Koiné) ou Hebraico com o respectivo número de Strong (ex: Strong #G3474 para moros, #G5429 para phronimos) e seu profundo impacto teológico."
+    );
   }
   if (hasCPAD) {
-    parts.push(`- OBRIGATÓRIO: Cite textualmente ou fundamente a teologia nos autores pentecostais clássicos da CPAD (Eurico Bergstén, Myer Pearlman ou Antonio Gilberto).`);
+    exigenciasObrigatorias.push(
+      "- SEÇÃO OBRIGATÓRIA (Fundamentação CPAD): Citação explícita de fundamentos da teologia pentecostal clássica da CPAD (Myer Pearlman, Eurico Bergstén ou Antonio Gilberto), explicando a doutrina, a simbologia bíblica e a atuação do Espírito Santo."
+    );
   }
   if (hasHarpa) {
-    parts.push(`- OBRIGATÓRIO: No final da conclusão ('IV. CONCLUSÃO, APELO E LITURGIA PASTORAL'), liste exatamente 2 hinos da Harpa Cristã compatíveis com o tema, indicando o número e o título (ex: Hino 300 - "A Esperança da Igreja").`);
+    exigenciasObrigatorias.push(
+      "- SEÇÃO OBRIGATÓRIA NO FINAL: Recomende exatamente 2 hinos pertinentes da Harpa Cristã com número e nome (ex: Hino 300 - 'A Esperança da Igreja', Hino 15 - 'Foi na Cruz')."
+    );
   }
 
-  parts.push("");
-  parts.push("ATENÇÃO: Você NÃO PODE gerar apenas resumos de 2 linhas por ponto. Escreva a exposição completa de cada divisão com parágrafos ricos e explicativos.");
-  parts.push("Comece diretamente no título (# [Título]), com todos os 4 blocos homiléticos completos e sem omitir nenhuma seção.");
-  return parts.join("\n");
+  const metodo = params.metodoHomiletico || params.estrutura || "Expositivo (Versículo por versículo)";
+  const linha = params.linhaDoutrinaria || "Pneumatologia & Avivamento Pentecostal";
+  const profundidade = params.profundidade || params.nivel || "Profundo / Acadêmico (Exegese no original com léxico Strong)";
+
+  const promptText = `
+Escreva um sermão COMPLETO, EXTENSO, EXEGÉTICO E PROFUNDO (mínimo de 1200 a 1500 palavras, terminantemente proibido gerar apenas tópicos curtos ou resumos de duas linhas).
+IMPORTANTE: Corrija automaticamente qualquer erro ortográfico ou de digitação do tema informado (por exemplo, corrija 'palabolas' para 'parábolas').
+
+TEMA: ${params.tema}
+TEXTO BASE: ${params.textoBase && params.textoBase.trim() ? params.textoBase.trim() : "Selecione o texto central mais adequado da Bíblia ARC e transcreva na íntegra"}
+MÉTODO HOMILÉTICO: ${metodo}
+LINHA DOUTRINÁRIA (CGADB): ${linha}
+PROFUNDIDADE: ${profundidade}
+${params.ocasiao ? `OCASIÃO LITÚRGICA: ${params.ocasiao}` : ""}
+${params.publico ? `PÚBLICO-ALVO: ${params.publico}` : ""}
+
+REQUISITOS INEGOCIÁVEIS:
+${exigenciasObrigatorias.join("\n")}
+
+ESTRUTURA COMPLETA A SEGUIR:
+# [TÍTULO HOMILÉTICO IMPACTANTE]
+**Texto Central:** [Citação textual completa na versão ARC]
+**Tema Homilético:** [Declaração do tema corrigido]
+**Proposição:** [Tese central do sermão]
+**Sentença de Transição:** [Conexão fluida]
+
+---
+## I. INTRODUÇÃO EXEGÉTICA & HISTÓRICA
+- Contexto Histórico, Político e Cultural detalhado
+- O Dilema Central da Narrativa e aplicação para a igreja contemporânea
+
+---
+## II. APARATO LÉXICO E TEOLÓGICO ORIGINAL
+${hasOriginal ? "- Análise Léxica no Original com Strong #GXXXX / Strong #HXXXX e significado morfológico" : ""}
+${hasCPAD ? "- Fundamentação Teológica CPAD (Eurico Bergstén, Myer Pearlman, Antonio Gilberto)" : ""}
+
+---
+## III. CORPO HOMILÉTICO (3 A 4 PONTOS PRINCIPAIS DETALHADOS COM MÚLTIPLOS PARÁGRAFOS)
+### 1. [Título do Ponto 1]
+- Exposição Bíblica Aprofundada
+- Aplicação Pentecostal e Mover do Espírito Santo
+- Ilustração Bíblica Cruzada
+- Aplicação Prática ao Coração do Crente
+
+### 2. [Título do Ponto 2]
+- Exposição Bíblica Aprofundada
+- Aplicação Pentecostal e Mover do Espírito Santo
+- Ilustração Bíblica Cruzada
+- Aplicação Prática ao Coração do Crente
+
+### 3. [Título do Ponto 3]
+- Exposição Bíblica Aprofundada
+- Aplicação Pentecostal e Mover do Espírito Santo
+- Ilustração Bíblica Cruzada
+- Aplicação Prática ao Coração do Crente
+
+---
+## IV. CONCLUSÃO, APELO E LITURGIA PASTORAL
+- Recapitulação Assertiva
+- Apelo Ministerial Fervoroso
+- Oração Pastoral Sugerida
+${hasHarpa ? "- Sugestão de 2 Hinos da Harpa Cristã (número e nome)" : ""}
+
+Desenvolva cada divisão com múltiplos parágrafos bem explicados, exegese detalhada e aplicação real para o púlpito. Comece diretamente no título (# [Título]).
+`.trim();
+
+  return promptText;
 }
 
 serve(async (req) => {

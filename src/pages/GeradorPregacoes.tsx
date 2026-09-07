@@ -644,10 +644,9 @@ const GeradorPregacoes = () => {
 
                 {/* Modo Púlpito Button */}
                 <Button
-                  variant="outline"
                   size="sm"
                   onClick={() => setPulpitOpen(true)}
-                  className="gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-500 font-bold hover:bg-amber-500/20 rounded-xl text-xs"
+                  className="gap-1.5 bg-amber-600 text-white hover:bg-amber-500 font-bold shadow-md shadow-amber-600/25 rounded-xl text-xs border-none transition-all active:scale-95"
                 >
                   <Maximize2 className="h-3.5 w-3.5" /> Modo Púlpito
                 </Button>

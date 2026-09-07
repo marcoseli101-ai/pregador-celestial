@@ -262,10 +262,39 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v20M7 7h10'/%3E%3Cpath d='M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z'/%3E%3C/svg%3E");
   }
 
-  /* Pulpit OLED Mode */
-  .pulpit-mode {
-    background-color: #050505 !important;
+  /* Pulpit OLED Mode - Contraste Máximo para Altar */
+  .pulpit-mode,
+  .modo-pulpito {
+    background-color: #080B11 !important;
     color: #F8FAFC !important;
+  }
+  .modo-pulpito h1,
+  .modo-pulpito h2,
+  .modo-pulpito h3 {
+    color: #FBBF24 !important;
+  }
+  .modo-pulpito p,
+  .modo-pulpito li {
+    color: #F1F5F9 !important;
+    line-height: 1.85 !important;
+  }
+  .modo-pulpito strong {
+    color: #FDE68A !important;
+  }
+  .modo-pulpito hr {
+    border-color: rgba(245, 158, 11, 0.3) !important;
+  }
+  .modo-pulpito blockquote {
+    background-color: rgba(245, 158, 11, 0.08) !important;
+    border-left-color: #F59E0B !important;
+    color: #F8FAFC !important;
+  }
+  .modo-pulpito .bloco-topico {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(245, 158, 11, 0.2) !important;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   /* Skeleton Gold Shimmer with Pulse */

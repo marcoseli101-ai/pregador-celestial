@@ -172,7 +172,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
             }
 
             return (
-              <p className="my-2.5 leading-relaxed prose-editorial text-foreground/90">
+              <p className="my-2.5 leading-relaxed prose-editorial text-inherit">
                 {React.Children.map(children, renderFormattedText)}
               </p>
             );
@@ -180,7 +180,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // Bold Text: Convert **negrito** into highlighted amber strong
           strong: ({ children }) => (
-            <strong className="text-amber-500 font-bold">{children}</strong>
+            <strong className="text-amber-400 font-bold">{children}</strong>
           ),
 
           // Dividers: Convert --- into elegant amber separator
@@ -188,9 +188,9 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // Blockquote: Scripture quotes & highlighted passages
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-amber-500 pl-4 py-2 my-4 italic bg-amber-500/5 rounded-r-lg text-foreground/90 shadow-sm">
-              <div className="flex items-center gap-1.5 text-amber-500 font-serif font-bold text-xs uppercase tracking-wider mb-1 not-italic">
-                <Quote className="h-3 w-3" />
+            <blockquote className="border-l-4 border-amber-500 pl-4 py-2 my-4 italic bg-amber-500/10 rounded-r-lg text-inherit shadow-sm">
+              <div className="flex items-center gap-1.5 text-amber-400 font-serif font-bold text-xs uppercase tracking-wider mb-1 not-italic">
+                <Quote className="h-3 w-3 text-amber-400" />
                 <span>Citação das Escrituras (ARC)</span>
               </div>
               <div className="leading-relaxed">
@@ -201,19 +201,19 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // Lists
           ul: ({ children }) => (
-            <ul className="list-disc pl-6 space-y-2 my-3 text-foreground/90 leading-relaxed">
+            <ul className="list-disc pl-6 space-y-2 my-3 text-inherit leading-relaxed">
               {children}
             </ul>
           ),
 
           ol: ({ children }) => (
-            <ol className="list-decimal pl-6 space-y-2 my-3 text-foreground/90 leading-relaxed">
+            <ol className="list-decimal pl-6 space-y-2 my-3 text-inherit leading-relaxed">
               {children}
             </ol>
           ),
 
           li: ({ children }) => (
-            <li className="leading-relaxed pl-1">
+            <li className="leading-relaxed pl-1 text-inherit">
               {React.Children.map(children, renderFormattedText)}
             </li>
           ),
@@ -221,7 +221,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
           // Tables
           table: ({ children }) => (
             <div className="overflow-x-auto my-4 rounded-xl border border-border/60">
-              <table className="w-full text-sm border-collapse">{children}</table>
+              <table className="w-full text-sm border-collapse text-inherit">{children}</table>
             </div>
           ),
           th: ({ children }) => (
@@ -230,7 +230,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
             </th>
           ),
           td: ({ children }) => (
-            <td className="p-2.5 border border-border/40 text-foreground/90">{children}</td>
+            <td className="p-2.5 border border-border/40 text-inherit">{children}</td>
           ),
         }}
       >
