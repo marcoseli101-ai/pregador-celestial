@@ -686,10 +686,9 @@ const GeradorPregacoes = () => {
                   </div>
                   {result && !loading && (
                     <Button
-                      variant="outline"
                       size="sm"
                       onClick={() => setPulpitOpen(true)}
-                      className="gap-1.5 text-xs text-amber-500 border-amber-500/30 font-semibold rounded-xl"
+                      className="gap-1.5 text-xs bg-amber-600 text-white hover:bg-amber-500 font-bold rounded-xl border-none shadow-sm shadow-amber-600/20 transition-all active:scale-95"
                     >
                       <Maximize2 className="h-3.5 w-3.5" /> Tela Cheia
                     </Button>

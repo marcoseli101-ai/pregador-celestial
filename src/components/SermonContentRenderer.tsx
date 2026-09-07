@@ -83,7 +83,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
   return (
     <div
-      className={`font-reading space-y-4 leading-relaxed ${className || "text-slate-100"}`}
+      className={`font-reading space-y-4 leading-relaxed text-slate-800 dark:text-slate-100 ${className}`}
       style={{ fontSize: `${fontSize}px` }}
     >
       <ReactMarkdown
@@ -92,7 +92,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
           // H1: Main Sermon Title
           h1: ({ children }) => (
             <div className="border-b-2 border-amber-500/40 pb-4 mb-6 mt-2 flex items-start justify-between gap-3 flex-wrap">
-              <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-amber-400 tracking-tight">
+              <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-amber-600 dark:text-amber-400 tracking-tight">
                 {children}
               </h1>
             </div>
@@ -108,19 +108,19 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
               <div
                 className={`mt-8 mb-4 p-3.5 sm:p-4 rounded-xl border flex items-center justify-between gap-3 ${
                   isLexicon
-                    ? "bg-amber-500/15 border-amber-500/40 text-amber-300"
+                    ? "bg-amber-500/10 dark:bg-amber-500/20 border-amber-500/40 text-amber-700 dark:text-amber-300"
                     : isConcl
-                    ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
-                    : "bg-white/10 border-amber-500/30 text-amber-300"
+                    ? "bg-amber-500/15 dark:bg-amber-500/25 border-amber-500/40 text-amber-700 dark:text-amber-300"
+                    : "bg-amber-500/5 dark:bg-white/10 border-amber-500/30 text-amber-800 dark:text-amber-300"
                 }`}
               >
-                <h2 className="font-serif text-lg sm:text-xl font-bold flex items-center gap-2 text-amber-300">
+                <h2 className="font-serif text-lg sm:text-xl font-bold flex items-center gap-2 text-amber-800 dark:text-amber-300">
                   {isLexicon ? (
-                    <GraduationCap className="h-5 w-5 text-amber-400 shrink-0" />
+                    <GraduationCap className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
                   ) : isConcl ? (
-                    <Flame className="h-5 w-5 text-amber-400 animate-pulse shrink-0" />
+                    <Flame className="h-5 w-5 text-amber-600 dark:text-amber-400 animate-pulse shrink-0" />
                   ) : (
-                    <BookOpen className="h-5 w-5 text-amber-400 shrink-0" />
+                    <BookOpen className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
                   )}
                   <span>{children}</span>
                 </h2>
@@ -130,15 +130,15 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // H3: Sub-points & divisions
           h3: ({ children }) => (
-            <h3 className="font-serif text-base sm:text-lg font-bold text-amber-400 mt-5 mb-2.5 flex items-center gap-2 border-b border-amber-500/30 pb-1.5">
-              <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
+            <h3 className="font-serif text-base sm:text-lg font-bold text-amber-700 dark:text-amber-400 mt-5 mb-2.5 flex items-center gap-2 border-b border-amber-500/20 pb-1.5">
+              <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
               <span>{children}</span>
             </h3>
           ),
 
           // H4: Sub-headings
           h4: ({ children }) => (
-            <h4 className="font-serif text-sm sm:text-base font-bold text-amber-300 mt-3 mb-1.5">
+            <h4 className="font-serif text-sm sm:text-base font-bold text-amber-800 dark:text-amber-300 mt-3 mb-1.5">
               {children}
             </h4>
           ),
@@ -150,8 +150,8 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
             // Harpa Cristã special container
             if (/Harpa\s*Crist[ãa]/i.test(textContent)) {
               return (
-                <div className="my-3 p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/40 flex items-start gap-2.5 text-amber-200 shadow-sm">
-                  <Music className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />
+                <div className="my-3 p-3.5 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 dark:border-amber-500/40 flex items-start gap-2.5 text-amber-900 dark:text-amber-200 shadow-sm">
+                  <Music className="h-4 w-4 mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
                   <div className="text-sm font-medium leading-relaxed">
                     {React.Children.map(children, renderFormattedText)}
                   </div>
@@ -162,9 +162,9 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
             // CPAD Citation special container
             if (/(?:Eurico\s*Bergst[ée]n|Myer\s*Pearlman|Antonio\s*Gilberto)/i.test(textContent)) {
               return (
-                <div className="my-2.5 p-3 rounded-xl bg-purple-950/50 border border-purple-500/40 flex items-start gap-2 text-purple-200 text-sm shadow-sm">
-                  <GraduationCap className="h-4 w-4 mt-0.5 shrink-0 text-purple-400" />
-                  <div className="flex-1 leading-relaxed text-slate-100 font-medium">
+                <div className="my-2.5 p-3 rounded-xl bg-purple-500/10 dark:bg-purple-950/50 border border-purple-500/30 dark:border-purple-500/40 flex items-start gap-2 text-purple-950 dark:text-purple-200 text-sm shadow-sm">
+                  <GraduationCap className="h-4 w-4 mt-0.5 shrink-0 text-purple-600 dark:text-purple-400" />
+                  <div className="flex-1 leading-relaxed text-slate-800 dark:text-slate-100 font-medium">
                     {React.Children.map(children, renderFormattedText)}
                   </div>
                 </div>
@@ -172,7 +172,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
             }
 
             return (
-              <p className="my-2.5 leading-relaxed prose-editorial text-[#F1F5F9] font-normal">
+              <p className="my-2.5 leading-relaxed prose-editorial text-slate-800 dark:text-slate-100 font-normal">
                 {React.Children.map(children, renderFormattedText)}
               </p>
             );
@@ -180,7 +180,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // Bold Text: Convert **negrito** into highlighted amber strong
           strong: ({ children }) => (
-            <strong className="text-amber-400 font-bold">{children}</strong>
+            <strong className="text-amber-700 dark:text-amber-400 font-bold">{children}</strong>
           ),
 
           // Dividers: Convert --- into elegant amber separator
@@ -188,9 +188,9 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // Blockquote: Scripture quotes & highlighted passages
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-amber-500 pl-4 py-2 my-4 italic bg-amber-500/10 rounded-r-lg text-inherit shadow-sm">
-              <div className="flex items-center gap-1.5 text-amber-400 font-serif font-bold text-xs uppercase tracking-wider mb-1 not-italic">
-                <Quote className="h-3 w-3 text-amber-400" />
+            <blockquote className="border-l-4 border-amber-500 pl-4 py-2 my-4 italic bg-amber-500/10 rounded-r-lg text-slate-800 dark:text-slate-100 shadow-sm">
+              <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-serif font-bold text-xs uppercase tracking-wider mb-1 not-italic">
+                <Quote className="h-3 w-3 text-amber-600 dark:text-amber-400" />
                 <span>Citação das Escrituras (ARC)</span>
               </div>
               <div className="leading-relaxed">
@@ -201,19 +201,19 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
           // Lists
           ul: ({ children }) => (
-            <ul className="list-disc pl-6 space-y-2 my-3 text-inherit leading-relaxed">
+            <ul className="list-disc pl-6 space-y-2 my-3 text-slate-800 dark:text-slate-100 leading-relaxed">
               {children}
             </ul>
           ),
 
           ol: ({ children }) => (
-            <ol className="list-decimal pl-6 space-y-2 my-3 text-inherit leading-relaxed">
+            <ol className="list-decimal pl-6 space-y-2 my-3 text-slate-800 dark:text-slate-100 leading-relaxed">
               {children}
             </ol>
           ),
 
           li: ({ children }) => (
-            <li className="leading-relaxed pl-1 text-inherit">
+            <li className="leading-relaxed pl-1 text-slate-800 dark:text-slate-100">
               {React.Children.map(children, renderFormattedText)}
             </li>
           ),
@@ -221,16 +221,16 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
           // Tables
           table: ({ children }) => (
             <div className="overflow-x-auto my-4 rounded-xl border border-border/60">
-              <table className="w-full text-sm border-collapse text-inherit">{children}</table>
+              <table className="w-full text-sm border-collapse text-slate-800 dark:text-slate-100">{children}</table>
             </div>
           ),
           th: ({ children }) => (
-            <th className="bg-amber-500/10 text-amber-400 font-bold p-2.5 text-left border border-border/40">
+            <th className="bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold p-2.5 text-left border border-border/40">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="p-2.5 border border-border/40 text-inherit">{children}</td>
+            <td className="p-2.5 border border-border/40 text-slate-800 dark:text-slate-100">{children}</td>
           ),
         }}
       >

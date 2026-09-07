@@ -178,7 +178,7 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
           <SermonContentRenderer
             content={content}
             fontSize={fontSize}
-            className="modo-pulpito text-[#F1F5F9] selection:bg-amber-500 selection:text-black"
+            className="modo-pulpito text-[#F1F5F9] [&_p]:text-[#F1F5F9] [&_li]:text-[#F1F5F9] [&_strong]:text-[#FDE68A] [&_h1]:text-[#FBBF24] [&_h2]:text-[#FBBF24] [&_h3]:text-[#FBBF24] [&_h4]:text-[#FBBF24] [&_.bible-verse-btn]:text-[#FCD34D] selection:bg-amber-500 selection:text-black"
           />
         </div>
       </main>
