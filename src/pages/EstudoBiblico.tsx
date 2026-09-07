@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useBibleBooks, useBibleChapter, useBibleVerses, BIBLE_TRANSLATIONS, type BibleBook } from "@/hooks/useBibleAPI";
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/data/thematicStudies";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
@@ -94,6 +95,7 @@ const EstudoBiblico = () => {
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = usePersistedState<BibleBook | null>("estudo:selectedBook", null);
   const [selectedChapter, setSelectedChapter] = usePersistedState<number | null>("estudo:selectedChapter", null);
+  const [selectedTranslation, setSelectedTranslation] = usePersistedState<string>("estudo:selectedTranslation", "ARC");
   const { isBookmarked, toggleBookmark, getBookmark } = useVerseBookmarks(selectedBook?.name, selectedChapter ?? undefined);
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
   const [selectedToolsVerse, setSelectedToolsVerse] = useState<number | null>(null);
@@ -168,7 +170,8 @@ const EstudoBiblico = () => {
 
   const { data: chapterData, loading: chapterLoading, error: chapterError } = useBibleChapter(
     selectedBook?.name ?? null,
-    selectedChapter
+    selectedChapter,
+    selectedTranslation
   );
 
   const filteredBooks = searchQuery
@@ -224,15 +227,39 @@ const EstudoBiblico = () => {
     const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
     return (
       <div className="container py-8 max-w-3xl">
-        <Button variant="ghost" onClick={handleBack} className="mb-4 gap-1">
-          <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
-        </Button>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <Button variant="ghost" onClick={handleBack} className="gap-1 text-xs sm:text-sm">
+            <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
+          </Button>
+
+          {/* Seletor de Versão da Bíblia */}
+          <div className="flex items-center gap-1.5">
+            <Select value={selectedTranslation} onValueChange={setSelectedTranslation}>
+              <SelectTrigger className="w-[170px] sm:w-[220px] h-8 text-xs font-medium bg-card border-border/80 shadow-sm">
+                <SelectValue placeholder="Selecione a versão" />
+              </SelectTrigger>
+              <SelectContent>
+                {BIBLE_TRANSLATIONS.map((t) => (
+                  <SelectItem key={t.code} value={t.code} className="text-xs">
+                    <span className="font-bold text-accent mr-1.5">{t.code}</span>
+                    <span className="text-muted-foreground text-[11px]">· {t.label}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
         <div className="mb-6 text-center">
-          <h1 className="font-serif text-3xl font-bold">
-            {selectedBook.name} <span className="text-gradient-gold">{selectedChapter}</span>
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">{selectedBook.author} · {selectedBook.group}</p>
+          <div className="inline-flex items-center gap-2 mb-1">
+            <h1 className="font-serif text-3xl font-bold">
+              {selectedBook.name} <span className="text-gradient-gold">{selectedChapter}</span>
+            </h1>
+            <Badge variant="outline" className="text-xs font-bold text-accent border-accent/30 py-0.5 px-2">
+              {selectedTranslation}
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mt-0.5">{selectedBook.author} · {selectedBook.group}</p>
           <div className="mt-3 max-w-xs mx-auto">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
               <span>Progresso do livro</span>
@@ -303,6 +330,7 @@ const EstudoBiblico = () => {
                           chapter={selectedChapter!}
                           verseNumber={v.number}
                           verseText={v.text}
+                          translationCode={selectedTranslation}
                           onClose={() => setSelectedToolsVerse(null)}
                         />
                       )}

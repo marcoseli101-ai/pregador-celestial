@@ -13,6 +13,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { fetchVerseInMultipleTranslations, fetchVerseText } from "../../../bible-engine/core/bibleApiClient.ts";
 import {
+  getChapterInTranslation,
   getOrCreateCrossReferences,
   getOrCreateExplanation,
   getOrCreateThemeSuggestions,
@@ -45,11 +46,16 @@ serve(async (req) => {
     const body = await req.json();
     const { action, book, bookLabel, chapter, verse, verseEnd, translationCode, verseText, compareWith, compareAll } = body;
 
-    const ref = parseVerseRef({ book, bookLabel, chapter, verse, verseEnd });
+    const ref = parseVerseRef({ book, bookLabel: bookLabel || book, chapter: Number(chapter) || 1, verse: Number(verse) || 1, verseEnd });
 
     let result: unknown;
 
     switch (action) {
+      case "get_chapter": {
+        result = await getChapterInTranslation(bookLabel || book, Number(chapter) || 1, translationCode || "ARC", apiKey);
+        break;
+      }
+
       case "get_verse":
         result = await fetchVerseText(ref, translationCode);
         break;

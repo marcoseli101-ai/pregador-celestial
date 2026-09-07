@@ -89,35 +89,126 @@ const BOOKS: BibleBook[] = [
   { abbrev:{pt:"ap",en:"revelation"}, author:"João", chapters:22, group:"Profético", name:"Apocalipse", testament:"NT" },
 ];
 
+export const BIBLE_TRANSLATIONS = [
+  { code: "ARC", label: "Almeida Revista e Corrigida" },
+  { code: "ACF", label: "Almeida Corrigida Fiel" },
+  { code: "ARA", label: "Almeida Revista e Atualizada" },
+  { code: "AA", label: "Almeida Revisada Imprensa Bíblica" },
+  { code: "NAA", label: "Nova Almeida Atualizada" },
+  { code: "NVI", label: "Nova Versão Internacional" },
+  { code: "NVT", label: "Nova Versão Transformadora" },
+  { code: "NTLH", label: "Nova Tradução na Linguagem de Hoje" },
+  { code: "KJA", label: "King James Atualizada" },
+  { code: "AME", label: "Ave Maria" },
+  { code: "KJV", label: "King James Version (inglês)" },
+  { code: "BBE", label: "Bible in Basic English" },
+  { code: "RVR", label: "Reina Valera (espanhol)" },
+];
+
 export function useBibleBooks() {
   return { books: BOOKS, loading: false };
 }
 
-export function useBibleChapter(bookEnName: string | null, chapter: number | null) {
+export function useBibleChapter(
+  bookName: string | null,
+  chapter: number | null,
+  translationCode: string = "ARC"
+) {
   const [data, setData] = useState<ChapterData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchChapter = useCallback(async () => {
-    if (!bookEnName || !chapter) return;
+    if (!bookName || !chapter) return;
+    const trans = (translationCode || "ARC").toUpperCase();
+    const cacheKey = `bible_ch_${bookName}_${chapter}_${trans}`;
+
+    // 1. Check client-side localStorage cache for instantaneous response
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && Array.isArray(parsed.verses) && parsed.verses.length > 0) {
+          setData(parsed);
+          setLoading(false);
+          setError(null);
+          return;
+        }
+      }
+    } catch {
+      // ignore storage error
+    }
+
     setLoading(true);
     setError(null);
+
     try {
-      const ref = encodeURIComponent(`${bookEnName} ${chapter}`);
-      const res = await fetch(`https://bible-api.com/${ref}?translation=almeida`);
-      if (!res.ok) throw new Error("Falha ao carregar capítulo");
-      const json = await res.json();
-      if (!json.verses || !Array.isArray(json.verses)) {
-        throw new Error("Formato inesperado da API");
+      // 2. Se for ARC (Almeida padrão) ou KJV ou BBE, tenta bible-api.com
+      if (trans === "ARC" || trans === "KJV" || trans === "BBE") {
+        try {
+          const transParam = trans === "ARC" ? "almeida" : trans.toLowerCase();
+          const ref = encodeURIComponent(`${bookName} ${chapter}`);
+          const res = await fetch(`https://bible-api.com/${ref}?translation=${transParam}`);
+          if (res.ok) {
+            const json = await res.json();
+            if (json.verses && Array.isArray(json.verses) && json.verses.length > 0) {
+              const chapterResult: ChapterData = {
+                bookName: json.reference ?? `${bookName} ${chapter}`,
+                chapter,
+                verses: json.verses.map((v: { verse: number; text: string }) => ({
+                  number: v.verse,
+                  text: v.text.trim(),
+                })),
+              };
+              setData(chapterResult);
+              try { localStorage.setItem(cacheKey, JSON.stringify(chapterResult)); } catch {}
+              setLoading(false);
+              return;
+            }
+          }
+        } catch {
+          // fallback para Edge Function
+        }
       }
-      setData({
-        bookName: json.reference ?? bookEnName,
-        chapter,
-        verses: json.verses.map((v: { verse: number; text: string }) => ({
-          number: v.verse,
-          text: v.text,
-        })),
+
+      // 3. Busca via Edge Function bible-verse-tools (suporta todas as 13 traduções)
+      const edgeUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bible-verse-tools`;
+      const response = await fetch(edgeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({
+          action: "get_chapter",
+          book: bookName.toLowerCase(),
+          bookLabel: bookName,
+          chapter,
+          translationCode: trans,
+        }),
       });
+
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({ error: "Erro ao buscar capítulo" }));
+        throw new Error(errJson.error || `Erro ${response.status}`);
+      }
+
+      const chapterJson = await response.json();
+      if (!chapterJson.verses || !Array.isArray(chapterJson.verses)) {
+        throw new Error("Formato de capítulo inválido retornado");
+      }
+
+      const chapterResult: ChapterData = {
+        bookName: chapterJson.bookName || `${bookName} ${chapter}`,
+        chapter,
+        verses: chapterJson.verses.map((v: any) => ({
+          number: Number(v.number) || 0,
+          text: String(v.text || "").trim(),
+        })),
+      };
+
+      setData(chapterResult);
+      try { localStorage.setItem(cacheKey, JSON.stringify(chapterResult)); } catch {}
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Erro desconhecido";
       setError(msg);
@@ -125,7 +216,7 @@ export function useBibleChapter(bookEnName: string | null, chapter: number | nul
     } finally {
       setLoading(false);
     }
-  }, [bookEnName, chapter]);
+  }, [bookName, chapter, translationCode]);
 
   useEffect(() => {
     fetchChapter();

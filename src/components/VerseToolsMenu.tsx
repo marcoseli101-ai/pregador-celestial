@@ -99,6 +99,7 @@ export function VerseToolsMenu({
           bookLabel: bookName,
           chapter,
           verse: verseNumber,
+          verseText,
           translationCode,
           ...extra,
         }),

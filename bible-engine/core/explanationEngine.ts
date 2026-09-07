@@ -471,3 +471,80 @@ Forneça o texto bíblico exato para cada uma das traduções listadas acima.`;
 
   return versions;
 }
+
+// ------------------------------------------------------------
+// Busca o capítulo completo em uma tradução específica
+// ------------------------------------------------------------
+export async function getChapterInTranslation(
+  bookLabel: string,
+  chapter: number,
+  translationCode: string,
+  apiKey: string
+): Promise<{ bookName: string; chapter: number; verses: { number: number; text: string }[] }> {
+  const codeUpper = (translationCode || "ARC").toUpperCase();
+
+  // Para KJV ou BBE podemos tentar bible-api.com primeiro
+  if (codeUpper === "KJV" || codeUpper === "BBE") {
+    try {
+      const enRef = encodeURIComponent(`${bookLabel} ${chapter}`);
+      const res = await fetch(`https://bible-api.com/${enRef}?translation=${codeUpper.toLowerCase()}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.verses && Array.isArray(json.verses) && json.verses.length > 0) {
+          return {
+            bookName: json.reference ?? `${bookLabel} ${chapter}`,
+            chapter,
+            verses: json.verses.map((v: any) => ({
+              number: v.verse,
+              text: (v.text || "").trim(),
+            })),
+          };
+        }
+      }
+    } catch {
+      // fallback para IA
+    }
+  }
+
+  const systemPrompt = `Você é uma base de dados de textos bíblicos sagrados de alta fidelidade e precisão.
+Sua tarefa é retornar TODOS os versículos do capítulo bíblico solicitado, rigorosamente na tradução bíblica indicada.
+Traduções suportadas:
+- ARC: Almeida Revista e Corrigida
+- ACF: Almeida Corrigida Fiel
+- ARA: Almeida Revista e Atualizada
+- AA: Almeida Revisada Imprensa Bíblica
+- NAA: Nova Almeida Atualizada
+- NVI: Nova Versão Internacional
+- NVT: Nova Versão Transformadora
+- NTLH: Nova Tradução na Linguagem de Hoje
+- KJA: King James Atualizada
+- AME: Ave Maria
+- KJV: King James Version (Inglês)
+- BBE: Bible in Basic English (Inglês)
+- RVR: Reina-Valera (Espanhol)
+
+Retorne estritamente um JSON no seguinte formato (sem nenhum texto fora do JSON e sem cercados markdown adicionais):
+{
+  "bookName": "${bookLabel}",
+  "chapter": ${chapter},
+  "translationCode": "${codeUpper}",
+  "verses": [
+    { "number": 1, "text": "Texto do versículo 1..." },
+    { "number": 2, "text": "Texto do versículo 2..." }
+  ]
+}`;
+
+  const userPrompt = `Retorne todos os versículos de ${bookLabel} capítulo ${chapter} na versão bíblica ${codeUpper}.`;
+
+  const raw = await callModel(systemPrompt, userPrompt, apiKey, 4000);
+  const parsed = JSON.parse(stripJsonFences(raw));
+
+  return {
+    bookName: parsed.bookName || `${bookLabel} ${chapter}`,
+    chapter,
+    verses: (parsed.verses || []).map((v: any) => ({
+      number: Number(v.number) || 0,
+      text: String(v.text || "").trim(),
+    })),
+  };
+}
