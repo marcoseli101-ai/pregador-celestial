@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { TourStep } from "@/config/featuresTour";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, X, Sparkles, Check } from "lucide-react";
 
 interface SpotlightTourProps {
@@ -27,13 +26,14 @@ export function SpotlightTour({
 }: SpotlightTourProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [targetRect, setTargetRect] = useState<ElementRect | null>(null);
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
   const navigate = useNavigate();
   const location = useLocation();
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const step = steps[currentStepIndex];
 
-  // Auto-navigate to target page if needed
+  // Auto-navigate to target page if step requires different route
   useEffect(() => {
     if (!active || !step) return;
 
@@ -42,53 +42,82 @@ export function SpotlightTour({
     }
   }, [active, step, location.pathname, navigate]);
 
-  // Find target element and calculate bounding rect
-  useEffect(() => {
+  // Find target element and calculate bounding box
+  const updateRect = useCallback(() => {
     if (!active || !step) {
       setTargetRect(null);
       return;
     }
 
-    const updateRect = () => {
-      if (!step.targetSelector) {
-        setTargetRect(null);
-        return;
-      }
+    if (!step.targetSelector) {
+      setTargetRect(null);
+      return;
+    }
 
-      const el = document.querySelector(step.targetSelector);
-      if (el) {
-        const rect = el.getBoundingClientRect();
+    const el = document.querySelector(step.targetSelector) as HTMLElement | null;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      // Only set if element has actual dimensions and is visible
+      if (rect.width > 0 && rect.height > 0) {
         setTargetRect({
-          top: rect.top + window.scrollY,
-          left: rect.left + window.scrollX,
+          top: rect.top,
+          left: rect.left,
           width: rect.width,
           height: rect.height,
         });
 
-        // Scroll into view smoothly
-        el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-      } else {
-        setTargetRect(null);
+        // Smooth scroll if element is outside comfortable viewport
+        if (rect.top < 80 || rect.bottom > window.innerHeight - 80) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
       }
-    };
+    }
+    setTargetRect(null);
+  }, [active, step]);
 
-    // Initial check
+  useEffect(() => {
     updateRect();
 
-    // Retry after page transition/render
+    // Check again after page render/animations
     retryTimeoutRef.current = setTimeout(updateRect, 300);
-    const retryTimeout2 = setTimeout(updateRect, 800);
+    const timeout2 = setTimeout(updateRect, 700);
 
-    window.addEventListener("resize", updateRect);
-    window.addEventListener("scroll", updateRect);
+    const handleResizeOrScroll = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+      updateRect();
+    };
+
+    window.addEventListener("resize", handleResizeOrScroll);
+    window.addEventListener("scroll", handleResizeOrScroll, { passive: true });
 
     return () => {
       if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
-      clearTimeout(retryTimeout2);
-      window.removeEventListener("resize", updateRect);
-      window.removeEventListener("scroll", updateRect);
+      clearTimeout(timeout2);
+      window.removeEventListener("resize", handleResizeOrScroll);
+      window.removeEventListener("scroll", handleResizeOrScroll);
     };
-  }, [active, step, location.pathname]);
+  }, [updateRect, location.pathname]);
+
+  // Keyboard navigation (Esc to skip, Arrow keys for next/prev)
+  useEffect(() => {
+    if (!active) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onSkip();
+      } else if (e.key === "ArrowRight") {
+        if (currentStepIndex < steps.length - 1) {
+          setCurrentStepIndex((p) => p + 1);
+        } else {
+          onComplete();
+        }
+      } else if (e.key === "ArrowLeft" && currentStepIndex > 0) {
+        setCurrentStepIndex((p) => p - 1);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [active, currentStepIndex, steps.length, onSkip, onComplete]);
 
   if (!active || !step) return null;
 
@@ -109,94 +138,165 @@ export function SpotlightTour({
     }
   };
 
+  // Card Positioning logic (Avoid covering the spotlighted target!)
+  const getCardPositionStyle = (): React.CSSProperties => {
+    if (!targetRect || step.placement === "center") {
+      return {
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      };
+    }
+
+    const isTargetInTopHalf = targetRect.top < windowSize.height / 2;
+
+    if (isTargetInTopHalf) {
+      // Place below target
+      const topPos = Math.min(windowSize.height - 320, targetRect.top + targetRect.height + 16);
+      return {
+        top: `${Math.max(80, topPos)}px`,
+        left: "50%",
+        transform: "translateX(-50%)",
+      };
+    } else {
+      // Place above target
+      const bottomPos = Math.max(20, windowSize.height - targetRect.top + 16);
+      return {
+        bottom: `${bottomPos}px`,
+        left: "50%",
+        transform: "translateX(-50%)",
+      };
+    }
+  };
+
+  const padding = 6;
+  const cutoutX = targetRect ? Math.max(0, targetRect.left - padding) : 0;
+  const cutoutY = targetRect ? Math.max(0, targetRect.top - padding) : 0;
+  const cutoutW = targetRect ? targetRect.width + padding * 2 : 0;
+  const cutoutH = targetRect ? targetRect.height + padding * 2 : 0;
+
   return (
     <div className="fixed inset-0 z-[9999] pointer-events-auto overflow-hidden">
-      {/* Dark overlay backdrop */}
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-[2px] transition-opacity duration-300" />
+      {/* SVG Spotlight Mask — Crisp cutout with NO BLUR overlay */}
+      <svg
+        className="fixed inset-0 w-full h-full pointer-events-none transition-all duration-300"
+        width="100%"
+        height="100%"
+      >
+        <defs>
+          <mask id="spotlight-mask">
+            {/* White covers all (opaque mask) */}
+            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+            {/* Black cuts out the spotlight hole (crystal-clear, sharp, unblurred) */}
+            {targetRect && (
+              <rect
+                x={cutoutX}
+                y={cutoutY}
+                width={cutoutW}
+                height={cutoutH}
+                rx="16"
+                ry="16"
+                fill="black"
+              />
+            )}
+          </mask>
+        </defs>
 
-      {/* Spotlight cutout highlight over element if found */}
+        {/* Dark backdrop using mask cutout */}
+        <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          fill="rgba(5, 8, 15, 0.78)"
+          mask="url(#spotlight-mask)"
+        />
+      </svg>
+
+      {/* Noble Gold Illuminated Frame around target */}
       {targetRect && (
         <div
-          className="absolute z-10 rounded-xl border-2 border-accent shadow-[0_0_25px_rgba(234,179,8,0.5)] transition-all duration-300 pointer-events-none animate-pulse"
+          className="fixed z-10 rounded-2xl border-2 border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.65),inset_0_0_15px_rgba(245,158,11,0.25)] pointer-events-none transition-all duration-300 animate-pulse"
           style={{
-            top: `${Math.max(0, targetRect.top - 6)}px`,
-            left: `${Math.max(0, targetRect.left - 6)}px`,
-            width: `${targetRect.width + 12}px`,
-            height: `${targetRect.height + 12}px`,
+            top: `${cutoutY}px`,
+            left: `${cutoutX}px`,
+            width: `${cutoutW}px`,
+            height: `${cutoutH}px`,
           }}
         />
       )}
 
-      {/* Floating Tour Card */}
+      {/* Floating Tour Guide Card */}
       <div
-        className="fixed inset-x-4 bottom-6 sm:bottom-10 sm:left-1/2 sm:-translate-x-1/2 max-w-lg z-20 transition-all duration-300"
+        className="fixed z-20 w-[92vw] max-w-lg transition-all duration-300 ease-out"
+        style={getCardPositionStyle()}
       >
-        <div className="relative rounded-2xl border border-accent/40 bg-card/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl space-y-4">
+        <div className="relative rounded-3xl glass-card-gold p-6 sm:p-7 shadow-2xl border border-amber-500/40 backdrop-blur-2xl space-y-4">
           {/* Header */}
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-gradient-gold text-background shadow">
-                <Sparkles className="h-4 w-4" />
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-gold text-background shadow-gold shrink-0">
+                <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-bold font-serif text-foreground">
+                <h3 className="text-base sm:text-lg font-bold font-serif text-foreground leading-tight">
                   {step.title}
                 </h3>
-                <span className="text-[11px] font-medium text-accent">
+                <span className="text-[11px] font-semibold text-amber-500 uppercase tracking-wider">
                   Passo {currentStepIndex + 1} de {steps.length}
                 </span>
               </div>
             </div>
             <button
               onClick={onSkip}
-              className="rounded-full p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              title="Pular tour"
+              className="rounded-full p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              title="Fechar tour (Esc)"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Description */}
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed font-sans">
             {step.description}
           </p>
 
-          {/* How to test Callout */}
+          {/* How to test Callout Box */}
           {step.howToTest && (
-            <div className="rounded-xl border border-accent/30 bg-accent/10 p-3 text-xs space-y-1">
-              <span className="font-semibold text-accent flex items-center gap-1.5">
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs space-y-1">
+              <span className="font-bold text-amber-500 flex items-center gap-1.5">
                 💡 Como testar agora:
               </span>
-              <p className="text-foreground/90">{step.howToTest}</p>
+              <p className="text-foreground/90 leading-normal">{step.howToTest}</p>
             </div>
           )}
 
           {/* Progress dots & Navigation Controls */}
-          <div className="flex items-center justify-between pt-2 border-t border-border/50">
+          <div className="flex items-center justify-between pt-3 border-t border-border/50">
             {/* Dots */}
             <div className="flex items-center gap-1.5">
               {steps.map((_, idx) => (
                 <div
                   key={idx}
-                  className={`h-1.5 rounded-full transition-all ${
+                  className={`h-1.5 rounded-full transition-all duration-200 ${
                     idx === currentStepIndex
-                      ? "w-5 bg-accent"
+                      ? "w-6 bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]"
                       : idx < currentStepIndex
-                      ? "w-2 bg-accent/50"
+                      ? "w-2 bg-amber-500/50"
                       : "w-2 bg-muted-foreground/30"
                   }`}
                 />
               ))}
             </div>
 
-            {/* Buttons */}
+            {/* Action Buttons */}
             <div className="flex items-center gap-2">
               {!isFirst && (
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handlePrev}
-                  className="h-8 text-xs px-2.5 gap-1"
+                  className="h-8 text-xs px-3 gap-1 rounded-xl glass-card hover:bg-accent/10"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" /> Anterior
                 </Button>
@@ -204,7 +304,7 @@ export function SpotlightTour({
               <Button
                 size="sm"
                 onClick={handleNext}
-                className="h-8 text-xs px-3.5 bg-gradient-gold text-background hover:opacity-90 font-semibold gap-1 shadow"
+                className="h-8 text-xs px-4 glow-btn-gold text-background font-bold gap-1.5 rounded-xl shadow-md"
               >
                 {isLast ? (
                   <>

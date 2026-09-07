@@ -24,9 +24,10 @@ export interface FeatureItem {
   targetSelector?: string;
 }
 
-export const DEPLOY_VERSION = "2026-09-06-v2";
+// Atualize esta constante sempre que houver novas funcionalidades ou melhorias
+export const DEPLOY_VERSION = "2026-09-07-v3";
 
-// Lista detalhada de todas as novidades implementadas no deploy de hoje
+// Lista detalhada de todas as novidades implementadas para usuários existentes
 export const TODAY_FEATURES: FeatureItem[] = [
   {
     id: "bible-reader-13-versions",
@@ -38,160 +39,152 @@ export const TODAY_FEATURES: FeatureItem[] = [
     howToTest:
       "Acesse a aba 'Bíblia', abra qualquer livro/capítulo e clique no seletor de versões no topo para ler na versão de sua preferência.",
     path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-version-selector']",
+    targetSelector: "[data-tour='bible-books-grid']",
   },
   {
-    id: "verse-tools-menu",
-    title: "Menu Contextual de Ferramentas de Versículo",
+    id: "pulpit-reading-mode",
+    title: "Modo Púlpito Imersivo & Tipografia Editorial",
     description:
-      "Ao clicar em qualquer versículo, uma barra inteligente se abre com 7 ferramentas de aprofundamento bíblico.",
-    icon: "Sparkles",
-    badge: "Interativo",
+      "Leitura bíblica com tipografia Lora em 20px, entrelinhas de alto conforto, menu lateral flutuante e marca d'água sagrada.",
+    icon: "ScrollText",
+    badge: "Imersivo",
     howToTest:
-      "Na tela de leitura da Bíblia, dê um clique em qualquer versículo para abrir a barra de ferramentas.",
+      "Abra qualquer capítulo da Bíblia para experimentar a visualização sem distrações otimizada para estudo e pregação.",
     path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-verse-item']",
-  },
-  {
-    id: "verse-tool-explain",
-    title: "Ferramenta 'Me Explica' (Exegese IA)",
-    description:
-      "Gera uma exegese completa do versículo: Resumo, Contexto Histórico-Literário, Termos em Grego/Hebraico, Aplicação Prática e Fontes.",
-    icon: "MessageCircleQuestion",
-    badge: "IA Avançada",
-    howToTest:
-      "Clique em um versículo e selecione 'Me Explica' para receber uma análise profunda e instantânea.",
-    path: "/estudo-biblico",
-  },
-  {
-    id: "verse-tool-compare",
-    title: "Comparador de 13 Traduções Bíblicas",
-    description:
-      "Compare o versículo selecionado com qualquer uma das 13 traduções disponíveis de forma pontual ou simultânea.",
-    icon: "GitCompare",
-    badge: "Essencial",
-    howToTest:
-      "Abra as ferramentas de um versículo, clique em 'Comparar' e selecione a tradução que deseja confrontar (ex: NVI, ARA, NVT).",
-    path: "/estudo-biblico",
-  },
-  {
-    id: "verse-tool-cross-ref-themes",
-    title: "Referências Cruzadas e Sugestão de Temas",
-    description:
-      "Descubra versículos correlatos (classificados em Textual, Doutrinária e Profética) e ideias de temas bíblicos para pregações.",
-    icon: "Link2",
-    badge: "Homilética",
-    howToTest:
-      "Clique em 'Referências' ou 'Temas' nas ferramentas de qualquer versículo.",
-    path: "/estudo-biblico",
+    targetSelector: "[data-tour='bible-books-grid']",
   },
   {
     id: "sermon-generator-rules",
-    title: "Novo Motor Homilético Oficial do Gerador de Esboços",
+    title: "Motor Homilético Oficial do Gerador de Esboços",
     description:
-      "Esboços de sermões com 6 arquiteturas (Expositiva, Textual, Temática, Doutrinária, Evangelística, Estudo Bíblico), rigor bíblico pentecostal e zero superficialidade.",
-    icon: "ScrollText",
+      "Esboços com 6 arquiteturas (Expositiva, Textual, Temática, Doutrinária, Evangelística, Estudo Bíblico), rigor bíblico e tela cheia para ministração.",
+    icon: "Sparkles",
     badge: "Reformulado",
     howToTest:
-      "Acesse o 'Gerador de Esboços', preencha um tema (ex: 'O Poder da Oração') e gere um sermão estruturado pronto para o púlpito.",
+      "Acesse o 'Gerador de Esboços', preencha seu tema e gere um sermão pronto com visualização em Modo Púlpito.",
     path: "/gerador-pregacoes",
     targetSelector: "[data-tour='sermon-generator-form']",
   },
+  {
+    id: "global-search-cmd-k",
+    title: "Busca Global Instantânea (Cmd/Ctrl + K)",
+    description:
+      "Pressione Ctrl+K (ou Cmd+K no Mac) em qualquer tela para abrir a busca universal de ferramentas, livros e conteúdos.",
+    icon: "GitCompare",
+    badge: "Atalho",
+    howToTest:
+      "Pressione Ctrl+K no teclado ou clique no botão de busca no topo para navegar instantaneamente.",
+    path: "/",
+    targetSelector: "[data-tour='global-search-btn']",
+  },
+  {
+    id: "glassmorphism-glow",
+    title: "Glassmorphism Refinado & Iluminação Celestial",
+    description:
+      "Design Editorial Sagrado Moderno com desfoque de vidro suave, cartões com bordas douradas e botão neon pulsante.",
+    icon: "Sparkles",
+    badge: "Design",
+    howToTest:
+      "Navegue pela página inicial para conferir a iluminação celestial e os efeitos de profundidade.",
+    path: "/",
+  },
 ];
 
-// Passos do FLUXO 1: Tutorial Completo da Aplicação (Para novos usuários)
+// FLUXO 1: Tutorial Completo da Aplicação (Para novos usuários)
 export const FULL_APP_TOUR_STEPS: TourStep[] = [
   {
     id: "welcome",
     title: "Bem-vindo ao Pregador Pro! 👋",
     description:
-      "Sua plataforma completa para estudo bíblico exegético, preparação de sermões bíblicos e crescimento ministerial. Vamos fazer um tour rápido?",
+      "Sua plataforma completa para estudo bíblico exegético, preparação de sermões e crescimento ministerial. Vamos fazer um tour guiado pelas principais ferramentas?",
     placement: "center",
   },
   {
     id: "navigation",
-    title: "Navegação Principal 🧭",
+    title: "Navegação por Menus Agrupados 🧭",
     description:
-      "Acesse facilmente todas as áreas: Bíblia, Gerador de Esboços, Biblioteca Teológica, Curso de Teologia, Dicionário e muito mais através da barra de navegação.",
-    targetSelector: "header nav, header [data-tour='mobile-menu']",
+      "Acesse de forma organizada: Estudo Bíblico, Pregação e Academia através dos menus dropdown no topo ou pela barra móvel no rodapé.",
+    path: "/",
+    targetSelector: "[data-tour='main-nav']",
     placement: "bottom",
   },
   {
     id: "bible-reading",
-    title: "Leitura Bíblica com 13 Versões 📖",
+    title: "Bíblia Sagrada & 13 Traduções 📖",
     description:
-      "Leia e navegue pelos 66 livros da Bíblia. Agora você pode alternar facilmente entre 13 versões (ARC, NVI, ACF, ARA, NVT, KJA, etc.) em qualquer capítulo.",
+      "Navegue pelos 66 livros da Bíblia com contagem de capítulos, barra de progresso e alterne entre 13 versões consagradas (ARC, NVI, ACF, ARA, etc.).",
     path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-version-selector']",
-    howToTest: "Clique no seletor no topo da leitura para trocar de versão instantaneamente.",
-    placement: "bottom",
-  },
-  {
-    id: "verse-tools",
-    title: "Ferramentas Contextuais do Versículo ⚡",
-    description:
-      "Dê um clique em qualquer versículo para abrir opções poderosas: Me Explica (Exegese com IA), Comparar Traduções, Referências Cruzadas, Temas e Anotações.",
-    path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-verse-item']",
-    howToTest: "Clique sobre o texto de qualquer versículo para ver a barra de ferramentas em ação.",
+    targetSelector: "[data-tour='bible-books-grid']",
+    howToTest: "Clique em qualquer livro para abrir os capítulos e ler na sua tradução preferida.",
     placement: "top",
   },
   {
     id: "sermon-generator",
-    title: "Gerador de Esboços Homiléticos 📜",
+    title: "Gerador de Esboços & Modo Púlpito 📜",
     description:
-      "Crie sermões fiéis à Palavra, com 6 arquiteturas (Expositiva, Textual, Temática, Doutrinária, etc.) e estrutura pronta para ministrar no púlpito.",
+      "Crie sermões fiéis à Palavra com divisões claras, aplicações práticas e visualize em tela cheia no Modo Púlpito com cronômetro ao vivo.",
     path: "/gerador-pregacoes",
     targetSelector: "[data-tour='sermon-generator-form']",
-    howToTest: "Digite seu tema, selecione o estilo e clique em 'Gerar Pregação'.",
+    howToTest: "Preencha o tema, selecione o estilo e clique em 'Gerar Pregação'.",
     placement: "top",
   },
   {
-    id: "help-center",
-    title: "Ajuda e Tour a Qualquer Momento 💡",
+    id: "global-search",
+    title: "Busca Global Rápida ⚡",
     description:
-      "Você pode rever este tutorial ou conferir as novidades a qualquer momento clicando no botão de lâmpada/novidades.",
-    placement: "center",
+      "Encontre rapidamente qualquer livro, sermão ou ferramenta pressionando Ctrl+K (ou Cmd+K) no teclado a qualquer momento.",
+    path: "/",
+    targetSelector: "[data-tour='global-search-btn']",
+    howToTest: "Pressione Ctrl+K para abrir a paleta de comandos rápida.",
+    placement: "bottom",
+  },
+  {
+    id: "help-center",
+    title: "Central de Novidades & Ajuda 💡",
+    description:
+      "Você pode rever este tutorial ou conferir as novidades de cada atualização clicando no botão 'Novidades' no topo.",
+    path: "/",
+    targetSelector: "[data-tour='tour-button']",
+    placement: "bottom",
   },
 ];
 
-// Passos do FLUXO 2: Mini Tour Interativo das Novidades de Hoje (Para usuários existentes)
+// FLUXO 2: Tour Interativo das Novidades (Para usuários que já conhecem o sistema)
 export const WHATS_NEW_TOUR_STEPS: TourStep[] = [
   {
     id: "intro-whats-new",
-    title: "Novidades do Deploy de Hoje! 🚀",
+    title: "Novidades do Deploy! 🚀",
     description:
-      "Preparamos atualizações incríveis para tornar seu estudo e preparação de mensagens ainda mais práticos e profundos. Vamos testar?",
+      "Confira as melhorias e novos recursos adicionados na plataforma: 13 versões bíblicas, Modo Púlpito imersivo, novo motor homilético e busca global.",
     placement: "center",
   },
   {
     id: "step-bible-versions",
-    title: "1. Seletor de 13 Versões na Leitura 📖",
+    title: "1. Leitura Bíblica com 13 Versões 📖",
     description:
-      "No cabeçalho de cada capítulo, você agora tem o seletor com 13 traduções consagradas com carregamento ultra-rápido e memória de preferência.",
+      "Os 66 livros da Bíblia agora contam com o seletor integrado de 13 traduções bíblicas e visualização imersiva em Modo Púlpito.",
     path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-version-selector']",
-    howToTest: "Experimente selecionar uma versão como NVI ou ACF no topo.",
-    placement: "bottom",
-  },
-  {
-    id: "step-verse-tools",
-    title: "2. Barra de Ferramentas ao Clicar no Versículo 🔍",
-    description:
-      "Ao clicar em qualquer versículo, você tem acesso imediato a 'Me Explica', 'Comparar', 'Referências', 'Temas', 'Marcar' e 'Anotar'.",
-    path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-verse-item']",
-    howToTest: "Clique em um versículo e experimente a ferramenta 'Me Explica' ou 'Comparar'.",
+    targetSelector: "[data-tour='bible-books-grid']",
+    howToTest: "Abra um capítulo na Bíblia para alternar entre as 13 versões consagradas.",
     placement: "top",
   },
   {
     id: "step-sermon-motor",
-    title: "3. Motor Homilético Oficial do Pregador 📜",
+    title: "2. Novo Motor Homilético do Gerador 📜",
     description:
-      "O Gerador de Esboços foi completamente reformulado com 6 arquiteturas e estrito alinhamento homilético sem superficialidades.",
+      "O Gerador de Esboços foi aprimorado com 6 arquiteturas e botões para visualizar o sermão gerado no Modo Púlpito em tela cheia.",
     path: "/gerador-pregacoes",
     targetSelector: "[data-tour='sermon-generator-form']",
-    howToTest: "Acesse o gerador para criar mensagens com nível elevado de fidelidade bíblica.",
+    howToTest: "Acesse o gerador para criar mensagens profundas e estruturadas.",
     placement: "top",
+  },
+  {
+    id: "step-search",
+    title: "3. Busca Universal com Atalho ⚡",
+    description:
+      "Pesquise e acesse ferramentas e livros rapidamente com o atalho Ctrl+K ou clicando no campo de busca.",
+    path: "/",
+    targetSelector: "[data-tour='global-search-btn']",
+    placement: "bottom",
   },
 ];

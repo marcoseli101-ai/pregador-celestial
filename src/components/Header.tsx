@@ -178,6 +178,7 @@ export function Header() {
             <Button
               variant="outline"
               size="sm"
+              data-tour="global-search-btn"
               onClick={() => setSearchOpen(true)}
               className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground border-border/70 rounded-full px-3 h-8 bg-background/50 hover:bg-accent/10"
               title="Buscar ferramentas e conteúdos (Ctrl+K)"
@@ -193,6 +194,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="sm"
+              data-tour="tour-button"
               onClick={openTourMenu}
               className="hidden sm:flex gap-1.5 text-xs text-amber-500 font-semibold hover:bg-amber-500/15 border border-amber-500/30 rounded-full px-3 h-8"
               title="Ver Novidades e Tutorial da Plataforma"
