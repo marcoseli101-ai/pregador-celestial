@@ -9,7 +9,7 @@ import { ContentActions } from "@/components/ContentActions";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { RankingPanel } from "@/components/RankingPanel";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePersistedState, clearPersistedState } from "@/hooks/usePersistedState";
 
@@ -24,7 +24,7 @@ type Question = {
   explanation: string;
 };
 
-const GENERATE_QUIZ_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-quiz`;
+const GENERATE_QUIZ_URL = `${SUPABASE_URL}/functions/v1/generate-quiz`;
 
 const Questionarios = () => {
   const { user } = useAuth();

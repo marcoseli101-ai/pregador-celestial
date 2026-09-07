@@ -3,6 +3,7 @@ import { X, Play, Pause, Square, Volume2, Loader2, Download, Minimize2, Maximize
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 
 const VOICE_OPTIONS = [
   { id: "pt-BR-AntonioNeural", label: "Antônio", description: "Voz masculina" },
@@ -87,13 +88,13 @@ export function AudioPlayerModal({ content, open, onClose }: AudioPlayerModalPro
 
   const playWithMultiVozes = useCallback(async (text: string) => {
     const response = await fetch(
-      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+      `${SUPABASE_URL}/functions/v1/elevenlabs-tts`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          apikey: SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({ text, voice: selectedVoice }),
       }

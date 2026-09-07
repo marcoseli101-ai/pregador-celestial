@@ -1,6 +1,7 @@
 import { getAuthToken } from "./auth-helpers";
+import { SUPABASE_URL } from "@/integrations/supabase/client";
 
-const GENERATE_SERMON_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-sermon`;
+const GENERATE_SERMON_URL = `${SUPABASE_URL}/functions/v1/generate-sermon`;
 
 type SSECallbacks = {
   onDelta: (text: string) => void;
@@ -71,12 +72,44 @@ async function parseSSEStream(resp: Response, { onDelta, onDone, onError }: SSEC
   onDone();
 }
 
-export async function streamSermon({
-  tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias, onDelta, onDone, onError,
-}: {
-  tema: string; publico: string; tempo: string; nivel: string;
-  textoBase?: string; estrutura?: string; ocasiao?: string; tom?: string; referencias?: string;
-} & SSECallbacks) {
+export interface GenerateSermonParams {
+  tema: string;
+  textoBase?: string;
+  metodoHomiletico?: string;
+  linhaDoutrinaria?: string;
+  profundidade?: string;
+  ocasiao?: string;
+  analiseOriginal?: boolean;
+  incluirOriginal?: boolean;
+  sugerirHarpa?: boolean;
+  incluirHarpa?: boolean;
+  fundamentacaoCPAD?: boolean;
+  incluirCPAD?: boolean;
+  // Campos complementares
+  publico?: string;
+  tempo?: string;
+  nivel?: string;
+  estrutura?: string;
+  tom?: string;
+  referencias?: string;
+}
+
+export async function streamSermon(
+  params: GenerateSermonParams & SSECallbacks
+) {
+  const { onDelta, onDone, onError, ...bodyPayload } = params;
+
+  // Garantir que ambos os aliases estejam preenchidos
+  const payload = {
+    ...bodyPayload,
+    analiseOriginal: bodyPayload.analiseOriginal ?? bodyPayload.incluirOriginal ?? true,
+    incluirOriginal: bodyPayload.incluirOriginal ?? bodyPayload.analiseOriginal ?? true,
+    sugerirHarpa: bodyPayload.sugerirHarpa ?? bodyPayload.incluirHarpa ?? true,
+    incluirHarpa: bodyPayload.incluirHarpa ?? bodyPayload.sugerirHarpa ?? true,
+    fundamentacaoCPAD: bodyPayload.fundamentacaoCPAD ?? bodyPayload.incluirCPAD ?? true,
+    incluirCPAD: bodyPayload.incluirCPAD ?? bodyPayload.fundamentacaoCPAD ?? true,
+  };
+
   const token = await getAuthToken();
   const resp = await fetch(GENERATE_SERMON_URL, {
     method: "POST",
@@ -84,7 +117,7 @@ export async function streamSermon({
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias }),
+    body: JSON.stringify(payload),
   });
   await parseSSEStream(resp, { onDelta, onDone, onError });
 }

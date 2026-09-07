@@ -15,7 +15,10 @@ export default {
     extend: {
       fontFamily: {
         serif: ["Cinzel", "serif"],
-        sans: ["Inter", "sans-serif"],
+        display: ["Cinzel", "Cormorant Garamond", "serif"],
+        editorial: ["Cormorant Garamond", "Cinzel", "serif"],
+        sans: ["Plus Jakarta Sans", "Inter", "sans-serif"],
+        reading: ["Lora", "Merriweather", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

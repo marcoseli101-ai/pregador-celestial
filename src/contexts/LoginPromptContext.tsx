@@ -37,15 +37,43 @@ export function LoginPromptProvider({ children }: { children: ReactNode }) {
     [user]
   );
 
+  const friendlyError = (msg: string): string => {
+    const m = (msg || "").toLowerCase();
+    if (m.includes("invalid login") || m.includes("invalid_grant") || m.includes("invalid credentials")) {
+      return "E-mail ou senha incorretos. Verifique os dados digitados.";
+    }
+    if (m.includes("email not confirmed") || m.includes("not confirmed")) {
+      return "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada ou solicite reenvio na página de login.";
+    }
+    if (m.includes("user not found")) {
+      return "Nenhuma conta encontrada com este e-mail. Crie uma conta na aba 'Cadastrar'.";
+    }
+    if (m.includes("user already registered") || m.includes("already registered") || m.includes("already exists")) {
+      return "Este e-mail já está cadastrado. Tente entrar com sua senha.";
+    }
+    if (m.includes("password should be") || m.includes("weak_password")) {
+      return "A senha deve ter pelo menos 6 caracteres.";
+    }
+    if (m.includes("rate limit") || m.includes("too many requests")) {
+      return "Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.";
+    }
+    return msg || "Erro ao processar autenticação. Tente novamente.";
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !password) {
+      toast.error("Preencha o e-mail e a senha.");
+      return;
+    }
     setLoading(true);
     try {
-      await signIn(email, password);
+      await signIn(cleanEmail, password);
       setOpen(false);
       setEmail(""); setPassword("");
     } catch (err: any) {
-      toast.error(err.message || "Erro ao entrar");
+      toast.error(friendlyError(err?.message || ""));
     } finally {
       setLoading(false);
     }
@@ -53,13 +81,21 @@ export function LoginPromptProvider({ children }: { children: ReactNode }) {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.length < 6) { toast.error("A senha deve ter pelo menos 6 caracteres"); return; }
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      toast.error("Preencha o e-mail.");
+      return;
+    }
+    if (password.length < 6) { 
+      toast.error("A senha deve ter pelo menos 6 caracteres"); 
+      return; 
+    }
     setLoading(true);
     try {
-      await signUp(email, password, name);
+      await signUp(cleanEmail, password, name);
       setTab("login");
     } catch (err: any) {
-      toast.error(err.message || "Erro ao cadastrar");
+      toast.error(friendlyError(err?.message || ""));
     } finally {
       setLoading(false);
     }

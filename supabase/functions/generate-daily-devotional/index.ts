@@ -37,8 +37,17 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY não configurada");
+    const apiKey =
+      Deno.env.get("GEMINI_API_CHATGPT") ||
+      Deno.env.get("OPENAI_API_KEY") ||
+      Deno.env.get("CHATGPT_API_KEY") ||
+      Deno.env.get("GEMINI_API_KEY") ||
+      Deno.env.get("LOVABLE_API_KEY");
+
+    if (!apiKey) throw new Error("Chave de IA não configurada no Supabase.");
+
+    const cleanKey = apiKey.replace(/^["']|["']$/g, "").trim();
+    const isOpenAI = cleanKey.startsWith("sk-proj-") || cleanKey.startsWith("sk-");
 
     const dateLabel = brasiliaDate.toLocaleDateString("pt-BR", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
@@ -92,25 +101,55 @@ A Paz que Excede Todo Entendimento
 ## 📖 Versículo do Dia
 ...`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        stream: false,
-      }),
-    });
+    let response: Response;
+
+    if (isOpenAI) {
+      response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cleanKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          temperature: 0.5,
+        }),
+      });
+    } else if (cleanKey.startsWith("AIza")) {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            { role: "user", parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }
+          ]
+        })
+      });
+    } else {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cleanKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          stream: false,
+        }),
+      });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("OpenAI error:", response.status, errorText);
+      console.error("AI error:", response.status, errorText);
       return new Response(
         JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -118,7 +157,7 @@ A Paz que Excede Todo Entendimento
     }
 
     const aiResult = await response.json();
-    const fullContent = aiResult.choices?.[0]?.message?.content ?? "";
+    const fullContent = aiResult.choices?.[0]?.message?.content ?? aiResult.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     if (!fullContent) {
       return new Response(

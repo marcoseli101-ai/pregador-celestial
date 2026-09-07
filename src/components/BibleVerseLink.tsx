@@ -162,10 +162,10 @@ export const BibleVerseLink: React.FC<BibleVerseLinkProps> = ({ text, className 
             <button
               key={i}
               onClick={(e) => handleClick(part, e)}
-              className="inline-flex items-center gap-0.5 text-accent hover:text-accent/80 underline decoration-accent/40 hover:decoration-accent underline-offset-2 cursor-pointer font-medium transition-colors"
+              className="bible-verse-btn inline-flex items-center gap-0.5 text-amber-300 hover:text-amber-200 font-bold underline decoration-amber-400/60 hover:decoration-amber-300 underline-offset-2 cursor-pointer transition-colors px-1 py-0.5 rounded bg-amber-500/10"
               title={`Abrir ${part} na Bíblia`}
             >
-              <BookOpen className="inline h-3 w-3 shrink-0" />
+              <BookOpen className="inline h-3 w-3 shrink-0 text-amber-400" />
               {part}
             </button>
           );

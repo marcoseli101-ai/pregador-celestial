@@ -1,6 +1,8 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { BottomNav } from "./BottomNav";
+import { ReadingProgressBar } from "./ReadingProgressBar";
 import { AppTourProvider } from "./tour/AppTourProvider";
 
 import bgSpiritualLight from "@/assets/bg-spiritual-light.jpg";
@@ -27,48 +29,58 @@ export function Layout() {
   return (
     <AppTourProvider>
       <div className="relative flex min-h-screen flex-col">
+        {/* Continuous Reading Progress Indicator on top */}
+        <ReadingProgressBar />
+
         {/* Fixed background image */}
         <div className="fixed inset-0 -z-20">
           <img
             src={bg}
             alt=""
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover opacity-90 dark:opacity-40"
             loading="eager"
           />
         </div>
-        {/* Golden light effects - between background image and text overlay */}
+
+        {/* Golden & Indigo celestial light mesh */}
         <div className="fixed inset-0 -z-[15] pointer-events-none overflow-hidden">
           {/* Central golden radial glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] rounded-full opacity-40"
-            style={{ background: 'radial-gradient(ellipse at center, hsl(42 60% 55% / 0.6), hsl(42 50% 45% / 0.3) 40%, transparent 70%)' }}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] rounded-full opacity-35 dark:opacity-45"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(245, 158, 11, 0.25), rgba(79, 70, 229, 0.1) 45%, transparent 70%)",
+            }}
           />
           {/* Top-left golden beam */}
-          <div className="absolute -top-20 -left-20 w-[600px] h-[600px] rounded-full opacity-35 animate-glow-pulse"
-            style={{ background: 'radial-gradient(circle, hsl(42 55% 60% / 0.7), hsl(42 50% 50% / 0.3) 50%, transparent 70%)' }}
+          <div
+            className="absolute -top-20 -left-20 w-[600px] h-[600px] rounded-full opacity-30 animate-pulse"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(245, 158, 11, 0.35), transparent 65%)",
+            }}
           />
-          {/* Bottom-right golden beam */}
-          <div className="absolute -bottom-32 -right-32 w-[700px] h-[700px] rounded-full opacity-30"
-            style={{ background: 'radial-gradient(circle, hsl(42 55% 55% / 0.6), hsl(42 45% 50% / 0.2) 50%, transparent 70%)' }}
-          />
-          {/* Top-right accent */}
-          <div className="absolute -top-10 -right-10 w-[400px] h-[400px] rounded-full opacity-25 animate-glow-pulse"
-            style={{ background: 'radial-gradient(circle, hsl(38 60% 60% / 0.6), transparent 60%)', animationDelay: '1.5s' }}
-          />
-          {/* Full-page golden wash */}
-          <div className="absolute inset-0 opacity-15"
-            style={{ background: 'linear-gradient(170deg, hsl(42 55% 60% / 0.4), hsl(42 50% 50% / 0.2) 50%, hsl(42 45% 55% / 0.3))' }}
+          {/* Bottom-right indigo beam */}
+          <div
+            className="absolute -bottom-32 -right-32 w-[700px] h-[700px] rounded-full opacity-25"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 60%)",
+            }}
           />
         </div>
 
-        {/* Overlay for readability */}
-        <div className="fixed inset-0 -z-10 bg-background/70 backdrop-blur-sm" />
+        {/* Adaptive backdrop readability overlay */}
+        <div className="fixed inset-0 -z-10 bg-background/80 dark:bg-[#0B0F17]/85 backdrop-blur-[3px]" />
 
         <Header />
-        <main className="flex-1">
+        <main className="flex-1 pb-16 lg:pb-0">
           <Outlet />
         </main>
         <Footer />
+        <BottomNav />
       </div>
     </AppTourProvider>
   );
 }
+

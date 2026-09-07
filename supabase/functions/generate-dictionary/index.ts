@@ -20,8 +20,19 @@ serve(async (req) => {
       });
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const apiKey =
+      Deno.env.get("GEMINI_API_CHATGPT") ||
+      Deno.env.get("OPENAI_API_KEY") ||
+      Deno.env.get("CHATGPT_API_KEY") ||
+      Deno.env.get("GEMINI_API_KEY") ||
+      Deno.env.get("LOVABLE_API_KEY");
+
+    if (!apiKey) {
+      throw new Error("Chave de IA não configurada no Supabase.");
+    }
+
+    const cleanKey = apiKey.replace(/^["']|["']$/g, "").trim();
+    const isOpenAI = cleanKey.startsWith("sk-proj-") || cleanKey.startsWith("sk-");
 
     const langFilter = language && language !== "Todos" ? `Foque no idioma ${language}.` : "Inclua resultados em Hebraico, Aramaico e Grego quando aplicável.";
 
@@ -44,39 +55,60 @@ Cada item DEVE ter EXATAMENTE estes campos:
 IMPORTANTE: Seja academicamente preciso. Use transliterações aceitas pela academia teológica.
 Retorne APENAS o JSON válido, sem texto adicional.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Pesquise a palavra ou conceito bíblico: "${word}"` },
-        ],
-      }),
-    });
+    let response: Response;
+
+    if (isOpenAI) {
+      response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cleanKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: `Pesquise a palavra ou conceito bíblico: "${word}"` },
+          ],
+          response_format: { type: "json_object" },
+          temperature: 0.3,
+        }),
+      });
+    } else if (cleanKey.startsWith("AIza")) {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            { role: "user", parts: [{ text: `${systemPrompt}\n\nPesquise a palavra ou conceito bíblico: "${word}"` }] }
+          ]
+        })
+      });
+    } else {
+      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cleanKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: `Pesquise a palavra ou conceito bíblico: "${word}"` },
+          ],
+        }),
+      });
+    }
 
     if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Ocorreu um erro ao processar sua solicitação. Tente novamente." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+      const errText = await response.text();
+      console.error("AI gateway error:", response.status, errText);
       throw new Error(`AI gateway error: ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    const content = data.choices?.[0]?.message?.content || data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {

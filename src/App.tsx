@@ -2,12 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LoginPromptProvider } from "@/contexts/LoginPromptContext";
 import { Layout } from "@/components/Layout";
 import { AdminRoute } from "@/components/AdminRoute";
 import { InstallPWAPrompt } from "@/components/InstallPWAPrompt";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import EstudoBiblico from "./pages/EstudoBiblico";
 import GeradorPregacoes from "./pages/GeradorPregacoes";
@@ -25,45 +26,48 @@ import NotasPessoais from "./pages/NotasPessoais";
 import Marcadores from "./pages/Marcadores";
 import NotFound from "./pages/NotFound";
 
-
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <LoginPromptProvider>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/" element={<Index />} />
-                <Route path="/estudo-biblico" element={<EstudoBiblico />} />
-                <Route path="/plano-leitura" element={<PlanoLeitura />} />
-                <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
-                <Route path="/biblioteca" element={<Biblioteca />} />
-                <Route path="/curso-teologia" element={<CursoTeologia />} />
-                <Route path="/dicionario" element={<Dicionario />} />
-                <Route path="/questionarios" element={<Questionarios />} />
-                <Route path="/devocional" element={<Devocional />} />
-                <Route path="/area-pregador" element={<AreaPregador />} />
-                <Route path="/notas" element={<NotasPessoais />} />
-                <Route path="/marcadores" element={<Marcadores />} />
-              </Route>
-              <Route element={<AdminRoute><Layout /></AdminRoute>}>
-                <Route path="/admin" element={<Admin />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <InstallPWAPrompt />
-          </LoginPromptProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <LoginPromptProvider>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/" element={<Index />} />
+                  <Route path="/estudo-biblico" element={<EstudoBiblico />} />
+                  <Route path="/plano-leitura" element={<PlanoLeitura />} />
+                  <Route path="/gerador-pregacoes" element={<GeradorPregacoes />} />
+                  <Route path="/gerador" element={<Navigate to="/gerador-pregacoes" replace />} />
+                  <Route path="/pregacao" element={<Navigate to="/gerador-pregacoes" replace />} />
+                  <Route path="/biblioteca" element={<Biblioteca />} />
+                  <Route path="/curso-teologia" element={<CursoTeologia />} />
+                  <Route path="/dicionario" element={<Dicionario />} />
+                  <Route path="/questionarios" element={<Questionarios />} />
+                  <Route path="/devocional" element={<Devocional />} />
+                  <Route path="/area-pregador" element={<AreaPregador />} />
+                  <Route path="/notas" element={<NotasPessoais />} />
+                  <Route path="/marcadores" element={<Marcadores />} />
+                </Route>
+                <Route element={<AdminRoute><Layout /></AdminRoute>}>
+                  <Route path="/admin" element={<Admin />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <InstallPWAPrompt />
+            </LoginPromptProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

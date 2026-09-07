@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
 import jsPDF from "jspdf";
+import { SUPABASE_URL } from "@/integrations/supabase/client";
 
 /* ══════════════════════════════════════════════════════════════
    GRADE CURRICULAR — Baseada na CGADB / FAECAD / CPAD
@@ -882,7 +883,7 @@ As Assembleias de Deus mantêm posições sobre:
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/theology-chat`;
+const CHAT_URL = `${SUPABASE_URL}/functions/v1/theology-chat`;
 
 const CursoTeologia = () => {
   const [activeModule, setActiveModule] = usePersistedState<number>("curso:activeModule", 0);
