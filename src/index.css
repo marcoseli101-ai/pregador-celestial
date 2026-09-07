@@ -152,31 +152,31 @@
     box-shadow: 0 15px 50px -10px rgba(245, 158, 11, 0.35);
   }
 
-  /* Refined Glassmorphism System */
+  /* Refined Glassmorphism System - Modern Sacred SaaS */
   .glass-card {
-    background: rgba(18, 24, 36, 0.72);
+    background: rgba(15, 23, 42, 0.82);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.05);
   }
   :root:not(.dark) .glass-card {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.08), 0 0 15px rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.08), 0 0 15px rgba(245, 158, 11, 0.08);
   }
 
   .glass-card-gold {
-    background: linear-gradient(145deg, rgba(26, 32, 48, 0.82) 0%, rgba(15, 20, 30, 0.75) 100%);
+    background: linear-gradient(145deg, rgba(26, 32, 48, 0.88) 0%, rgba(15, 20, 30, 0.82) 100%);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.38);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.2);
   }
   :root:not(.dark) .glass-card-gold {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(245, 158, 11, 0.45);
@@ -184,13 +184,13 @@
   }
 
   .glass-header {
-    background: rgba(11, 15, 23, 0.85);
+    background: rgba(11, 15, 23, 0.88);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.15);
   }
   :root:not(.dark) .glass-header {
-    background: rgba(250, 248, 245, 0.9);
+    background: rgba(250, 248, 245, 0.92);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.07);
@@ -209,6 +209,27 @@
 
   .gold-glow {
     box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
+  }
+
+  /* Strong & Lexicon Badges */
+  .badge-strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: rgba(245, 158, 11, 0.18);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #FBBF24;
+    letter-spacing: 0.03em;
+  }
+  :root:not(.dark) .badge-strong {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(217, 119, 6, 0.35);
+    color: #B45309;
   }
 
   /* Editorial Reading Typography */
@@ -243,16 +264,16 @@
 
   /* Pulpit OLED Mode */
   .pulpit-mode {
-    background-color: #000000 !important;
+    background-color: #050505 !important;
     color: #F8FAFC !important;
   }
 
-  /* Skeleton Gold Shimmer with Emblem Pulse */
+  /* Skeleton Gold Shimmer with Pulse */
   .skeleton-gold {
     background: linear-gradient(
       90deg,
       rgba(245, 158, 11, 0.05) 0%,
-      rgba(245, 158, 11, 0.18) 50%,
+      rgba(245, 158, 11, 0.22) 50%,
       rgba(245, 158, 11, 0.05) 100%
     );
     background-size: 200% 100%;
@@ -263,4 +284,110 @@
 @keyframes skeleton-shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   CAMADA 1: ESTILOS DE IMPRESSÃO DE PÚLPITO (@media print - FOLHA A4 LIMPA)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 18mm 15mm 18mm 15mm;
+  }
+
+  /* Ocultar elementos de navegação e UI interativa */
+  header,
+  nav,
+  footer,
+  aside,
+  .glass-header,
+  #bottom-nav,
+  .no-print,
+  button,
+  [data-tour],
+  .actions-bar,
+  .pulpit-hide-print {
+    display: none !important;
+  }
+
+  /* Resetar página para fundo branco puro e texto preto */
+  html, body, #root, main, .container {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Lora', 'Merriweather', 'Times New Roman', Georgia, serif !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  /* Formatador de cards para impressão */
+  .glass-card, .glass-card-gold, .card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 1rem 0 !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Títulos e seções do sermão */
+  h1, h2, h3, h4 {
+    color: #000000 !important;
+    font-family: 'Cinzel', 'Cormorant Garamond', 'Times New Roman', serif !important;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  h1 {
+    font-size: 20pt !important;
+    text-align: center;
+    margin-bottom: 0.5rem !important;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 0.3rem !important;
+  }
+
+  h2, h3 {
+    font-size: 13pt !important;
+    margin-top: 1rem !important;
+    margin-bottom: 0.4rem !important;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 0.2rem !important;
+  }
+
+  /* Evitar quebra no meio dos tópicos homiléticos */
+  .group\/sec,
+  .print-avoid-break,
+  blockquote,
+  .badge-strong {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Caixa do texto bíblico */
+  .bg-amber-500\/10, blockquote {
+    background: #f8f8f8 !important;
+    border-left: 3px solid #000000 !important;
+    color: #111111 !important;
+    padding: 0.6rem 0.8rem !important;
+    margin: 0.8rem 0 !important;
+    font-style: italic;
+  }
+
+  /* Tags de Strong na impressão */
+  .badge-strong {
+    border: 1px solid #333333 !important;
+    background: #f0f0f0 !important;
+    color: #000000 !important;
+    font-size: 9pt !important;
+    padding: 1px 4px !important;
+  }
+
+  /* Links */
+  a {
+    color: #000000 !important;
+    text-decoration: none !important;
+  }
 }

@@ -13,6 +13,13 @@ import {
   Maximize2,
   Sliders,
   Flame,
+  Printer,
+  Copy,
+  Check,
+  GraduationCap,
+  Music,
+  CheckSquare,
+  Type,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,6 +36,28 @@ import { SermonContentRenderer } from "@/components/SermonContentRenderer";
 import { PulpitModeModal } from "@/components/PulpitModeModal";
 import { usePersistedState, clearPersistedState } from "@/hooks/usePersistedState";
 
+export interface RegistroSermon {
+  id: string;
+  titulo: string;
+  textoBase: string;
+  conteudoMarkdown: string;
+  dataCriacao: string;
+  metodoHomiletico?: string;
+  linhaDoutrinaria?: string;
+  profundidade?: string;
+  ocasiao?: string;
+  ministracoes: Array<{
+    id?: string;
+    data: string;
+    igreja: string;
+    cidade: string;
+    ocasiao: string;
+    frutos: { conversoes: number; batismosEspirito: number };
+    hinosUtilizados: string[];
+    anotacoes: string;
+  }>;
+}
+
 interface SavedSermon {
   id: string;
   title: string;
@@ -41,19 +70,37 @@ interface SavedSermon {
 }
 
 const GeradorPregacoes = () => {
-  const [tema, setTema] = usePersistedState("ger:tema", "");
+  // Layer 2: Homiletical Parameters
   const [textoBase, setTextoBase] = usePersistedState("ger:textoBase", "");
-  const [publico, setPublico] = usePersistedState("ger:publico", "");
-  const [tempo, setTempo] = usePersistedState("ger:tempo", "");
-  const [nivel, setNivel] = usePersistedState("ger:nivel", "");
-  const [estrutura, setEstrutura] = usePersistedState("ger:estrutura", "");
-  const [ocasiao, setOcasiao] = usePersistedState("ger:ocasiao", "");
-  const [tom, setTom] = usePersistedState("ger:tom", "");
-  const [referencias, setReferencias] = usePersistedState("ger:referencias", "");
+  const [tema, setTema] = usePersistedState("ger:tema", "");
+  const [metodoHomiletico, setMetodoHomiletico] = usePersistedState(
+    "ger:metodoHomiletico",
+    "Expositivo (Versículo por versículo)"
+  );
+  const [linhaDoutrinaria, setLinhaDoutrinaria] = usePersistedState(
+    "ger:linhaDoutrinaria",
+    "Pneumatologia & Avivamento Pentecostal"
+  );
+  const [profundidade, setProfundidade] = usePersistedState(
+    "ger:profundidade",
+    "Profundo / Acadêmico (Exegese no original com léxico Strong)"
+  );
+  const [ocasiao, setOcasiao] = usePersistedState("ger:ocasiao", "Culto de Ensino / Doutrina");
+
+  // Toggles
+  const [incluirOriginal, setIncluirOriginal] = usePersistedState("ger:incluirOriginal", true);
+  const [incluirHarpa, setIncluirHarpa] = usePersistedState("ger:incluirHarpa", true);
+  const [incluirCPAD, setIncluirCPAD] = usePersistedState("ger:incluirCPAD", true);
+
+  // Output & UI State
   const [result, setResult] = usePersistedState<string>("ger:result", "");
   const [resultTema, setResultTema] = usePersistedState<string>("ger:resultTema", "");
+  const [resultTextoBase, setResultTextoBase] = usePersistedState<string>("ger:resultTextoBase", "");
   const [loading, setLoading] = useState(false);
   const [pulpitOpen, setPulpitOpen] = useState(false);
+  const [fontSize, setFontSize] = useState<number>(18);
+  const [copiedAll, setCopiedAll] = useState(false);
+
   const { user } = useAuth();
   const { requireLogin } = useLoginPrompt();
 
@@ -86,33 +133,97 @@ const GeradorPregacoes = () => {
     if (user) fetchHistory();
   }, [user, fetchHistory]);
 
-  const autoSaveSermon = useCallback(async (content: string, sermonTema: string) => {
-    if (!user || !content) return;
-    const { error } = await supabase.from("saved_sermons").insert({
-      user_id: user.id, title: sermonTema, tema: sermonTema, publico, tempo, nivel, content,
-    });
-    if (!error) { fetchHistory(); toast.success("Pregação salva automaticamente!"); }
-  }, [user, publico, tempo, nivel, fetchHistory]);
+  const saveToOfflineCache = (sermon: RegistroSermon) => {
+    try {
+      const existingRaw = localStorage.getItem("pregador:sermoes_offline_v2");
+      const existing: RegistroSermon[] = existingRaw ? JSON.parse(existingRaw) : [];
+      const updated = [sermon, ...existing.filter((s) => s.id !== sermon.id)];
+      localStorage.setItem("pregador:sermoes_offline_v2", JSON.stringify(updated.slice(0, 100)));
+    } catch (e) {
+      console.error("Offline save error:", e);
+    }
+  };
+
+  const autoSaveSermon = useCallback(
+    async (content: string, sermonTema: string, sermonTextoBase: string) => {
+      const sermonId = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+      const registro: RegistroSermon = {
+        id: sermonId,
+        titulo: sermonTema,
+        textoBase: sermonTextoBase,
+        conteudoMarkdown: content,
+        dataCriacao: new Date().toISOString(),
+        metodoHomiletico,
+        linhaDoutrinaria,
+        profundidade,
+        ocasiao,
+        ministracoes: [],
+      };
+
+      // Always save to offline cache
+      saveToOfflineCache(registro);
+
+      if (!user || !content) return;
+
+      const { error } = await supabase.from("saved_sermons").insert({
+        user_id: user.id,
+        title: sermonTema,
+        tema: sermonTema,
+        content,
+      });
+
+      if (!error) {
+        fetchHistory();
+        toast.success("Pregação salva no acervo e cache offline!");
+      }
+    },
+    [user, metodoHomiletico, linhaDoutrinaria, profundidade, ocasiao, fetchHistory]
+  );
 
   const handleGenerate = async () => {
-    if (!tema.trim()) { toast.error("Digite um tema para a pregação"); return; }
-    if (!publico) { toast.error("Selecione o público-alvo"); return; }
-    if (!tempo) { toast.error("Selecione o tempo de pregação"); return; }
-    if (!nivel) { toast.error("Selecione o estilo da pregação"); return; }
-    if (!estrutura) { toast.error("Selecione a estrutura homilética"); return; }
+    if (!textoBase.trim()) {
+      toast.error("Informe o Texto Base Bíblico (ex: Mateus 25:1-13)");
+      return;
+    }
+    if (!tema.trim()) {
+      toast.error("Informe o Tema Central da Pregação");
+      return;
+    }
+
     setResult("");
     setResultTema(tema);
+    setResultTextoBase(textoBase);
     setLoading(true);
     setChatMessages([]);
     clearPersistedState("ger:chatMessages");
     setActiveTab("pregacao");
+
     let accumulated = "";
     const currentTema = tema;
+    const currentTextoBase = textoBase;
+
     await streamSermon({
-      tema, textoBase, publico, tempo, nivel, estrutura, ocasiao, tom, referencias,
-      onDelta: (chunk) => { accumulated += chunk; setResult(accumulated); },
-      onDone: () => { setLoading(false); autoSaveSermon(accumulated, currentTema); },
-      onError: (msg) => { toast.error(msg); setLoading(false); },
+      tema: currentTema,
+      textoBase: currentTextoBase,
+      metodoHomiletico,
+      linhaDoutrinaria,
+      profundidade,
+      ocasiao,
+      incluirOriginal,
+      incluirHarpa,
+      incluirCPAD,
+      onDelta: (chunk) => {
+        accumulated += chunk;
+        setResult(accumulated);
+      },
+      onDone: () => {
+        setLoading(false);
+        autoSaveSermon(accumulated, currentTema, currentTextoBase);
+      },
+      onError: (msg) => {
+        toast.error(msg);
+        setLoading(false);
+      },
     });
   };
 
@@ -120,19 +231,34 @@ const GeradorPregacoes = () => {
     if (!requireLogin()) return;
     if (!result) return;
     const { error } = await supabase.from("saved_sermons").insert({
-      user_id: user!.id, title: resultTema || tema, tema: resultTema || tema, publico, tempo, nivel, content: result,
+      user_id: user!.id,
+      title: resultTema || tema,
+      tema: resultTema || tema,
+      content: result,
     });
     if (error) toast.error("Erro ao salvar");
-    else { toast.success("Pregação salva no seu histórico!"); fetchHistory(); }
+    else {
+      toast.success("Pregação salva no seu histórico!");
+      fetchHistory();
+    }
+  };
+
+  const handleCopyFullSermon = () => {
+    if (!result) return;
+    navigator.clipboard.writeText(result);
+    setCopiedAll(true);
+    toast.success("Esboço completo copiado com formatação!");
+    setTimeout(() => setCopiedAll(false), 2000);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   const handleLoadFromHistory = (sermon: SavedSermon) => {
     setResult(sermon.content);
     setResultTema(sermon.title);
     setTema(sermon.tema || sermon.title);
-    if (sermon.publico) setPublico(sermon.publico);
-    if (sermon.tempo) setTempo(sermon.tempo);
-    if (sermon.nivel) setNivel(sermon.nivel);
     setChatMessages([]);
     setActiveTab("pregacao");
     setShowHistory(false);
@@ -143,7 +269,10 @@ const GeradorPregacoes = () => {
     e.stopPropagation();
     const { error } = await supabase.from("saved_sermons").delete().eq("id", id);
     if (error) toast.error("Erro ao excluir");
-    else { toast.success("Excluído"); setHistory(prev => prev.filter(s => s.id !== id)); }
+    else {
+      toast.success("Excluído");
+      setHistory((prev) => prev.filter((s) => s.id !== id));
+    }
   };
 
   const handleSendQuestion = async () => {
@@ -151,12 +280,19 @@ const GeradorPregacoes = () => {
     const userMsg: ChatMessage = { role: "user", content: chatInput };
     const displayTema = resultTema || tema;
     const contextMessages: ChatMessage[] = [
-      { role: "user", content: `Aqui está a pregação gerada sobre "${displayTema}":\n\n${result}` },
-      { role: "assistant", content: "Entendi! Li a pregação completa. Pode me fazer qualquer pergunta sobre ela — teologia, aplicação, referências bíblicas, como adaptar para outro público, etc." },
+      {
+        role: "user",
+        content: `Aqui está o sermão homilético gerado sobre "${displayTema}":\n\n${result}`,
+      },
+      {
+        role: "assistant",
+        content:
+          "Paz do Senhor! Analisei o sermão completo de acordo com as diretrizes da CGADB e CPAD. Pode me fazer qualquer pergunta para aprofundar a exegese, extrair mais ilustrações ou adaptar a ministração.",
+      },
       ...chatMessages,
       userMsg,
     ];
-    setChatMessages(prev => [...prev, userMsg]);
+    setChatMessages((prev) => [...prev, userMsg]);
     setChatInput("");
     setChatLoading(true);
     let accumulated = "";
@@ -164,16 +300,22 @@ const GeradorPregacoes = () => {
       messages: contextMessages,
       onDelta: (chunk) => {
         accumulated += chunk;
-        setChatMessages(prev => {
+        setChatMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last?.role === "assistant") {
-            return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: accumulated } : m);
+            return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: accumulated } : m));
           }
           return [...prev, { role: "assistant", content: accumulated }];
         });
       },
-      onDone: () => { setChatLoading(false); chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); },
-      onError: (msg) => { toast.error(msg); setChatLoading(false); },
+      onDone: () => {
+        setChatLoading(false);
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      },
+      onError: (msg) => {
+        toast.error(msg);
+        setChatLoading(false);
+      },
     });
   };
 
@@ -181,161 +323,181 @@ const GeradorPregacoes = () => {
 
   return (
     <AnimatedPage className="container px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      <AnimatedSection className="mb-8 text-center">
+      <AnimatedSection className="mb-8 text-center pulpit-hide-print">
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 tracking-tight">
-          Gerador de <span className="text-gradient-gold">Esboço de Pregação</span>
+          Gerador de <span className="text-gradient-gold">Pregações & Esboços</span>
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-          Crie sermões bíblicos profundos, com exegese rigorosa, estrutura homilética clara e aplicações práticas para o púlpito.
+          Motor Homilético Pentecostal Clássico (CGADB) com rigor exegético ARC, léxico no original e bibliografia CPAD.
         </p>
       </AnimatedSection>
 
       {/* Split View Container */}
-      <div className="mx-auto w-full max-w-7xl grid gap-6 lg:grid-cols-[380px_minmax(0,1fr)] xl:grid-cols-[420px_minmax(0,1fr)] items-start">
+      <div className="mx-auto w-full max-w-7xl grid gap-6 lg:grid-cols-[400px_minmax(0,1fr)] xl:grid-cols-[430px_minmax(0,1fr)] items-start">
         {/* Left Column: Parameter Form & History */}
-        <div className="space-y-4">
-          <Card className="glass-card border-border/80 shadow-lg rounded-2xl" data-tour="sermon-generator-form">
+        <div className="space-y-4 pulpit-hide-print">
+          <Card className="glass-card border-amber-500/20 shadow-xl rounded-2xl" data-tour="sermon-generator-form">
             <CardHeader className="pb-3 border-b border-border/40">
-              <CardTitle className="font-serif text-lg font-bold flex items-center gap-2">
+              <CardTitle className="font-serif text-lg font-bold flex items-center gap-2 text-foreground">
                 <Sliders className="h-4 w-4 text-amber-500" />
-                Parâmetros da Pregação
+                Parâmetros Homiléticos
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-4">
+              {/* 1. Texto Base */}
               <div>
-                <Label className="text-xs font-semibold text-foreground/90">Tema da Mensagem *</Label>
-                <input
-                  type="text"
-                  value={tema}
-                  onChange={(e) => setTema(e.target.value)}
-                  placeholder="Ex: O poder da fé, A volta de Jesus..."
-                  className="mt-1.5 w-full rounded-xl border border-input bg-background/60 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
-                />
-              </div>
-
-              <div>
-                <Label className="text-xs font-semibold text-foreground/90">Texto Base (Opcional)</Label>
+                <Label className="text-xs font-bold text-foreground flex items-center justify-between">
+                  <span>Texto Base Bíblico *</span>
+                  <span className="text-[10px] text-amber-500 font-mono">ARC</span>
+                </Label>
                 <input
                   type="text"
                   value={textoBase}
                   onChange={(e) => setTextoBase(e.target.value)}
-                  placeholder="Ex: Romanos 8:35-39, Salmos 23..."
+                  placeholder="Ex: Mateus 25:1-13 ou Romanos 8:31-39"
+                  className="mt-1.5 w-full rounded-xl border border-input bg-background/60 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium"
+                />
+              </div>
+
+              {/* 2. Tema */}
+              <div>
+                <Label className="text-xs font-bold text-foreground">Tema da Mensagem *</Label>
+                <input
+                  type="text"
+                  value={tema}
+                  onChange={(e) => setTema(e.target.value)}
+                  placeholder="Ex: O Azeite da Vigilância e a Volta de Cristo"
                   className="mt-1.5 w-full rounded-xl border border-input bg-background/60 px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-xs font-semibold text-foreground/90">Público-Alvo *</Label>
-                  <Select value={publico} onValueChange={setPublico}>
-                    <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="igreja">Igreja Geral</SelectItem>
-                      <SelectItem value="jovens">Jovens</SelectItem>
-                      <SelectItem value="cruzada">Cruzada Evangelística</SelectItem>
-                      <SelectItem value="congresso">Congresso / Obreiros</SelectItem>
-                      <SelectItem value="casais">Casais</SelectItem>
-                      <SelectItem value="criancas">Crianças</SelectItem>
-                      <SelectItem value="idosos">Idosos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label className="text-xs font-semibold text-foreground/90">Duração *</Label>
-                  <Select value={tempo} onValueChange={setTempo}>
-                    <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">5 min (rápido)</SelectItem>
-                      <SelectItem value="10">10 minutos</SelectItem>
-                      <SelectItem value="15">15 minutos</SelectItem>
-                      <SelectItem value="20">20 minutos</SelectItem>
-                      <SelectItem value="30">30 minutos</SelectItem>
-                      <SelectItem value="45">45 minutos</SelectItem>
-                      <SelectItem value="60">1 hora</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              {/* 3. Método Homilético */}
+              <div>
+                <Label className="text-xs font-bold text-foreground">Método Homilético</Label>
+                <Select value={metodoHomiletico} onValueChange={setMetodoHomiletico}>
+                  <SelectTrigger className="mt-1.5 rounded-xl">
+                    <SelectValue placeholder="Selecione o método" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Expositivo (Versículo por versículo)">
+                      Expositivo (Versículo por versículo)
+                    </SelectItem>
+                    <SelectItem value="Textual">Textual (Divisões no texto)</SelectItem>
+                    <SelectItem value="Temático">Temático (Progressão lógica de passagens)</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-xs font-semibold text-foreground/90">Estilo *</Label>
-                  <Select value={nivel} onValueChange={setNivel}>
-                    <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="exortacao">Exortação</SelectItem>
-                      <SelectItem value="ensino">Ensino Expositivo</SelectItem>
-                      <SelectItem value="tematico">Temático</SelectItem>
-                      <SelectItem value="textual">Textual</SelectItem>
-                      <SelectItem value="doutrinario">Doutrinário</SelectItem>
-                      <SelectItem value="evangelismo">Evangelismo</SelectItem>
-                      <SelectItem value="devocional">Devocional</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label className="text-xs font-semibold text-foreground/90">Estrutura *</Label>
-                  <Select value={estrutura} onValueChange={setEstrutura}>
-                    <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="textual">Textual</SelectItem>
-                      <SelectItem value="tematica">Temática</SelectItem>
-                      <SelectItem value="expositiva">Expositiva</SelectItem>
-                      <SelectItem value="doutrinaria">Doutrinária</SelectItem>
-                      <SelectItem value="narrativa">Narrativa</SelectItem>
-                      <SelectItem value="topica">Tópica</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              {/* 4. Linha Doutrinária (CGADB) */}
+              <div>
+                <Label className="text-xs font-bold text-foreground flex items-center justify-between">
+                  <span>Linha Doutrinária (CGADB)</span>
+                  <span className="text-[10px] text-amber-500 font-mono">Pentecostal</span>
+                </Label>
+                <Select value={linhaDoutrinaria} onValueChange={setLinhaDoutrinaria}>
+                  <SelectTrigger className="mt-1.5 rounded-xl">
+                    <SelectValue placeholder="Selecione a linha doutrinária" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Pneumatologia & Avivamento Pentecostal">
+                      Pneumatologia & Avivamento Pentecostal
+                    </SelectItem>
+                    <SelectItem value="Escatologia Pré-Tribulacionista e Vigilância">
+                      Escatologia Pré-Tribulacionista e Vigilância
+                    </SelectItem>
+                    <SelectItem value="Soteriologia, Graça e Novo Nascimento">
+                      Soteriologia, Graça e Novo Nascimento
+                    </SelectItem>
+                    <SelectItem value="Santificação, Altar e Ética Cristã">
+                      Santificação, Altar e Ética Cristã
+                    </SelectItem>
+                    <SelectItem value="Cristologia e a Obra Vicária da Cruz">
+                      Cristologia e a Obra Vicária da Cruz
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* 5 & 6. Profundidade e Ocasião */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-foreground/90">Ocasião</Label>
+                  <Label className="text-xs font-bold text-foreground">Profundidade</Label>
+                  <Select value={profundidade} onValueChange={setProfundidade}>
+                    <SelectTrigger className="mt-1.5 rounded-xl text-xs">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Médio (Foco pastoral e exegético)">Médio (Pastoral)</SelectItem>
+                      <SelectItem value="Profundo / Acadêmico (Exegese no original com léxico Strong)">
+                        Profundo (Léxico Strong)
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label className="text-xs font-bold text-foreground">Ocasião Litúrgica</Label>
                   <Select value={ocasiao} onValueChange={setOcasiao}>
-                    <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Opcional" /></SelectTrigger>
+                    <SelectTrigger className="mt-1.5 rounded-xl text-xs">
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="culto_domingo">Culto de Domingo</SelectItem>
-                      <SelectItem value="culto_oracao">Culto de Oração</SelectItem>
-                      <SelectItem value="santa_ceia">Santa Ceia</SelectItem>
-                      <SelectItem value="batismo">Batismo</SelectItem>
-                      <SelectItem value="casamento">Casamento</SelectItem>
-                      <SelectItem value="funeral">Funeral</SelectItem>
-                      <SelectItem value="dedicacao">Apresentação</SelectItem>
-                      <SelectItem value="vigilia">Vigília</SelectItem>
-                      <SelectItem value="semana_santa">Páscoa</SelectItem>
-                      <SelectItem value="natal">Natal</SelectItem>
-                      <SelectItem value="ano_novo">Ano Novo</SelectItem>
-                      <SelectItem value="missoes">Missões</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label className="text-xs font-semibold text-foreground/90">Tom</Label>
-                  <Select value={tom} onValueChange={setTom}>
-                    <SelectTrigger className="mt-1.5 rounded-xl"><SelectValue placeholder="Opcional" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="encorajamento">Encorajamento</SelectItem>
-                      <SelectItem value="consolacao">Consolação</SelectItem>
-                      <SelectItem value="confrontacao">Confrontação</SelectItem>
-                      <SelectItem value="celebracao">Celebração</SelectItem>
-                      <SelectItem value="urgencia">Urgência</SelectItem>
-                      <SelectItem value="reflexao">Reflexão</SelectItem>
+                      <SelectItem value="Culto de Ensino / Doutrina">Culto de Ensino</SelectItem>
+                      <SelectItem value="Culto Público Evangelístico">Culto Evangelístico</SelectItem>
+                      <SelectItem value="Vigília">Vigília</SelectItem>
+                      <SelectItem value="Santa Ceia">Santa Ceia</SelectItem>
+                      <SelectItem value="Conferência Missionária">Conferência Missionária</SelectItem>
+                      <SelectItem value="Culto da Família">Culto da Família</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
+              {/* 7. Toggles */}
+              <div className="space-y-2.5 pt-2 border-t border-border/40">
+                <label className="flex items-center gap-2.5 text-xs text-foreground/90 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={incluirOriginal}
+                    onChange={(e) => setIncluirOriginal(e.target.checked)}
+                    className="rounded text-amber-500 focus:ring-amber-500 h-4 w-4 bg-background/80"
+                  />
+                  <span>Análise no original (Grego/Hebraico com Léxico Strong)</span>
+                </label>
+
+                <label className="flex items-center gap-2.5 text-xs text-foreground/90 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={incluirHarpa}
+                    onChange={(e) => setIncluirHarpa(e.target.checked)}
+                    className="rounded text-amber-500 focus:ring-amber-500 h-4 w-4 bg-background/80"
+                  />
+                  <span>Sugerir hinos temáticos da Harpa Cristã</span>
+                </label>
+
+                <label className="flex items-center gap-2.5 text-xs text-foreground/90 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={incluirCPAD}
+                    onChange={(e) => setIncluirCPAD(e.target.checked)}
+                    className="rounded text-amber-500 focus:ring-amber-500 h-4 w-4 bg-background/80"
+                  />
+                  <span>Fundamentação CPAD (Bergstén, Pearlman, Gilberto)</span>
+                </label>
+              </div>
+
+              {/* Action Button */}
               <Button
                 onClick={handleGenerate}
                 disabled={loading}
-                className="w-full bg-gradient-gold text-background hover:opacity-90 font-bold gap-2 text-base py-5 rounded-xl shadow-gold"
+                className="w-full bg-gradient-gold text-background hover:opacity-95 font-bold gap-2 text-base py-5 rounded-xl shadow-gold glow-btn-gold transition-all"
               >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Sparkles className="h-5 w-5" />}
-                {loading ? "Gerando Esboço..." : "Gerar Pregação"}
+                {loading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-5 w-5 animate-pulse" />
+                )}
+                {loading ? "Gerando Pregação Exegética..." : "Gerar Pregação Completa"}
               </Button>
             </CardContent>
           </Card>
@@ -345,12 +507,17 @@ const GeradorPregacoes = () => {
             <Card className="glass-card border-border/80 shadow-md rounded-2xl">
               <CardHeader
                 className="cursor-pointer py-3.5 px-4"
-                onClick={() => { setShowHistory(!showHistory); if (!showHistory) fetchHistory(); }}
+                onClick={() => {
+                  setShowHistory(!showHistory);
+                  if (!showHistory) fetchHistory();
+                }}
               >
                 <CardTitle className="font-serif text-sm flex items-center gap-2">
                   <History className="h-4 w-4 text-amber-500" />
                   Histórico de Sermões Salvos
-                  <ChevronRight className={`h-4 w-4 ml-auto transition-transform ${showHistory ? "rotate-90" : ""}`} />
+                  <ChevronRight
+                    className={`h-4 w-4 ml-auto transition-transform ${showHistory ? "rotate-90" : ""}`}
+                  />
                 </CardTitle>
               </CardHeader>
               {showHistory && (
@@ -396,23 +563,27 @@ const GeradorPregacoes = () => {
           )}
         </div>
 
-        {/* Right Column: Live Result & Pulpit Mode */}
+        {/* Right Column: Live Result, Toolbar & Q&A */}
         <div className="space-y-4">
           {/* Header Action Bar */}
           {result && !loading && (
-            <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center justify-between gap-2 flex-wrap pulpit-hide-print">
               <div className="flex gap-2">
                 <Button
                   variant={activeTab === "pregacao" ? "default" : "outline"}
-                  className={activeTab === "pregacao" ? "bg-gradient-gold text-background font-semibold" : "rounded-xl"}
+                  className={
+                    activeTab === "pregacao" ? "bg-gradient-gold text-background font-semibold" : "rounded-xl"
+                  }
                   onClick={() => setActiveTab("pregacao")}
                   size="sm"
                 >
-                  <BookOpen className="h-4 w-4 mr-1.5" /> Esboço Completo
+                  <BookOpen className="h-4 w-4 mr-1.5" /> Sermão Completo
                 </Button>
                 <Button
                   variant={activeTab === "perguntas" ? "default" : "outline"}
-                  className={activeTab === "perguntas" ? "bg-gradient-gold text-background font-semibold" : "rounded-xl"}
+                  className={
+                    activeTab === "perguntas" ? "bg-gradient-gold text-background font-semibold" : "rounded-xl"
+                  }
                   onClick={() => setActiveTab("perguntas")}
                   size="sm"
                 >
@@ -420,26 +591,78 @@ const GeradorPregacoes = () => {
                 </Button>
               </div>
 
-              {/* Modo Púlpito Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPulpitOpen(true)}
-                className="gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-500 font-bold hover:bg-amber-500/20 rounded-xl"
-              >
-                <Maximize2 className="h-4 w-4" /> Modo Púlpito (Tela Cheia)
-              </Button>
+              {/* Dynamic Reading Toolbar */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {/* Font Resizers */}
+                <div className="flex items-center gap-1 bg-background/80 rounded-xl p-1 border border-border/80">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs font-bold"
+                    onClick={() => setFontSize((prev) => Math.max(14, prev - 2))}
+                    title="Diminuir Fonte"
+                  >
+                    A-
+                  </Button>
+                  <span className="text-[11px] font-mono text-muted-foreground px-1">{fontSize}px</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs font-bold"
+                    onClick={() => setFontSize((prev) => Math.min(30, prev + 2))}
+                    title="Aumentar Fonte"
+                  >
+                    A+
+                  </Button>
+                </div>
+
+                {/* Copy Full Sermon */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCopyFullSermon}
+                  className="rounded-xl gap-1.5 text-xs"
+                  title="Copiar sermão completo"
+                >
+                  {copiedAll ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copiedAll ? "Copiado" : "Copiar"}
+                </Button>
+
+                {/* Print / PDF Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePrint}
+                  className="rounded-xl gap-1.5 text-xs"
+                  title="Imprimir sermão formatado em folha A4"
+                >
+                  <Printer className="h-3.5 w-3.5" /> Imprimir / PDF
+                </Button>
+
+                {/* Modo Púlpito Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPulpitOpen(true)}
+                  className="gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-500 font-bold hover:bg-amber-500/20 rounded-xl text-xs"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" /> Modo Púlpito
+                </Button>
+              </div>
             </div>
           )}
 
           {/* Loading Skeleton Card */}
           {loading && !result && (
-            <Card className="glass-card border-border/80 rounded-2xl shadow-lg p-12 text-center">
+            <Card className="glass-card border-amber-500/30 rounded-2xl shadow-xl p-12 text-center skeleton-gold">
               <div className="flex flex-col items-center justify-center space-y-4">
-                <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
-                <p className="font-serif text-lg font-bold text-foreground">Estruturando Exposição Homilética...</p>
-                <p className="text-xs text-muted-foreground max-w-sm">
-                  Consultando hermenêutica bíblica, referências cruzadas e organizando tópicos pregáveis.
+                <Loader2 className="h-10 w-10 animate-spin text-amber-500" />
+                <p className="font-serif text-xl font-bold text-foreground">
+                  Estruturando Exposição Homilética Pentecostal...
+                </p>
+                <p className="text-xs text-muted-foreground max-w-md">
+                  Consultando exegese no original, referências cruzadas ARC e obras de Eurico Bergstén, Myer Pearlman e
+                  Antonio Gilberto.
                 </p>
               </div>
             </Card>
@@ -448,14 +671,15 @@ const GeradorPregacoes = () => {
           {/* Pregação Result Card */}
           {(result || loading) && activeTab === "pregacao" && (
             <Card className="glass-card border-border/80 rounded-2xl shadow-xl">
-              <CardHeader className="border-b border-border/40 pb-4">
+              <CardHeader className="border-b border-border/40 pb-4 pulpit-hide-print">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
                   <div>
                     <CardTitle className="font-serif text-xl sm:text-2xl font-bold text-foreground">
                       {displayTema ? `Sermão: ${displayTema}` : "Esboço Homilético"}
                     </CardTitle>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Pronto para ministração com divisões claras e versículos integrados.
+                      {resultTextoBase ? `Texto Base: ${resultTextoBase} • ` : ""}
+                      Pronto para ministração no púlpito.
                     </p>
                   </div>
                   {result && !loading && (
@@ -465,19 +689,22 @@ const GeradorPregacoes = () => {
                       onClick={() => setPulpitOpen(true)}
                       className="gap-1.5 text-xs text-amber-500 border-amber-500/30 font-semibold rounded-xl"
                     >
-                      <Maximize2 className="h-3.5 w-3.5" /> Púlpito
+                      <Maximize2 className="h-3.5 w-3.5" /> Tela Cheia
                     </Button>
                   )}
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 space-y-6">
-                <SermonContentRenderer content={result} title={displayTema} />
+                <SermonContentRenderer content={result} title={displayTema} fontSize={fontSize} />
 
                 {result && !loading && (
-                  <div className="flex gap-2 flex-wrap pt-6 border-t border-border/60">
+                  <div className="flex gap-2 flex-wrap pt-6 border-t border-border/60 pulpit-hide-print">
                     <ContentActions content={result} title={`Pregação: ${displayTema}`} contentType="pregacao" />
                     <Button variant="outline" size="sm" onClick={handleSave} className="gap-1.5 rounded-xl">
                       <Save className="h-4 w-4" /> Salvar no Perfil
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 rounded-xl">
+                      <Printer className="h-4 w-4" /> Imprimir A4
                     </Button>
                   </div>
                 )}
@@ -487,14 +714,14 @@ const GeradorPregacoes = () => {
 
           {/* Perguntas Tab */}
           {activeTab === "perguntas" && result && !loading && (
-            <Card className="glass-card border-border/80 rounded-2xl shadow-xl">
+            <Card className="glass-card border-border/80 rounded-2xl shadow-xl pulpit-hide-print">
               <CardHeader className="border-b border-border/40">
                 <CardTitle className="font-serif text-lg flex items-center gap-2">
                   <MessageCircleQuestion className="h-5 w-5 text-amber-500" />
-                  Perguntas sobre a Pregação
+                  Perguntas sobre o Sermão
                 </CardTitle>
                 <p className="text-xs text-muted-foreground">
-                  Tire dúvidas teológicas, solicite mais ilustrações ou adapte o sermão para contextos específicos.
+                  Tire dúvidas teológicas, aprofunde o léxico Grego/Hebraico ou adapte para ocasiões especiais.
                 </p>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 space-y-4">
@@ -504,7 +731,12 @@ const GeradorPregacoes = () => {
                       <MessageCircleQuestion className="h-10 w-10 mx-auto mb-3 opacity-30 text-amber-500" />
                       <p className="text-sm font-medium">Faça uma pergunta sobre o sermão gerado.</p>
                       <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                        {["Quais outros versículos posso usar?", "Como adaptar para jovens?", "Explique o contexto histórico", "Dê mais ilustrações"].map((suggestion) => (
+                        {[
+                          "Aprofunde o termo no grego/hebraico",
+                          "Como conduzir o momento do apelo?",
+                          "Dê mais uma ilustração bíblica cruzada",
+                          "Explique o contexto histórico aos ouvintes",
+                        ].map((suggestion) => (
                           <Button
                             key={suggestion}
                             variant="outline"
@@ -569,11 +801,11 @@ const GeradorPregacoes = () => {
 
           {/* Empty state when no result */}
           {!result && !loading && (
-            <Card className="glass-card border-border/80 rounded-2xl shadow-md p-12 text-center text-muted-foreground">
+            <Card className="glass-card border-border/80 rounded-2xl shadow-md p-12 text-center text-muted-foreground pulpit-hide-print">
               <Sparkles className="h-12 w-12 mx-auto mb-4 text-amber-500/40" />
-              <p className="text-xl font-serif font-bold text-foreground mb-1">Nenhum esboço gerado ainda</p>
+              <p className="text-xl font-serif font-bold text-foreground mb-1">Nenhum sermão gerado ainda</p>
               <p className="text-sm max-w-sm mx-auto">
-                Preencha o tema e as preferências ao lado e clique em "Gerar Pregação".
+                Preencha o Texto Base, Tema e Parâmetros Homiléticos ao lado e clique em "Gerar Pregação Completa".
               </p>
             </Card>
           )}
@@ -592,4 +824,5 @@ const GeradorPregacoes = () => {
 };
 
 export default GeradorPregacoes;
+
 

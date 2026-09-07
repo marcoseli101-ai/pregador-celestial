@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Copy, Check, BookOpen, Quote, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Copy,
+  Check,
+  BookOpen,
+  Quote,
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
+  Music,
+  GraduationCap,
+  Flame,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BibleVerseLink } from "@/components/BibleVerseLink";
 import { toast } from "sonner";
@@ -10,6 +21,82 @@ interface SermonContentRendererProps {
   fontSize?: number;
   className?: string;
 }
+
+// Regex to detect Strong concordance numbers
+const STRONG_REGEX = /\b(Strong\s*#?[HG]\d{1,5}|#(?:H|G)\d{1,5}|\b[HG]\d{3,5}\b)/gi;
+
+/**
+ * Text formatter that injects Strong badges and Harpa badges
+ */
+export const RichSermonText: React.FC<{ text: string }> = ({ text }) => {
+  if (!text) return null;
+
+  // Split lines to keep formatting
+  const lines = text.split("\n");
+
+  return (
+    <div className="space-y-2">
+      {lines.map((line, lIdx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={lIdx} className="h-2" />;
+
+        // Harpa Cristã highlight line
+        if (/Harpa\s*Crist[ãa]/i.test(trimmed)) {
+          return (
+            <div
+              key={lIdx}
+              className="my-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-2.5 text-amber-300"
+            >
+              <Music className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />
+              <div className="text-sm font-medium leading-relaxed">
+                <BibleVerseLink text={trimmed} />
+              </div>
+            </div>
+          );
+        }
+
+        // CPAD Authors citation highlight
+        if (/(?:Eurico\s*Bergst[ée]n|Myer\s*Pearlman|Antonio\s*Gilberto|CPAD)/i.test(trimmed)) {
+          return (
+            <div
+              key={lIdx}
+              className="my-1.5 p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-start gap-2 text-foreground/90 text-sm"
+            >
+              <GraduationCap className="h-4 w-4 mt-0.5 shrink-0 text-purple-400" />
+              <div className="flex-1 leading-relaxed">
+                <BibleVerseLink text={trimmed} />
+              </div>
+            </div>
+          );
+        }
+
+        // Parse Strong Badges in line
+        const parts = trimmed.split(STRONG_REGEX);
+        const testStrong = new RegExp(STRONG_REGEX.source, "i");
+
+        return (
+          <p key={lIdx} className="leading-relaxed">
+            {parts.map((part, pIdx) => {
+              if (testStrong.test(part)) {
+                const formattedBadge = part.startsWith("#")
+                  ? `Strong ${part}`
+                  : part.toLowerCase().startsWith("strong")
+                  ? part
+                  : `Strong #${part}`;
+                return (
+                  <span key={pIdx} className="badge-strong mx-1 shadow-sm">
+                    {formattedBadge}
+                  </span>
+                );
+              }
+              return <BibleVerseLink key={pIdx} text={part} />;
+            })}
+          </p>
+        );
+      })}
+    </div>
+  );
+};
 
 export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
   content,
@@ -33,8 +120,10 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
 
   if (!content) return null;
 
-  // Split content into major blocks
-  const rawSections = content.split(/(?=\n#{1,3}\s|\n(?:\d+\.|\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.)\s|\n\*\*(?:INTRODUÇÃO|TÓPICO|APLICAÇÃO|CONCLUSÃO|ILUSTRAÇÃO))/i);
+  // Split content into major blocks (Roman numerals, headings, or markdown sections)
+  const rawSections = content.split(
+    /(?=\n#{1,3}\s|\n(?:\d+\.|\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.)\s|\n\*\*(?:INTRODUÇÃO|TÓPICO|APLICAÇÃO|CONCLUSÃO|APARATO|APELO))/i
+  );
 
   return (
     <div className={`space-y-6 font-reading ${className}`} style={{ fontSize: `${fontSize}px` }}>
@@ -42,14 +131,23 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
         const trimmed = section.trim();
         if (!trimmed) return null;
 
-        // Check if section is a main title or intro/topic
+        // Categorize section types
         const isHeader = /^#{1,3}\s|^(?:TÍTULO|TEMA):/i.test(trimmed);
-        const isScriptureBox = /^(?:TEXTO\s*B[ÁA]SICO|PASSAGEM|LEITURA|VERS[ÍI]CULO)/i.test(trimmed) || trimmed.startsWith(">");
-        const isTopic = /^(?:#{2,3}\s)?(?:\d+\.|\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.|\*\*(?:TÓPICO|PONTO))/i.test(trimmed);
-        const isApplication = /^(?:#{2,3}\s)?(?:\*\*)?(?:APLICAÇÃO|APLICAÇÕES|COMO APLICAR)/i.test(trimmed);
-        const isConclusion = /^(?:#{2,3}\s)?(?:\*\*)?(?:CONCLUSÃO|APELO|CONSIDERAÇÕES FINAIS)/i.test(trimmed);
+        const isScriptureBox =
+          /^(?:TEXTO\s*(?:B[ÁA]SICO|CENTRAL)|PASSAGEM|LEITURA|VERS[ÍI]CULO)/i.test(trimmed) ||
+          trimmed.startsWith(">");
+        const isLexiconBox =
+          /(?:APARATO\s*L[ÉE]XICO|ORIGINAL\s*(?:GREGO|HEBRAICO)|AN[ÁA]LISE\s*L[ÉE]XICA)/i.test(trimmed);
+        const isTopic =
+          /^(?:#{2,3}\s)?(?:\d+\.|\b(?:I|II|III|IV|V|VI|VII|VIII|IX|X)\.|\*\*(?:TÓPICO|PONTO|\d+\.))/i.test(
+            trimmed
+          );
+        const isConclusionOrAppeal =
+          /(?:CONCLUSÃO|APELO|LITURGIA\s*PASTORAL|ORAÇÃO\s*PASTORAL|CONSIDERAÇÕES\s*FINAIS)/i.test(
+            trimmed
+          );
 
-        // Clean raw markdown heading tags and leading asterisks for clean display
+        // Clean raw markdown heading tags
         const cleanedLines = trimmed
           .replace(/^#{1,4}\s+/gm, "")
           .split("\n");
@@ -58,16 +156,17 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
         const bodyLines = cleanedLines.slice(1).join("\n").trim();
         const isCollapsed = collapsedSections[idx] || false;
 
+        // 1. Scripture Quote Box
         if (isScriptureBox) {
           return (
             <div
               key={idx}
               className="relative p-5 sm:p-6 rounded-2xl bg-amber-500/10 border-l-4 border-amber-500 shadow-sm transition-all"
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 text-amber-500 font-serif font-bold text-base tracking-wide">
                   <Quote className="h-4 w-4" />
-                  <span>Texto Bíblico Base</span>
+                  <span>Texto Central das Escrituras (ARC)</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -79,13 +178,47 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
                   {copiedSection === idx ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 </Button>
               </div>
-              <div className="text-foreground/90 italic leading-relaxed">
-                <BibleVerseLink text={cleanedLines.join("\n")} />
+              <div className="text-foreground/95 italic leading-relaxed text-base sm:text-lg">
+                <RichSermonText text={cleanedLines.join("\n")} />
               </div>
             </div>
           );
         }
 
+        // 2. Lexical & Strong Apparatus
+        if (isLexiconBox) {
+          return (
+            <div
+              key={idx}
+              className="rounded-2xl glass-card border border-amber-500/30 p-5 sm:p-6 shadow-md transition-all bg-gradient-to-br from-amber-500/5 to-transparent"
+            >
+              <div className="flex items-center justify-between gap-3 border-b border-amber-500/20 pb-3 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400 font-serif font-bold text-xs shrink-0">
+                    <GraduationCap className="h-4 w-4" />
+                  </div>
+                  <h3 className="font-serif font-bold text-lg sm:text-xl text-amber-400">
+                    {firstLine || "Aparato Léxico e Teológico Original"}
+                  </h3>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-amber-400 hover:bg-amber-500/20 rounded-lg"
+                  onClick={() => handleCopySection(trimmed, idx)}
+                  title="Copiar aparato original"
+                >
+                  {copiedSection === idx ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+                </Button>
+              </div>
+              <div className="text-foreground/90 space-y-2">
+                <RichSermonText text={bodyLines || firstLine} />
+              </div>
+            </div>
+          );
+        }
+
+        // 3. Main Topic Card
         if (isTopic) {
           return (
             <div
@@ -124,46 +257,47 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
               </div>
 
               {!isCollapsed && bodyLines && (
-                <div className="prose-editorial text-foreground/90 whitespace-pre-wrap leading-relaxed space-y-2">
-                  <BibleVerseLink text={bodyLines} />
+                <div className="prose-editorial text-foreground/90 leading-relaxed space-y-3">
+                  <RichSermonText text={bodyLines} />
                 </div>
               )}
             </div>
           );
         }
 
-        if (isApplication || isConclusion) {
+        // 4. Conclusion, Appeal & Harpa Cristã
+        if (isConclusionOrAppeal) {
           return (
             <div
               key={idx}
-              className="rounded-2xl bg-indigo-500/10 border border-indigo-500/30 p-5 sm:p-6 transition-all shadow-sm"
+              className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-5 sm:p-6 transition-all shadow-md"
             >
-              <div className="flex items-center justify-between mb-3 border-b border-indigo-500/20 pb-2">
-                <h3 className="font-serif font-bold text-lg text-indigo-400 flex items-center gap-2">
-                  <BookOpen className="h-4 w-4" />
+              <div className="flex items-center justify-between mb-3 border-b border-amber-500/20 pb-2">
+                <h3 className="font-serif font-bold text-lg sm:text-xl text-amber-400 flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-amber-500 animate-pulse" />
                   {firstLine}
                 </h3>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 text-indigo-400 hover:bg-indigo-500/20"
+                  className="h-7 w-7 text-amber-400 hover:bg-amber-500/20"
                   onClick={() => handleCopySection(trimmed, idx)}
-                  title="Copiar aplicação/conclusão"
+                  title="Copiar ministração e apelo"
                 >
                   {copiedSection === idx ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
                 </Button>
               </div>
-              <div className="text-foreground/90 whitespace-pre-wrap leading-relaxed">
-                <BibleVerseLink text={bodyLines || firstLine} />
+              <div className="text-foreground/95 leading-relaxed space-y-3">
+                <RichSermonText text={bodyLines || firstLine} />
               </div>
             </div>
           );
         }
 
-        // Generic text block / Introduction
+        // 5. Generic text block / Introduction / Headers
         return (
-          <div key={idx} className="p-2 sm:p-4 whitespace-pre-wrap leading-relaxed text-foreground/90">
-            <BibleVerseLink text={cleanedLines.join("\n")} />
+          <div key={idx} className="p-2 sm:p-4 leading-relaxed text-foreground/90">
+            <RichSermonText text={cleanedLines.join("\n")} />
           </div>
         );
       })}
