@@ -15,8 +15,9 @@ import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/da
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useVerseBookmarks } from "@/hooks/useVerseBookmarks";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import { SUPABASE_URL } from "@/integrations/supabase/client";
 
-const COMMENTARY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-bible-commentary`;
+const COMMENTARY_URL = `${SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
 async function streamCommentary({
   book, theme, description, onDelta, onDone, onError,

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 
 export interface BibleBook {
   abbrev: { pt: string; en: string };
@@ -172,12 +173,12 @@ export function useBibleChapter(
       }
 
       // 3. Busca via Edge Function bible-verse-tools (suporta todas as 13 traduções)
-      const edgeUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bible-verse-tools`;
+      const edgeUrl = `${SUPABASE_URL}/functions/v1/bible-verse-tools`;
       const response = await fetch(edgeUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          apikey: SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({
           action: "get_chapter",

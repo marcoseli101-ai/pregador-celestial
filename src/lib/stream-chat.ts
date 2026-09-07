@@ -1,6 +1,7 @@
 import { getAuthToken } from "./auth-helpers";
+import { SUPABASE_URL } from "@/integrations/supabase/client";
 
-const GENERATE_SERMON_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-sermon`;
+const GENERATE_SERMON_URL = `${SUPABASE_URL}/functions/v1/generate-sermon`;
 
 type SSECallbacks = {
   onDelta: (text: string) => void;

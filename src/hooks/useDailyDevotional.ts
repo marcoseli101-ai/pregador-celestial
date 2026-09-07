@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 
 export interface DailyDevotional {
   id: string;
@@ -51,12 +51,12 @@ export function useDailyDevotional() {
     // No devotional for today - generate one
     setGenerating(true);
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-daily-devotional`;
+      const url = `${SUPABASE_URL}/functions/v1/generate-daily-devotional`;
       const resp = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({}),
       });

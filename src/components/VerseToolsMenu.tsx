@@ -6,7 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
@@ -39,7 +39,7 @@ const HIGHLIGHT_COLORS = [
   { name: "purple", bg: "bg-purple-300", label: "Roxo" },
 ];
 
-const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/bible-verse-tools`;
+const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/bible-verse-tools`;
 
 interface VerseToolsMenuProps {
   bookName: string;

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
+import { SUPABASE_URL } from "@/integrations/supabase/client";
 
 type SlideType = "title" | "subtitle" | "content" | "verse" | "conclusion";
 type ThemeKey = "light" | "dark" | "colorful";
@@ -21,7 +22,7 @@ interface SlideData {
   slides: Slide[];
 }
 
-const GENERATE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-slides`;
+const GENERATE_URL = `${SUPABASE_URL}/functions/v1/generate-slides`;
 
 const THEMES: Record<ThemeKey, { label: string; icon: typeof Sun; colors: Record<SlideType, { bg: string; fg: string; accent: string; bulletFg: string }> }> = {
   light: {
