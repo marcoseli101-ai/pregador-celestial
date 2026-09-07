@@ -174,7 +174,7 @@ const GeradorPregacoes = () => {
       <div className="mx-auto w-full max-w-3xl lg:max-w-6xl grid gap-6 md:gap-8 lg:grid-cols-[340px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)]">
         {/* Left column: Config + History */}
         <div className="space-y-4">
-          <Card className="shadow-celestial border-celestial/20">
+          <Card className="shadow-celestial border-celestial/20" data-tour="sermon-generator-form">
             <CardHeader>
               <CardTitle className="font-serif">Configure sua Pregação</CardTitle>
             </CardHeader>

@@ -233,7 +233,7 @@ const EstudoBiblico = () => {
           </Button>
 
           {/* Seletor de Versão da Bíblia */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5" data-tour="bible-version-selector">
             <Select value={selectedTranslation} onValueChange={setSelectedTranslation}>
               <SelectTrigger className="w-[170px] sm:w-[220px] h-8 text-xs font-medium bg-card border-border/80 shadow-sm">
                 <SelectValue placeholder="Selecione a versão" />
@@ -287,11 +287,11 @@ const EstudoBiblico = () => {
           <>
             <Card className="mb-6">
               <CardContent className="p-6 space-y-3">
-                {(chapterData?.verses ?? []).map((v) => {
+                {(chapterData?.verses ?? []).map((v, vIdx) => {
                   const isHighlighted = highlightVerse === v.number;
                   const isToolsOpen = selectedToolsVerse === v.number;
                   return (
-                    <div key={v.number}>
+                    <div key={v.number} data-tour={vIdx === 0 ? "bible-verse-item" : undefined}>
                       <p
                         id={`verse-${v.number}`}
                         className={`leading-relaxed text-sm rounded-lg transition-all group/verse flex items-start gap-1 cursor-pointer ${
@@ -421,7 +421,7 @@ const EstudoBiblico = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-center gap-2 mb-8">
+      <div className="flex justify-center gap-2 mb-8" data-tour="bible-tabs">
         {([
           { key: "biblia" as const, label: "Bíblia", icon: BookOpen },
           { key: "versiculos" as const, label: "Versículos", icon: Sparkles },
@@ -442,7 +442,7 @@ const EstudoBiblico = () => {
 
       {/* TAB: Bíblia */}
       {activeTab === "biblia" && (
-        <>
+        <div data-tour="bible-books-grid">
           <div className="mx-auto max-w-xl mb-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -487,7 +487,7 @@ const EstudoBiblico = () => {
               </div>
             </div>
           ))}
-        </>
+        </div>
       )}
 
       {/* TAB: Versículos em Destaque */}
