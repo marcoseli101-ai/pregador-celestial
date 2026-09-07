@@ -270,7 +270,14 @@
   }
   .modo-pulpito h1,
   .modo-pulpito h2,
-  .modo-pulpito h3 {
+  .modo-pulpito h3,
+  .modo-pulpito h4 {
+    color: #FBBF24 !important;
+  }
+  .modo-pulpito h1 *,
+  .modo-pulpito h2 *,
+  .modo-pulpito h3 *,
+  .modo-pulpito h4 * {
     color: #FBBF24 !important;
   }
   .modo-pulpito p,
@@ -278,20 +285,31 @@
     color: #F1F5F9 !important;
     line-height: 1.85 !important;
   }
-  .modo-pulpito strong {
+  .modo-pulpito span {
+    color: inherit !important;
+  }
+  .modo-pulpito strong,
+  .modo-pulpito strong * {
     color: #FDE68A !important;
   }
   .modo-pulpito hr {
     border-color: rgba(245, 158, 11, 0.3) !important;
   }
   .modo-pulpito blockquote {
-    background-color: rgba(245, 158, 11, 0.08) !important;
+    background-color: rgba(245, 158, 11, 0.1) !important;
     border-left-color: #F59E0B !important;
     color: #F8FAFC !important;
   }
+  .modo-pulpito blockquote * {
+    color: #F8FAFC !important;
+  }
+  .modo-pulpito .bible-verse-btn {
+    color: #FCD34D !important;
+    background-color: rgba(245, 158, 11, 0.15) !important;
+  }
   .modo-pulpito .bloco-topico {
-    background-color: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(245, 158, 11, 0.2) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(245, 158, 11, 0.25) !important;
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;

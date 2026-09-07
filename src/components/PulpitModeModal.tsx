@@ -74,7 +74,7 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#080B11] text-[#F8FAFC] flex flex-col modo-pulpito select-text overflow-hidden animate-in fade-in duration-200">
+    <div className="dark fixed inset-0 z-[100] bg-[#080B11] text-[#F8FAFC] flex flex-col modo-pulpito select-text overflow-hidden animate-in fade-in duration-200">
       {/* Top Preacher Status Bar */}
       <header className="h-16 px-4 sm:px-8 border-b border-amber-500/20 bg-[#0B0F17] flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export const PulpitModeModal: React.FC<PulpitModeModalProps> = ({
             </span>
           </div>
 
-          <div className="hidden sm:block text-xs text-neutral-300 truncate max-w-md font-medium">
+          <div className="hidden sm:block text-xs text-neutral-200 truncate max-w-md font-medium">
             {title}
           </div>
         </div>
