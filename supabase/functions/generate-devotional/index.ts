@@ -9,8 +9,18 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const apiKey =
+      Deno.env.get("GEMINI_API_CHATGPT") ||
+      Deno.env.get("OPENAI_API_KEY") ||
+      Deno.env.get("CHATGPT_API_KEY") ||
+      Deno.env.get("GEMINI_API_KEY") ||
+      Deno.env.get("LOVABLE_API_KEY");
+
+    if (!apiKey) throw new Error("Chave de IA não configurada no Supabase.");
+
+    const cleanKey = apiKey.replace(/^["']|["']$/g, "").trim();
+    const isOpenAI = cleanKey.startsWith("sk-proj-") || cleanKey.startsWith("sk-");
+
     const today = new Date().toLocaleDateString("pt-BR", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
     });
@@ -52,21 +62,52 @@ IMPORTANTE:
 
     const userPrompt = `Gere o devocional para hoje, ${today}. Escolha um versículo inspirador e diferente, que fale ao coração do povo de Deus neste dia.`;
 
-    const response = await fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        stream: true,
-      }),
-    });
+    let response: Response;
+
+    if (isOpenAI) {
+      response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cleanKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          stream: true,
+          temperature: 0.5,
+        }),
+      });
+    } else if (cleanKey.startsWith("AIza")) {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            { role: "user", parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }
+          ]
+        })
+      });
+    } else {
+      response = await fetch(`https://ai.gateway.lovable.dev/v1/chat/completions`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cleanKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          stream: true,
+        }),
+      });
+    }
 
     if (!response.ok) {
       if (response.status === 429) {
