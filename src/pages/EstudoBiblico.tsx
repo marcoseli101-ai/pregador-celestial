@@ -3,11 +3,13 @@ import { useSearchParams } from "react-router-dom";
 import { getAuthToken } from "@/lib/auth-helpers";
 import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb, Bookmark } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
+import { VerseToolsMenu } from "@/components/VerseToolsMenu";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useBibleBooks, useBibleChapter, useBibleVerses, type BibleBook } from "@/hooks/useBibleAPI";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useBibleBooks, useBibleChapter, useBibleVerses, BIBLE_TRANSLATIONS, type BibleBook } from "@/hooks/useBibleAPI";
 import { COMPLETE_BIBLE_STUDIES, type BibleStudy } from "@/data/bibleStudies";
 import { THEMATIC_STUDIES, type ThematicStudy, type ThematicSection } from "@/data/thematicStudies";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
@@ -93,8 +95,10 @@ const EstudoBiblico = () => {
   const { markChapterRead, getBookProgress, isChapterRead } = useReadingProgress();
   const [selectedBook, setSelectedBook] = usePersistedState<BibleBook | null>("estudo:selectedBook", null);
   const [selectedChapter, setSelectedChapter] = usePersistedState<number | null>("estudo:selectedChapter", null);
+  const [selectedTranslation, setSelectedTranslation] = usePersistedState<string>("estudo:selectedTranslation", "ARC");
   const { isBookmarked, toggleBookmark, getBookmark } = useVerseBookmarks(selectedBook?.name, selectedChapter ?? undefined);
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
+  const [selectedToolsVerse, setSelectedToolsVerse] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = usePersistedState<string>("estudo:searchQuery", "");
   const [activeTab, setActiveTab] = usePersistedState<"biblia" | "versiculos" | "estudos" | "tematicos">("estudo:activeTab", "biblia");
   const [expandedStudy, setExpandedStudy] = usePersistedState<string | null>("estudo:expandedStudy", null);
@@ -166,7 +170,8 @@ const EstudoBiblico = () => {
 
   const { data: chapterData, loading: chapterLoading, error: chapterError } = useBibleChapter(
     selectedBook?.name ?? null,
-    selectedChapter
+    selectedChapter,
+    selectedTranslation
   );
 
   const filteredBooks = searchQuery
@@ -222,15 +227,39 @@ const EstudoBiblico = () => {
     const bookProg = getBookProgress(selectedBook.name, selectedBook.chapters);
     return (
       <div className="container py-8 max-w-3xl">
-        <Button variant="ghost" onClick={handleBack} className="mb-4 gap-1">
-          <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
-        </Button>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <Button variant="ghost" onClick={handleBack} className="gap-1 text-xs sm:text-sm">
+            <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
+          </Button>
+
+          {/* Seletor de Versão da Bíblia */}
+          <div className="flex items-center gap-1.5" data-tour="bible-version-selector">
+            <Select value={selectedTranslation} onValueChange={setSelectedTranslation}>
+              <SelectTrigger className="w-[170px] sm:w-[220px] h-8 text-xs font-medium bg-card border-border/80 shadow-sm">
+                <SelectValue placeholder="Selecione a versão" />
+              </SelectTrigger>
+              <SelectContent>
+                {BIBLE_TRANSLATIONS.map((t) => (
+                  <SelectItem key={t.code} value={t.code} className="text-xs">
+                    <span className="font-bold text-accent mr-1.5">{t.code}</span>
+                    <span className="text-muted-foreground text-[11px]">· {t.label}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
         <div className="mb-6 text-center">
-          <h1 className="font-serif text-3xl font-bold">
-            {selectedBook.name} <span className="text-gradient-gold">{selectedChapter}</span>
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">{selectedBook.author} · {selectedBook.group}</p>
+          <div className="inline-flex items-center gap-2 mb-1">
+            <h1 className="font-serif text-3xl font-bold">
+              {selectedBook.name} <span className="text-gradient-gold">{selectedChapter}</span>
+            </h1>
+            <Badge variant="outline" className="text-xs font-bold text-accent border-accent/30 py-0.5 px-2">
+              {selectedTranslation}
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mt-0.5">{selectedBook.author} · {selectedBook.group}</p>
           <div className="mt-3 max-w-xs mx-auto">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
               <span>Progresso do livro</span>
@@ -258,38 +287,54 @@ const EstudoBiblico = () => {
           <>
             <Card className="mb-6">
               <CardContent className="p-6 space-y-3">
-                {(chapterData?.verses ?? []).map((v) => {
+                {(chapterData?.verses ?? []).map((v, vIdx) => {
                   const isHighlighted = highlightVerse === v.number;
+                  const isToolsOpen = selectedToolsVerse === v.number;
                   return (
-                    <p
-                      key={v.number}
-                      id={`verse-${v.number}`}
-                      className={`leading-relaxed text-sm rounded-lg transition-all group/verse flex items-start gap-1 ${
-                        isHighlighted
-                          ? "bg-accent/15 border-l-4 border-accent px-4 py-3 shadow-sm"
-                          : isBookmarked(v.number)
-                          ? "bg-yellow-50 dark:bg-yellow-900/10 px-2 py-1"
-                          : "px-1 py-0.5"
-                      }`}
-                    >
-                      <span className={`font-bold mr-1.5 shrink-0 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
-                        {v.number}
-                      </span>
-                      <span className={`flex-1 ${isHighlighted ? "font-medium text-foreground" : ""}`}>
-                        {v.text}
-                      </span>
-                      <button
-                        onClick={() => toggleBookmark(v.number, v.text)}
-                        className={`shrink-0 p-0.5 rounded transition-all ${
-                          isBookmarked(v.number)
-                            ? "text-yellow-500 opacity-100"
-                            : "text-muted-foreground/30 opacity-0 group-hover/verse:opacity-100 hover:text-yellow-500"
+                    <div key={v.number} data-tour={vIdx === 0 ? "bible-verse-item" : undefined}>
+                      <p
+                        id={`verse-${v.number}`}
+                        className={`leading-relaxed text-sm rounded-lg transition-all group/verse flex items-start gap-1 cursor-pointer ${
+                          isHighlighted
+                            ? "bg-accent/15 border-l-4 border-accent px-4 py-3 shadow-sm"
+                            : isToolsOpen
+                            ? "bg-accent/10 border-l-4 border-accent/50 px-4 py-2"
+                            : isBookmarked(v.number)
+                            ? "bg-yellow-50 dark:bg-yellow-900/10 px-2 py-1"
+                            : "px-1 py-0.5 hover:bg-muted/50"
                         }`}
-                        title={isBookmarked(v.number) ? "Remover marcador" : "Marcar versículo"}
+                        onClick={() => setSelectedToolsVerse(isToolsOpen ? null : v.number)}
                       >
-                        <Bookmark className={`h-4 w-4 ${isBookmarked(v.number) ? "fill-current" : ""}`} />
-                      </button>
-                    </p>
+                        <span className={`font-bold mr-1.5 shrink-0 ${isHighlighted ? "text-accent text-base" : "text-accent"}`}>
+                          {v.number}
+                        </span>
+                        <span className={`flex-1 ${isHighlighted ? "font-medium text-foreground" : ""}`}>
+                          {v.text}
+                        </span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleBookmark(v.number, v.text); }}
+                          className={`shrink-0 p-0.5 rounded transition-all ${
+                            isBookmarked(v.number)
+                              ? "text-yellow-500 opacity-100"
+                              : "text-muted-foreground/30 opacity-0 group-hover/verse:opacity-100 hover:text-yellow-500"
+                          }`}
+                          title={isBookmarked(v.number) ? "Remover marcador" : "Marcar versículo"}
+                        >
+                          <Bookmark className={`h-4 w-4 ${isBookmarked(v.number) ? "fill-current" : ""}`} />
+                        </button>
+                      </p>
+                      {isToolsOpen && selectedBook && (
+                        <VerseToolsMenu
+                          bookName={selectedBook.name}
+                          bookSlug={selectedBook.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}
+                          chapter={selectedChapter!}
+                          verseNumber={v.number}
+                          verseText={v.text}
+                          translationCode={selectedTranslation}
+                          onClose={() => setSelectedToolsVerse(null)}
+                        />
+                      )}
+                    </div>
                   );
                 })}
                 {chapterData?.verses?.length === 0 && (
@@ -376,7 +421,7 @@ const EstudoBiblico = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-center gap-2 mb-8">
+      <div className="flex justify-center gap-2 mb-8" data-tour="bible-tabs">
         {([
           { key: "biblia" as const, label: "Bíblia", icon: BookOpen },
           { key: "versiculos" as const, label: "Versículos", icon: Sparkles },
@@ -397,7 +442,7 @@ const EstudoBiblico = () => {
 
       {/* TAB: Bíblia */}
       {activeTab === "biblia" && (
-        <>
+        <div data-tour="bible-books-grid">
           <div className="mx-auto max-w-xl mb-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -442,7 +487,7 @@ const EstudoBiblico = () => {
               </div>
             </div>
           ))}
-        </>
+        </div>
       )}
 
       {/* TAB: Versículos em Destaque */}

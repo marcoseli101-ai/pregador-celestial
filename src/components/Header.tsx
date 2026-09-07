@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, BookOpen, Sun, Moon, LogOut, ShieldCheck, StickyNote, Bookmark } from "lucide-react";
+import { Menu, X, BookOpen, Sun, Moon, LogOut, ShieldCheck, StickyNote, Bookmark, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useAppTour } from "@/components/tour/AppTourProvider";
 
 const navItems = [
   { label: "Início", path: "/" },
-  { label: "Estudo Bíblico", path: "/estudo-biblico" },
+  { label: "Bíblia", path: "/estudo-biblico" },
   { label: "Plano de Leitura", path: "/plano-leitura" },
   { label: "Gerador de Esboços", path: "/gerador-pregacoes" },
   { label: "Biblioteca", path: "/biblioteca" },
@@ -29,6 +30,7 @@ export function Header() {
   const { user, signOut } = useAuth();
   const { openLogin } = useLoginPrompt();
   const { isAdmin } = useAdminCheck();
+  const { openTourMenu } = useAppTour();
 
   const toggleTheme = () => {
     setDark(!dark);
@@ -47,7 +49,7 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex" data-tour="main-nav">
           {navItems.map((item) => (
             <Link key={item.path} to={item.path} className={cn("rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground", location.pathname === item.path ? "bg-accent text-accent-foreground" : "text-muted-foreground")}>
               {item.label}
@@ -56,6 +58,17 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={openTourMenu}
+            className="hidden sm:flex gap-1.5 text-xs text-accent font-semibold hover:bg-accent/15 border border-accent/30 rounded-full px-3 py-1 h-8"
+            title="Ver Novidades e Tutorial"
+          >
+            <Lightbulb className="h-3.5 w-3.5 text-accent animate-pulse" />
+            Novidades
+          </Button>
+
           {isAdmin && (
             <Link to="/admin">
               <Button variant="ghost" size="sm" className="hidden sm:flex gap-1 text-accent">
@@ -98,6 +111,16 @@ export function Header() {
         )}
         style={{ maxHeight: 'calc(100vh - 64px)', overflowY: 'auto' }}
       >
+        <div className="pb-3 border-b border-border/50 mb-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { setMobileOpen(false); openTourMenu(); }}
+            className="w-full justify-center gap-2 border-accent/40 bg-accent/10 text-accent font-semibold"
+          >
+            <Lightbulb className="h-4 w-4" /> Ver Novidades & Tutorial
+          </Button>
+        </div>
         <nav className="flex flex-col gap-1 pb-8">
           {navItems.map((item) => (
             <Link 
