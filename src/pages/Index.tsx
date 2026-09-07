@@ -310,24 +310,30 @@ const Index = () => {
                 key={f.title}
                 custom={i}
                 variants={fadeUp}
-                whileHover={{ y: -6, transition: { duration: 0.4, ease: "easeOut" } }}
+                whileHover={{ y: -6, transition: { duration: 0.3, ease: "easeOut" } }}
               >
                 <Link to={f.link}>
-                  <Card className="group h-full cursor-pointer border-border/40 bg-card/80 backdrop-blur-sm transition-all duration-500 hover:shadow-[0_15px_50px_-12px_hsl(var(--accent)/0.2)] hover:border-accent/40 relative overflow-hidden">
-                    {/* Hover glow effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--accent)/0.1)_0%,transparent_55%)]" />
-                    <CardContent className="p-6 relative">
-                      <motion.div
-                        className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${f.color} shadow-lg`}
-                        whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        <f.icon className="h-6 w-6 text-primary-foreground" />
-                      </motion.div>
-                      <h3 className="mb-2 font-serif text-lg font-semibold">{f.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-                      <div className="mt-4 flex items-center text-sm font-medium text-accent gap-1 group-hover:gap-2 transition-all">
-                        Acessar <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <Card className="group h-full cursor-pointer glass-card border border-border/80 transition-all duration-300 hover:border-amber-500/50 hover:shadow-gold rounded-2xl relative overflow-hidden">
+                    {/* Hover gold shine effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.12)_0%,transparent_65%)]" />
+                    <CardContent className="p-6 relative flex flex-col justify-between h-full">
+                      <div>
+                        <motion.div
+                          className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${f.color} shadow-md`}
+                          whileHover={{ rotate: [0, -6, 6, 0], scale: 1.08 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <f.icon className="h-6 w-6 text-white" />
+                        </motion.div>
+                        <h3 className="mb-2 font-serif text-lg font-bold text-foreground group-hover:text-amber-500 transition-colors">
+                          {f.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {f.desc}
+                        </p>
+                      </div>
+                      <div className="mt-5 flex items-center text-xs font-bold text-amber-500 gap-1 group-hover:gap-2 transition-all">
+                        Acessar Ferramenta <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </CardContent>
                   </Card>
