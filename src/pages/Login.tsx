@@ -11,13 +11,28 @@ import { toast } from "sonner";
 
 const friendlyError = (msg: string): string => {
   const m = (msg || "").toLowerCase();
-  if (m.includes("invalid login")) return "E-mail ou senha incorretos.";
-  if (m.includes("email not confirmed")) return "Confirme seu e-mail antes de entrar.";
-  if (m.includes("user already registered")) return "Este e-mail já está cadastrado. Tente entrar.";
-  if (m.includes("password should be")) return "A senha deve ter pelo menos 6 caracteres.";
-  if (m.includes("rate limit") || m.includes("too many")) return "Muitas tentativas. Aguarde alguns minutos.";
-  if (m.includes("network")) return "Falha de conexão. Verifique sua internet.";
-  return msg || "Algo deu errado. Tente novamente.";
+  if (m.includes("invalid login") || m.includes("invalid_grant") || m.includes("invalid credentials")) {
+    return "E-mail ou senha incorretos. Verifique se digitou corretamente ou use a recuperação de senha.";
+  }
+  if (m.includes("email not confirmed") || m.includes("not confirmed")) {
+    return "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada/spam ou clique em 'Reenviar confirmação'.";
+  }
+  if (m.includes("user not found")) {
+    return "Nenhum cadastro encontrado com este e-mail. Crie sua conta na aba 'Cadastrar'.";
+  }
+  if (m.includes("user already registered") || m.includes("already registered") || m.includes("already exists")) {
+    return "Este e-mail já está cadastrado. Tente entrar com sua senha ou recupere o acesso.";
+  }
+  if (m.includes("password should be") || m.includes("weak_password")) {
+    return "A senha deve ter pelo menos 6 caracteres.";
+  }
+  if (m.includes("rate limit") || m.includes("too many requests") || m.includes("too many")) {
+    return "Muitas tentativas em pouco tempo. Por segurança, aguarde alguns minutos antes de tentar novamente.";
+  }
+  if (m.includes("network") || m.includes("failed to fetch")) {
+    return "Falha de conexão com os servidores. Verifique sua internet e tente novamente.";
+  }
+  return msg || "Ocorreu um erro ao processar sua solicitação. Tente novamente.";
 };
 
 const Login = () => {
@@ -30,7 +45,9 @@ const Login = () => {
   const [forgotOpen, setForgotOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
-  const { signIn, signUp, user, resetPassword } = useAuth();
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null);
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const { signIn, signUp, user, resetPassword, resendConfirmationEmail } = useAuth();
   const navigate = useNavigate();
 
   if (user) {
@@ -40,26 +57,57 @@ const Login = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !password) {
+      toast.error("Por favor, preencha o e-mail e a senha.");
+      return;
+    }
+
     setLoading(true);
+    setUnconfirmedEmail(null);
     try {
-      await signIn(email, password);
+      await signIn(cleanEmail, password);
       navigate("/");
     } catch (err: any) {
-      toast.error(friendlyError(err.message));
+      const msg = err?.message || "";
+      if (msg.toLowerCase().includes("email not confirmed") || msg.toLowerCase().includes("not confirmed")) {
+        setUnconfirmedEmail(cleanEmail);
+      }
+      toast.error(friendlyError(msg));
     } finally {
       setLoading(false);
     }
   };
 
+  const handleResendConfirmation = async () => {
+    if (!unconfirmedEmail) return;
+    setResendingEmail(true);
+    try {
+      await resendConfirmationEmail(unconfirmedEmail);
+    } catch (err: any) {
+      toast.error(friendlyError(err?.message || ""));
+    } finally {
+      setResendingEmail(false);
+    }
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.length < 6) { toast.error("A senha deve ter pelo menos 6 caracteres"); return; }
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      toast.error("Preencha o e-mail.");
+      return;
+    }
+    if (password.length < 6) { 
+      toast.error("A senha deve ter pelo menos 6 caracteres"); 
+      return; 
+    }
     setLoading(true);
     try {
-      await signUp(email, password, name);
+      await signUp(cleanEmail, password, name);
       setTab("login");
     } catch (err: any) {
-      toast.error(friendlyError(err.message));
+      toast.error(friendlyError(err?.message || ""));
     } finally {
       setLoading(false);
     }
@@ -67,13 +115,18 @@ const Login = () => {
 
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanForgot = forgotEmail.trim();
+    if (!cleanForgot) {
+      toast.error("Digite o e-mail para recuperação.");
+      return;
+    }
     setForgotLoading(true);
     try {
-      await resetPassword(forgotEmail);
+      await resetPassword(cleanForgot);
       setForgotOpen(false);
       setForgotEmail("");
     } catch (err: any) {
-      toast.error(friendlyError(err.message));
+      toast.error(friendlyError(err?.message || ""));
     } finally {
       setForgotLoading(false);
     }
@@ -118,6 +171,25 @@ const Login = () => {
                       </button>
                     </div>
                   </div>
+
+                  {unconfirmedEmail && (
+                    <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs space-y-2 text-amber-200">
+                      <p>
+                        Seu e-mail ainda não foi confirmado. Caso não tenha recebido o link de ativação, você pode solicitar um novo envio:
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={resendingEmail}
+                        onClick={handleResendConfirmation}
+                        className="w-full text-xs h-8 border-amber-500/40 text-amber-300 hover:bg-amber-500/20"
+                      >
+                        {resendingEmail ? "Reenviando..." : "Reenviar e-mail de confirmação"}
+                      </Button>
+                    </div>
+                  )}
+
                   <Button type="submit" disabled={loading} className="w-full bg-gradient-gold text-background hover:opacity-90 gap-2">
                     <LogIn className="h-4 w-4" /> {loading ? "Entrando..." : "Entrar"}
                   </Button>
