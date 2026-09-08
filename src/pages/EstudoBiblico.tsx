@@ -99,7 +99,7 @@ const EstudoBiblico = () => {
   const [selectedTranslation, setSelectedTranslation] = usePersistedState<string>("estudo:selectedTranslation", "ARC");
   const { isBookmarked, toggleBookmark, getBookmark } = useVerseBookmarks(selectedBook?.name, selectedChapter ?? undefined);
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
-  const [selectedToolsVerse, setSelectedToolsVerse] = useState<number | null>(null);
+  const [selectedVerseRange, setSelectedVerseRange] = useState<{ start: number; end: number } | null>(null);
   const [searchQuery, setSearchQuery] = usePersistedState<string>("estudo:searchQuery", "");
   const [activeTab, setActiveTab] = usePersistedState<"biblia" | "versiculos" | "estudos" | "tematicos">("estudo:activeTab", "biblia");
   const [expandedStudy, setExpandedStudy] = usePersistedState<string | null>("estudo:expandedStudy", null);
@@ -345,32 +345,105 @@ const EstudoBiblico = () => {
           ) : (
             <>
               <div className="glass-card watermark-cross-bg border border-border/80 shadow-2xl rounded-3xl p-6 sm:p-10 md:p-12 space-y-5">
+                {/* Dica de seleção de múltiplos versículos se houver seleção ativa */}
+                {selectedVerseRange && (
+                  <div className="flex items-center justify-between p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300 animate-in fade-in duration-150 mb-2">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
+                      <span>
+                        Trecho selecionado: <strong>{selectedBook.name} {selectedChapter}:{selectedVerseRange.start}{selectedVerseRange.end > selectedVerseRange.start ? `-${selectedVerseRange.end}` : ""}</strong> (toque em outro versículo para estender o intervalo)
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedVerseRange(null)}
+                      className="h-6 px-2 text-[11px] text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 rounded-lg"
+                    >
+                      Limpar seleção
+                    </Button>
+                  </div>
+                )}
+
                 {(chapterData?.verses ?? []).map((v, vIdx) => {
                   const isHighlighted = highlightVerse === v.number;
-                  const isToolsOpen = selectedToolsVerse === v.number;
+                  const isInRange = Boolean(
+                    selectedVerseRange &&
+                    v.number >= selectedVerseRange.start &&
+                    v.number <= selectedVerseRange.end
+                  );
+                  const isRangeStart = Boolean(selectedVerseRange && v.number === selectedVerseRange.start);
+                  const isRangeEnd = Boolean(selectedVerseRange && v.number === selectedVerseRange.end);
+                  const isMultiVerse = Boolean(
+                    selectedVerseRange && selectedVerseRange.end > selectedVerseRange.start
+                  );
+
+                  const selectedVersesList = (chapterData?.verses ?? []).filter(
+                    (item) =>
+                      selectedVerseRange &&
+                      item.number >= selectedVerseRange.start &&
+                      item.number <= selectedVerseRange.end
+                  );
+                  const selectedRangeText = selectedVersesList
+                    .map((item) => `${item.number}. ${item.text}`)
+                    .join("\n");
+
+                  const handleVerseClick = () => {
+                    if (!selectedVerseRange) {
+                      setSelectedVerseRange({ start: v.number, end: v.number });
+                      return;
+                    }
+
+                    // Se clicar exatamente no único versículo selecionado, fecha
+                    if (selectedVerseRange.start === v.number && selectedVerseRange.end === v.number) {
+                      setSelectedVerseRange(null);
+                      return;
+                    }
+
+                    // Estender ou ajustar o intervalo
+                    if (v.number > selectedVerseRange.start) {
+                      setSelectedVerseRange({ start: selectedVerseRange.start, end: v.number });
+                    } else if (v.number < selectedVerseRange.start) {
+                      setSelectedVerseRange({ start: v.number, end: selectedVerseRange.end });
+                    } else {
+                      setSelectedVerseRange({ start: v.number, end: v.number });
+                    }
+                  };
+
                   return (
                     <div key={v.number} data-tour={vIdx === 0 ? "bible-verse-item" : undefined}>
                       <p
                         id={`verse-${v.number}`}
-                        className={`rounded-2xl transition-all duration-150 group/verse flex items-start gap-3 cursor-pointer select-text font-reading text-lg sm:text-[20px] leading-[1.95] ${
+                        className={`transition-all duration-150 group/verse flex items-start gap-3 cursor-pointer select-text font-reading text-lg sm:text-[20px] leading-[1.95] ${
                           isHighlighted
-                            ? "bg-amber-500/15 border-l-4 border-amber-500 px-5 py-4 shadow-sm text-foreground"
-                            : isToolsOpen
-                            ? "bg-amber-500/10 border-l-4 border-amber-500/60 px-5 py-3 text-foreground"
+                            ? "bg-amber-500/20 border-l-4 border-amber-500 px-5 py-4 shadow-sm text-foreground rounded-2xl"
+                            : isInRange
+                            ? isMultiVerse
+                              ? `bg-amber-500/15 border-l-4 border-amber-500 px-5 py-2.5 text-foreground ${
+                                  isRangeStart ? "rounded-t-2xl pt-3.5" : ""
+                                } ${isRangeEnd ? "rounded-b-2xl pb-3.5" : ""}`
+                              : "bg-amber-500/15 border-l-4 border-amber-500 px-5 py-3 text-foreground rounded-2xl shadow-sm"
                             : isBookmarked(v.number)
-                            ? "bg-amber-500/10 border-l-2 border-amber-400 px-4 py-2"
-                            : "px-3 py-1.5 hover:bg-accent/10 text-foreground/90 hover:text-foreground"
+                            ? "bg-amber-500/10 border-l-2 border-amber-400 px-4 py-2 rounded-2xl"
+                            : "px-3 py-1.5 hover:bg-accent/10 text-foreground/90 hover:text-foreground rounded-2xl"
                         }`}
-                        onClick={() => setSelectedToolsVerse(isToolsOpen ? null : v.number)}
+                        onClick={handleVerseClick}
                       >
-                        <span className={`font-mono font-bold text-xs sm:text-sm mt-1.5 shrink-0 ${isHighlighted ? "text-amber-500 font-black" : "text-amber-500/80"}`}>
+                        <span
+                          className={`font-mono font-bold text-xs sm:text-sm mt-1.5 shrink-0 ${
+                            isHighlighted || isInRange ? "text-amber-500 font-black" : "text-amber-500/80"
+                          }`}
+                        >
                           {v.number}
                         </span>
-                        <span className={`flex-1 ${isHighlighted ? "font-medium" : ""}`}>
+                        <span className={`flex-1 ${isHighlighted || isInRange ? "font-medium" : ""}`}>
                           {v.text}
                         </span>
                         <button
-                          onClick={(e) => { e.stopPropagation(); toggleBookmark(v.number, v.text); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleBookmark(v.number, v.text);
+                          }}
                           className={`shrink-0 p-1.5 rounded-lg transition-all ${
                             isBookmarked(v.number)
                               ? "text-amber-400 opacity-100"
@@ -381,16 +454,24 @@ const EstudoBiblico = () => {
                           <Bookmark className={`h-4 w-4 ${isBookmarked(v.number) ? "fill-current" : ""}`} />
                         </button>
                       </p>
-                      {isToolsOpen && selectedBook && (
+
+                      {/* Menu de ferramentas abre abaixo do último versículo do intervalo selecionado */}
+                      {isRangeEnd && selectedBook && selectedVerseRange && (
                         <div className="my-3">
                           <VerseToolsMenu
                             bookName={selectedBook.name}
-                            bookSlug={selectedBook.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}
+                            bookSlug={selectedBook.name
+                              .normalize("NFD")
+                              .replace(/[\u0300-\u036f]/g, "")
+                              .toLowerCase()
+                              .replace(/\s+/g, "-")}
                             chapter={selectedChapter!}
-                            verseNumber={v.number}
-                            verseText={v.text}
+                            verseNumber={selectedVerseRange.start}
+                            verseEnd={selectedVerseRange.end > selectedVerseRange.start ? selectedVerseRange.end : undefined}
+                            verseText={selectedRangeText}
+                            versesList={selectedVersesList}
                             translationCode={selectedTranslation}
-                            onClose={() => setSelectedToolsVerse(null)}
+                            onClose={() => setSelectedVerseRange(null)}
                           />
                         </div>
                       )}

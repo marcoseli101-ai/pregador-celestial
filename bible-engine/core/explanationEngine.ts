@@ -447,7 +447,7 @@ Retorne estritamente um JSON no seguinte formato (sem nenhum texto fora do JSON 
   ]
 }`;
 
-  const userPrompt = `Versículo: ${ref.bookLabel} ${ref.chapter}:${ref.verse}
+  const userPrompt = `Passagem Bíblica: ${verseRefLabel(ref)}
 Traduções solicitadas: ${codesToFetch.join(", ")}
 
 Forneça o texto bíblico exato para cada uma das traduções listadas acima.`;

@@ -20,6 +20,10 @@ import {
   Music,
   CheckSquare,
   Type,
+  Pencil,
+  RotateCcw,
+  FileEdit,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -89,7 +93,6 @@ const GeradorPregacoes = () => {
 
   // Toggles
   const [incluirOriginal, setIncluirOriginal] = usePersistedState("ger:incluirOriginal", true);
-  const [incluirHarpa, setIncluirHarpa] = usePersistedState("ger:incluirHarpa", true);
   const [incluirCPAD, setIncluirCPAD] = usePersistedState("ger:incluirCPAD", true);
 
   // Output & UI State
@@ -100,6 +103,10 @@ const GeradorPregacoes = () => {
   const [pulpitOpen, setPulpitOpen] = useState(false);
   const [fontSize, setFontSize] = useState<number>(18);
   const [copiedAll, setCopiedAll] = useState(false);
+
+  // Edit Mode State (Parte 1.7)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
 
   const { user } = useAuth();
   const { requireLogin } = useLoginPrompt();
@@ -211,8 +218,6 @@ const GeradorPregacoes = () => {
       ocasiao,
       analiseOriginal: incluirOriginal,
       incluirOriginal,
-      sugerirHarpa: incluirHarpa,
-      incluirHarpa,
       fundamentacaoCPAD: incluirCPAD,
       incluirCPAD,
       onDelta: (chunk) => {
@@ -228,6 +233,28 @@ const GeradorPregacoes = () => {
         setLoading(false);
       },
     });
+  };
+
+  const handleStartEdit = () => {
+    setEditedContent(result);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editedContent.trim()) {
+      toast.error("O texto do esboço não pode ficar vazio.");
+      return;
+    }
+    setResult(editedContent);
+    setIsEditing(false);
+    autoSaveSermon(editedContent, resultTema || tema, resultTextoBase || textoBase);
+    toast.success("Alterações salvas no esboço!");
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedContent("");
+    toast.info("Edição descartada");
   };
 
   const handleSave = async () => {
@@ -471,16 +498,6 @@ const GeradorPregacoes = () => {
                 <label className="flex items-center gap-2.5 text-xs text-foreground/90 cursor-pointer select-none">
                   <input
                     type="checkbox"
-                    checked={incluirHarpa}
-                    onChange={(e) => setIncluirHarpa(e.target.checked)}
-                    className="rounded text-amber-500 focus:ring-amber-500 h-4 w-4 bg-background/80"
-                  />
-                  <span>Sugerir hinos temáticos da Harpa Cristã</span>
-                </label>
-
-                <label className="flex items-center gap-2.5 text-xs text-foreground/90 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
                     checked={incluirCPAD}
                     onChange={(e) => setIncluirCPAD(e.target.checked)}
                     className="rounded text-amber-500 focus:ring-amber-500 h-4 w-4 bg-background/80"
@@ -596,6 +613,20 @@ const GeradorPregacoes = () => {
 
               {/* Dynamic Reading Toolbar */}
               <div className="flex items-center gap-1.5 flex-wrap">
+                {/* Edit Outline Button (Parte 1.7) */}
+                <Button
+                  variant={isEditing ? "default" : "outline"}
+                  size="sm"
+                  onClick={isEditing ? handleSaveEdit : handleStartEdit}
+                  className={`rounded-xl gap-1.5 text-xs ${
+                    isEditing ? "bg-emerald-600 hover:bg-emerald-500 text-white font-bold" : ""
+                  }`}
+                  title={isEditing ? "Salvar edições feitas no esboço" : "Editar texto do esboço livremente"}
+                >
+                  {isEditing ? <Check className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5 text-amber-500" />}
+                  {isEditing ? "Salvar Edição" : "Editar"}
+                </Button>
+
                 {/* Font Resizers */}
                 <div className="flex items-center gap-1 bg-background/80 rounded-xl p-1 border border-border/80">
                   <Button
@@ -681,10 +712,10 @@ const GeradorPregacoes = () => {
                     </CardTitle>
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {resultTextoBase ? `Texto Base: ${resultTextoBase} • ` : ""}
-                      Pronto para ministração no púlpito.
+                      {isEditing ? "Modo de Edição Aberto." : "Pronto para ministração no púlpito."}
                     </p>
                   </div>
-                  {result && !loading && (
+                  {result && !loading && !isEditing && (
                     <Button
                       size="sm"
                       onClick={() => setPulpitOpen(true)}
@@ -696,18 +727,63 @@ const GeradorPregacoes = () => {
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 space-y-6">
-                <SermonContentRenderer content={result} title={displayTema} fontSize={fontSize} />
+                {isEditing ? (
+                  <div className="space-y-4 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300">
+                      <div className="flex items-center gap-2">
+                        <FileEdit className="h-4 w-4 shrink-0 text-amber-500" />
+                        <span>
+                          <strong>Modo de Edição Livre:</strong> edite, remova ou adicione qualquer seção, texto ou anotação ao seu gosto.
+                        </span>
+                      </div>
+                      <span className="font-mono text-[11px] opacity-80">{editedContent.length} caracteres</span>
+                    </div>
 
-                {result && !loading && (
-                  <div className="flex gap-2 flex-wrap pt-6 border-t border-border/60 pulpit-hide-print">
-                    <ContentActions content={result} title={`Pregação: ${displayTema}`} contentType="pregacao" />
-                    <Button variant="outline" size="sm" onClick={handleSave} className="gap-1.5 rounded-xl">
-                      <Save className="h-4 w-4" /> Salvar no Perfil
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 rounded-xl">
-                      <Printer className="h-4 w-4" /> Imprimir A4
-                    </Button>
+                    <textarea
+                      value={editedContent}
+                      onChange={(e) => setEditedContent(e.target.value)}
+                      rows={22}
+                      className="w-full rounded-2xl border border-input bg-background/80 p-4 font-mono text-sm leading-relaxed text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y shadow-inner"
+                      placeholder="Escreva ou edite o esboço homilético..."
+                    />
+
+                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/60">
+                      <Button variant="outline" size="sm" onClick={handleCancelEdit} className="gap-1.5 rounded-xl text-xs">
+                        <X className="h-3.5 w-3.5" /> Cancelar Edição
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleSaveEdit}
+                        className="gap-1.5 bg-gradient-gold text-background hover:opacity-95 font-bold rounded-xl text-xs shadow-gold"
+                      >
+                        <Check className="h-3.5 w-3.5" /> Salvar Edição
+                      </Button>
+                    </div>
                   </div>
+                ) : (
+                  <>
+                    <SermonContentRenderer content={result} title={displayTema} fontSize={fontSize} />
+
+                    {result && !loading && (
+                      <div className="flex gap-2 flex-wrap pt-6 border-t border-border/60 pulpit-hide-print">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleStartEdit}
+                          className="gap-1.5 rounded-xl text-amber-600 hover:text-amber-500 border-amber-500/30 hover:border-amber-500/60"
+                        >
+                          <Pencil className="h-4 w-4 text-amber-500" /> Editar Esboço
+                        </Button>
+                        <ContentActions content={result} title={`Pregação: ${displayTema}`} contentType="pregacao" />
+                        <Button variant="outline" size="sm" onClick={handleSave} className="gap-1.5 rounded-xl">
+                          <Save className="h-4 w-4" /> Salvar no Perfil
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 rounded-xl">
+                          <Printer className="h-4 w-4" /> Imprimir A4
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>
