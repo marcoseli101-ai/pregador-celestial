@@ -196,9 +196,6 @@ Desenvolva cada divisão com múltiplos parágrafos bem explicados, exegese deta
   return promptText;
 }
 
-  return promptText;
-}
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
