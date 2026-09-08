@@ -261,7 +261,10 @@ const EstudoBiblico = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => document.documentElement.classList.toggle("dark")}
+            onClick={() => {
+              const isDark = document.documentElement.classList.toggle("dark");
+              localStorage.setItem("app_theme", isDark ? "dark" : "light");
+            }}
             className="rounded-xl h-10 w-10 text-muted-foreground hover:text-amber-500 hover:bg-amber-500/15"
             title="Alternar Tema Escuro / Claro"
           >
@@ -347,21 +350,62 @@ const EstudoBiblico = () => {
               <div className="glass-card watermark-cross-bg border border-border/80 shadow-2xl rounded-3xl p-6 sm:p-10 md:p-12 space-y-5">
                 {/* Dica de seleção de múltiplos versículos se houver seleção ativa */}
                 {selectedVerseRange && (
-                  <div className="flex items-center justify-between p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300 animate-in fade-in duration-150 mb-2">
+                  <div
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300 animate-in fade-in duration-150 mb-2 flex-wrap gap-2.5 shadow-sm"
+                    data-range-control="true"
+                  >
                     <div className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
+                      <Sparkles className="h-4 w-4 text-amber-500 shrink-0 animate-pulse" />
                       <span>
-                        Trecho selecionado: <strong>{selectedBook.name} {selectedChapter}:{selectedVerseRange.start}{selectedVerseRange.end > selectedVerseRange.start ? `-${selectedVerseRange.end}` : ""}</strong> (toque em outro versículo para estender o intervalo)
+                        Trecho selecionado: <strong>{selectedBook.name} {selectedChapter}:{selectedVerseRange.start}{selectedVerseRange.end > selectedVerseRange.start ? `-${selectedVerseRange.end}` : ""}</strong>
+                        <span className="text-muted-foreground ml-1.5 hidden sm:inline">(clique em outro versículo para estender o intervalo)</span>
                       </span>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedVerseRange(null)}
-                      className="h-6 px-2 text-[11px] text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 rounded-lg"
-                    >
-                      Limpar seleção
-                    </Button>
+
+                    <div className="flex items-center gap-2">
+                      {/* Stepper rápido no banner */}
+                      <div className="flex items-center gap-1 bg-background/80 px-2 py-0.5 rounded-xl border border-border/80">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-1.5 text-[11px] font-bold text-muted-foreground hover:text-foreground"
+                          disabled={selectedVerseRange.end <= selectedVerseRange.start}
+                          onClick={() =>
+                            setSelectedVerseRange({
+                              start: selectedVerseRange.start,
+                              end: Math.max(selectedVerseRange.start, selectedVerseRange.end - 1),
+                            })
+                          }
+                          title="Diminuir 1 versículo"
+                        >
+                          -1 v
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-1.5 text-[11px] font-bold text-amber-500 hover:text-amber-400 hover:bg-amber-500/15"
+                          disabled={Boolean(chapterData?.verses && selectedVerseRange.end >= chapterData.verses.length)}
+                          onClick={() =>
+                            setSelectedVerseRange({
+                              start: selectedVerseRange.start,
+                              end: selectedVerseRange.end + 1,
+                            })
+                          }
+                          title="Estender +1 versículo"
+                        >
+                          +1 v
+                        </Button>
+                      </div>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedVerseRange(null)}
+                        className="h-6 px-2 text-[11px] text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 rounded-lg"
+                      >
+                        Limpar
+                      </Button>
+                    </div>
                   </div>
                 )}
 
@@ -388,7 +432,8 @@ const EstudoBiblico = () => {
                     .map((item) => `${item.number}. ${item.text}`)
                     .join("\n");
 
-                  const handleVerseClick = () => {
+                  const handleVerseClick = (e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (!selectedVerseRange) {
                       setSelectedVerseRange({ start: v.number, end: v.number });
                       return;
@@ -397,6 +442,12 @@ const EstudoBiblico = () => {
                     // Se clicar exatamente no único versículo selecionado, fecha
                     if (selectedVerseRange.start === v.number && selectedVerseRange.end === v.number) {
                       setSelectedVerseRange(null);
+                      return;
+                    }
+
+                    // Se clicar no início de um intervalo já selecionado, reduz para somente esse versículo
+                    if (selectedVerseRange.start === v.number && selectedVerseRange.end > v.number) {
+                      setSelectedVerseRange({ start: v.number, end: v.number });
                       return;
                     }
 
@@ -411,7 +462,11 @@ const EstudoBiblico = () => {
                   };
 
                   return (
-                    <div key={v.number} data-tour={vIdx === 0 ? "bible-verse-item" : undefined}>
+                    <div
+                      key={v.number}
+                      data-verse-item={v.number}
+                      data-tour={vIdx === 0 ? "bible-verse-item" : undefined}
+                    >
                       <p
                         id={`verse-${v.number}`}
                         className={`transition-all duration-150 group/verse flex items-start gap-3 cursor-pointer select-text font-reading text-lg sm:text-[20px] leading-[1.95] ${
@@ -471,6 +526,8 @@ const EstudoBiblico = () => {
                             verseText={selectedRangeText}
                             versesList={selectedVersesList}
                             translationCode={selectedTranslation}
+                            maxVerse={chapterData?.verses?.length}
+                            onRangeChange={(start, end) => setSelectedVerseRange({ start, end })}
                             onClose={() => setSelectedVerseRange(null)}
                           />
                         </div>

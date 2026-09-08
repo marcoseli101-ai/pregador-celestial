@@ -42,7 +42,8 @@ export function Header() {
   const { openTourMenu } = useAppTour();
 
   const toggleTheme = () => {
-    document.documentElement.classList.toggle("dark");
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("app_theme", isDark ? "dark" : "light");
   };
 
   const navCategories = [

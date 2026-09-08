@@ -50,6 +50,8 @@ interface VerseToolsMenuProps {
   verseText: string;
   versesList?: Array<{ number: number; text: string }>;
   translationCode?: string;
+  maxVerse?: number;
+  onRangeChange?: (start: number, end: number) => void;
   onClose: () => void;
 }
 
@@ -64,6 +66,8 @@ export function VerseToolsMenu({
   verseText,
   versesList = [],
   translationCode = "ARC",
+  maxVerse,
+  onRangeChange,
   onClose,
 }: VerseToolsMenuProps) {
   const { user } = useAuth();
@@ -78,10 +82,17 @@ export function VerseToolsMenu({
   const totalVersesCount = isRange ? (verseEnd! - verseNumber + 1) : 1;
   const refHeader = `${bookName} ${chapter}:${verseNumber}${isRange ? `-${verseEnd}` : ""}`;
 
-  // Close when clicking outside
+  // Close when clicking outside, excluding clicks on other verses or range controls
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      const target = e.target as HTMLElement | null;
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target as Node) &&
+        !target?.closest("[data-verse-item]") &&
+        !target?.closest(".group\\/verse") &&
+        !target?.closest("[data-range-control]")
+      ) {
         onClose();
       }
     }
@@ -256,8 +267,8 @@ export function VerseToolsMenu({
       <Card className="border-amber-500/40 shadow-xl bg-card/95 backdrop-blur-md rounded-2xl overflow-hidden">
         <CardContent className="p-3.5 sm:p-4 space-y-3">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-border/40 pb-2">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between border-b border-border/40 pb-2 flex-wrap gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs sm:text-sm font-bold text-amber-500 font-serif">
                 {refHeader}
               </span>
@@ -270,13 +281,43 @@ export function VerseToolsMenu({
                 </Badge>
               )}
             </div>
-            <button
-              onClick={onClose}
-              className="text-muted-foreground hover:text-foreground p-1 rounded-lg hover:bg-accent/10 transition-colors"
-              title="Fechar ferramentas"
-            >
-              <X className="h-4 w-4" />
-            </button>
+
+            <div className="flex items-center gap-2">
+              {/* Range Stepper */}
+              {onRangeChange && (
+                <div className="flex items-center gap-1 bg-background/80 px-2 py-0.5 rounded-xl border border-border/80" data-range-control="true">
+                  <span className="text-[10px] text-muted-foreground font-medium">Trecho:</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-1.5 text-[11px] font-bold text-muted-foreground hover:text-foreground"
+                    disabled={!isRange || (verseEnd ?? verseNumber) <= verseNumber}
+                    onClick={() => onRangeChange(verseNumber, Math.max(verseNumber, (verseEnd ?? verseNumber) - 1))}
+                    title="Diminuir 1 versículo do trecho"
+                  >
+                    -1 v
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-1.5 text-[11px] font-bold text-amber-500 hover:text-amber-400 hover:bg-amber-500/15"
+                    disabled={maxVerse ? (verseEnd ?? verseNumber) >= maxVerse : false}
+                    onClick={() => onRangeChange(verseNumber, (verseEnd ?? verseNumber) + 1)}
+                    title="Aumentar 1 versículo no trecho"
+                  >
+                    +1 v
+                  </Button>
+                </div>
+              )}
+
+              <button
+                onClick={onClose}
+                className="text-muted-foreground hover:text-foreground p-1 rounded-lg hover:bg-accent/10 transition-colors"
+                title="Fechar ferramentas"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Tool buttons */}
