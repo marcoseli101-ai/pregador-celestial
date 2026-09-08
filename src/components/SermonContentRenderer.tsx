@@ -102,7 +102,7 @@ export const SermonContentRenderer: React.FC<SermonContentRendererProps> = ({
           h2: ({ children }) => {
             const headingText = String(children || "");
             const isLexicon = /APARATO|L[ÉE]XICO|ORIGINAL/i.test(headingText);
-            const isConcl = /CONCLUSÃO|APELO|LITURGIA/i.test(headingText);
+            const isConcl = /CONCLUS[ÃA]O|APLICA[ÇC][ÃA]O|APELO|LITURGIA/i.test(headingText);
 
             return (
               <div

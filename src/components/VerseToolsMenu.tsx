@@ -46,8 +46,12 @@ interface VerseToolsMenuProps {
   bookSlug: string;
   chapter: number;
   verseNumber: number;
+  verseEnd?: number;
   verseText: string;
+  versesList?: Array<{ number: number; text: string }>;
   translationCode?: string;
+  maxVerse?: number;
+  onRangeChange?: (start: number, end: number) => void;
   onClose: () => void;
 }
 
@@ -58,8 +62,12 @@ export function VerseToolsMenu({
   bookSlug,
   chapter,
   verseNumber,
+  verseEnd,
   verseText,
+  versesList = [],
   translationCode = "ARC",
+  maxVerse,
+  onRangeChange,
   onClose,
 }: VerseToolsMenuProps) {
   const { user } = useAuth();
@@ -70,10 +78,21 @@ export function VerseToolsMenu({
   const [copied, setCopied] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close when clicking outside
+  const isRange = Boolean(verseEnd && verseEnd > verseNumber);
+  const totalVersesCount = isRange ? (verseEnd! - verseNumber + 1) : 1;
+  const refHeader = `${bookName} ${chapter}:${verseNumber}${isRange ? `-${verseEnd}` : ""}`;
+
+  // Close when clicking outside, excluding clicks on other verses or range controls
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+      const target = e.target as HTMLElement | null;
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target as Node) &&
+        !target?.closest("[data-verse-item]") &&
+        !target?.closest(".group\\/verse") &&
+        !target?.closest("[data-range-control]")
+      ) {
         onClose();
       }
     }
@@ -99,6 +118,7 @@ export function VerseToolsMenu({
           bookLabel: bookName,
           chapter,
           verse: verseNumber,
+          verseEnd: isRange ? verseEnd : undefined,
           verseText,
           translationCode,
           ...extra,
@@ -142,19 +162,32 @@ export function VerseToolsMenu({
   async function handleHighlight(color: string) {
     if (!user) { toast.error("Faça login para marcar versículos"); return; }
     try {
-      const { error } = await supabase.from("bible_user_highlights").upsert(
-        {
+      const start = verseNumber;
+      const end = isRange && verseEnd ? verseEnd : verseNumber;
+      const records = [];
+      for (let v = start; v <= end; v++) {
+        records.push({
           user_id: user.id,
           book: bookSlug,
           chapter,
-          verse: verseNumber,
+          verse: v,
+          verse_end: isRange ? end : null,
           translation_code: translationCode,
           color,
-        },
+        });
+      }
+
+      const { error } = await supabase.from("bible_user_highlights").upsert(
+        records,
         { onConflict: "user_id,book,chapter,verse,translation_code" }
       );
       if (error) throw error;
-      toast.success(`Versículo marcado com ${HIGHLIGHT_COLORS.find(c => c.name === color)?.label || color}`);
+      const colorLabel = HIGHLIGHT_COLORS.find(c => c.name === color)?.label || color;
+      toast.success(
+        isRange
+          ? `${totalVersesCount} versículos (${refHeader}) marcados com ${colorLabel}!`
+          : `Versículo marcado com ${colorLabel}!`
+      );
       setActiveTool(null);
     } catch (err: any) {
       toast.error(err.message || "Erro ao marcar");
@@ -164,14 +197,17 @@ export function VerseToolsMenu({
   async function handleRemoveHighlight() {
     if (!user) return;
     try {
+      const start = verseNumber;
+      const end = isRange && verseEnd ? verseEnd : verseNumber;
       await supabase.from("bible_user_highlights")
         .delete()
         .eq("user_id", user.id)
         .eq("book", bookSlug)
         .eq("chapter", chapter)
-        .eq("verse", verseNumber)
+        .gte("verse", start)
+        .lte("verse", end)
         .eq("translation_code", translationCode);
-      toast.success("Marcação removida");
+      toast.success(isRange ? "Marcações do trecho removidas" : "Marcação removida");
       setActiveTool(null);
     } catch {
       toast.error("Erro ao remover marcação");
@@ -188,6 +224,7 @@ export function VerseToolsMenu({
           book: bookSlug,
           chapter,
           verse: verseNumber,
+          verse_end: isRange ? verseEnd : null,
           translation_code: translationCode,
           note_text: noteText.trim(),
           updated_at: new Date().toISOString(),
@@ -195,7 +232,7 @@ export function VerseToolsMenu({
         { onConflict: "user_id,book,chapter,verse,translation_code" }
       );
       if (error) throw error;
-      toast.success("Anotação salva!");
+      toast.success(isRange ? `Anotação salva para ${refHeader}!` : "Anotação salva!");
       setActiveTool(null);
       setNoteText("");
     } catch (err: any) {
@@ -204,10 +241,15 @@ export function VerseToolsMenu({
   }
 
   function handleCopy() {
-    const text = `${bookName} ${chapter}:${verseNumber}\n${verseText}`;
+    let text = "";
+    if (versesList && versesList.length > 0) {
+      text = `${refHeader} (${translationCode})\n` + versesList.map(v => `${v.number} ${v.text}`).join("\n");
+    } else {
+      text = `${refHeader} (${translationCode})\n${verseText}`;
+    }
     navigator.clipboard.writeText(text);
     setCopied(true);
-    toast.success("Versículo copiado!");
+    toast.success(isRange ? `${totalVersesCount} versículos copiados!` : "Versículo copiado!");
     setTimeout(() => setCopied(false), 2000);
   }
 
@@ -221,17 +263,61 @@ export function VerseToolsMenu({
   ];
 
   return (
-    <div ref={menuRef} className="mt-2 mb-3 animate-in fade-in slide-in-from-top-2 duration-200">
-      <Card className="border-accent/30 shadow-lg">
-        <CardContent className="p-3 space-y-3">
+    <div ref={menuRef} className="mt-3 mb-4 animate-in fade-in slide-in-from-top-2 duration-200">
+      <Card className="border-amber-500/40 shadow-xl bg-card/95 backdrop-blur-md rounded-2xl overflow-hidden">
+        <CardContent className="p-3.5 sm:p-4 space-y-3">
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-accent">
-              {bookName} {chapter}:{verseNumber}
-            </span>
-            <button onClick={onClose} className="text-muted-foreground hover:text-foreground p-0.5">
-              <X className="h-4 w-4" />
-            </button>
+          <div className="flex items-center justify-between border-b border-border/40 pb-2 flex-wrap gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs sm:text-sm font-bold text-amber-500 font-serif">
+                {refHeader}
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 font-mono font-semibold">
+                {translationCode}
+              </span>
+              {isRange && (
+                <Badge variant="outline" className="text-[10px] border-amber-500/30 text-amber-600 dark:text-amber-400">
+                  {totalVersesCount} versículos selecionados
+                </Badge>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Range Stepper */}
+              {onRangeChange && (
+                <div className="flex items-center gap-1 bg-background/80 px-2 py-0.5 rounded-xl border border-border/80" data-range-control="true">
+                  <span className="text-[10px] text-muted-foreground font-medium">Trecho:</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-1.5 text-[11px] font-bold text-muted-foreground hover:text-foreground"
+                    disabled={!isRange || (verseEnd ?? verseNumber) <= verseNumber}
+                    onClick={() => onRangeChange(verseNumber, Math.max(verseNumber, (verseEnd ?? verseNumber) - 1))}
+                    title="Diminuir 1 versículo do trecho"
+                  >
+                    -1 v
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-1.5 text-[11px] font-bold text-amber-500 hover:text-amber-400 hover:bg-amber-500/15"
+                    disabled={maxVerse ? (verseEnd ?? verseNumber) >= maxVerse : false}
+                    onClick={() => onRangeChange(verseNumber, (verseEnd ?? verseNumber) + 1)}
+                    title="Aumentar 1 versículo no trecho"
+                  >
+                    +1 v
+                  </Button>
+                </div>
+              )}
+
+              <button
+                onClick={onClose}
+                className="text-muted-foreground hover:text-foreground p-1 rounded-lg hover:bg-accent/10 transition-colors"
+                title="Fechar ferramentas"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Tool buttons */}

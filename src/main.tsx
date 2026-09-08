@@ -2,6 +2,14 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// Tema escuro como padrão, respeitando se o usuário optou explicitamente por "light"
+const savedTheme = localStorage.getItem("app_theme");
+if (savedTheme === "light") {
+  document.documentElement.classList.remove("dark");
+} else {
+  document.documentElement.classList.add("dark");
+}
+
 createRoot(document.getElementById("root")!).render(<App />);
 
 // Registro do Service Worker (PWA)

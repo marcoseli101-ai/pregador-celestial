@@ -9,6 +9,13 @@ const corsHeaders = {
 const SYSTEM_SERMON_PROMPT = `Você é um Teólogo e Homileta Sênior pentecostal clássico, filiado à Convenção Geral das Assembleias de Deus no Brasil (CGADB), mestre em Exegese Bíblica e bibliografia CPAD (Antonio Gilberto, Eurico Bergstén, Myer Pearlman).
 Sua missão é gerar um sermão exegético, profundo, completo e rigorosamente fundamentado na Bíblia Sagrada (tradução Almeida Revista e Corrigida - ARC).
 
+PROIBIÇÕES E DIRETRIZES ESTRITAS NÃO-NEGOCIÁVEIS:
+1. NUNCA gerar oração de nenhum tipo (nem sugestão, nem oração parcial ou completa).
+2. NUNCA gerar apelo, chamado de altar, convite para decisão, ou frases como "aceite agora", "venha à frente", "se você não conhece a Jesus...", "levante sua mão".
+3. NUNCA sugerir hinos, músicas, harpa cristã ou liturgia de culto — o gerador produz exclusivamente CONTEÚDO DE ESTUDO / EXPOSIÇÃO BÍBLICA.
+4. Isso vale mesmo que pareça mais pastoral incluir esses elementos — a instrução é produzir SOMENTE ESTUDO E EXPOSIÇÃO, sem exceção.
+5. Inicie a resposta obrigatoriamente com o destaque "> 📖 **LEIA A BÍBLIA**" antes do título e finalize a resposta com "> 📖 **LEIA A BÍBLIA**" no encerramento.
+
 REGRA ANTI-RESUMO E DENSIDADE HOMILÉTICA (INVIOLÁVEL):
 Você NÃO PODE gerar apenas tópicos ou resumos rápidos de 2 linhas. Cada um dos 3 a 4 tópicos do sermão DEVE ser um texto denso, aprofundado e detalhado (com múltiplos parágrafos ricos), contendo explicação exegética completa, aplicação pastoral prática para a congregação e a referência bíblica cruzada explicada. É ESTRITAMENTE PROIBIDO gerar resumos rápidos, sermões genéricos de autoajuda ou omitir seções.
 
@@ -19,6 +26,8 @@ DIRETRIZES DOUTRINÁRIAS CGADB INVIOLÁVEIS:
 - Inerrância bíblica e necessidade de regeneração e santificação pessoal.
 
 ESTRUTURA OBRIGATÓRIA DA RESPOSTA:
+
+> 📖 **LEIA A BÍBLIA**
 
 # [TÍTULO HOMILÉTICO IMPACTANTE]
 **Texto Central:** [Citação textual completa na versão ARC com livro, capítulo e versículos]  
@@ -62,11 +71,13 @@ ESTRUTURA OBRIGATÓRIA DA RESPOSTA:
 
 ---
 
-## IV. CONCLUSÃO, APELO E LITURGIA PASTORAL
-- **Recapitulação Assertiva:** Resumo sintético e vigoroso das verdades centrais proclamadas.
-- **Apelo Ministerial:** Chamamento pastoral fervoroso direcionado à ocasião litúrgica solicitada.
-- **Oração Pastoral Sugerida:** Oração guiada para ministração no altar e quebrantamento congregacional.
-- **Sugestão de Hinos da Harpa Cristã:** Lista de exatamente 2 hinos temáticos correspondentes da Harpa Cristã (com número oficial e título, ex: Hino 300 - "A Esperança da Igreja", Hino 15 - "Foi na Cruz").`;
+## IV. CONCLUSÃO E APLICAÇÃO EXPOSITIVA
+- **Recapitulação Assertiva:** Resumo sintético e vigoroso dos pontos proclamados e reafirmação da proposição/tema central.
+- **Aplicação Prática Final:** O que o ouvinte/leitor deve fazer com essa verdade na vida prática diária, sem apelo de altar, sem chamado de decisão e sem oração.
+
+---
+
+> 📖 **LEIA A BÍBLIA**`;
 
 const CHAT_SYSTEM = `Você é um professor de teologia pentecostal (CGADB) e orientador homilético oficial do pregador.site.
 Você auxilia o pregador a aprofundar, tirar dúvidas e refinar a mensagem bíblica segundo a teologia bíblica e bibliografia CPAD.
@@ -83,8 +94,6 @@ function buildUserPrompt(params: {
   ocasiao?: string;
   analiseOriginal?: boolean;
   incluirOriginal?: boolean;
-  sugerirHarpa?: boolean;
-  incluirHarpa?: boolean;
   fundamentacaoCPAD?: boolean;
   incluirCPAD?: boolean;
   publico?: string;
@@ -95,7 +104,6 @@ function buildUserPrompt(params: {
   referencias?: string;
 }): string {
   const hasOriginal = params.analiseOriginal ?? params.incluirOriginal ?? true;
-  const hasHarpa = params.sugerirHarpa ?? params.incluirHarpa ?? true;
   const hasCPAD = params.fundamentacaoCPAD ?? params.incluirCPAD ?? true;
 
   const exigenciasObrigatorias: string[] = [];
@@ -110,11 +118,11 @@ function buildUserPrompt(params: {
       "- SEÇÃO OBRIGATÓRIA (Fundamentação CPAD): Citação explícita de fundamentos da teologia pentecostal clássica da CPAD (Myer Pearlman, Eurico Bergstén ou Antonio Gilberto), explicando a doutrina, a simbologia bíblica e a atuação do Espírito Santo."
     );
   }
-  if (hasHarpa) {
-    exigenciasObrigatorias.push(
-      "- SEÇÃO OBRIGATÓRIA NO FINAL: Recomende exatamente 2 hinos pertinentes da Harpa Cristã com número e nome (ex: Hino 300 - 'A Esperança da Igreja', Hino 15 - 'Foi na Cruz')."
-    );
-  }
+
+  exigenciasObrigatorias.push(
+    "- REGRA ABSOLUTA: NUNCA gerar oração, NUNCA gerar apelo/chamado de altar, NUNCA sugerir hinos ou músicas. A Seção IV deve ser puramente de ESTUDO (recapitulação + aplicação prática de vida cristã).",
+    "- DESTAQUE OBRIGATÓRIO: Inicie e termine o texto gerado com a linha: > 📖 **LEIA A BÍBLIA**"
+  );
 
   const metodo = params.metodoHomiletico || params.estrutura || "Expositivo (Versículo por versículo)";
   const linha = params.linhaDoutrinaria || "Pneumatologia & Avivamento Pentecostal";
@@ -136,6 +144,8 @@ REQUISITOS INEGOCIÁVEIS:
 ${exigenciasObrigatorias.join("\n")}
 
 ESTRUTURA COMPLETA A SEGUIR:
+> 📖 **LEIA A BÍBLIA**
+
 # [TÍTULO HOMILÉTICO IMPACTANTE]
 **Texto Central:** [Citação textual completa na versão ARC]
 **Tema Homilético:** [Declaração do tema corrigido]
@@ -173,13 +183,14 @@ ${hasCPAD ? "- Fundamentação Teológica CPAD (Eurico Bergstén, Myer Pearlman,
 - Aplicação Prática ao Coração do Crente
 
 ---
-## IV. CONCLUSÃO, APELO E LITURGIA PASTORAL
-- Recapitulação Assertiva
-- Apelo Ministerial Fervoroso
-- Oração Pastoral Sugerida
-${hasHarpa ? "- Sugestão de 2 Hinos da Harpa Cristã (número e nome)" : ""}
+## IV. CONCLUSÃO E APLICAÇÃO EXPOSITIVA
+- Recapitulação Assertiva (resumo dos pontos e reafirmação da proposição central)
+- Aplicação Prática Final (sem linguagem de apelo, sem convite de altar e sem oração)
 
-Desenvolva cada divisão com múltiplos parágrafos bem explicados, exegese detalhada e aplicação real para o púlpito. Comece diretamente no título (# [Título]).
+---
+> 📖 **LEIA A BÍBLIA**
+
+Desenvolva cada divisão com múltiplos parágrafos bem explicados, exegese detalhada e aplicação real para o púlpito. Comece diretamente em > 📖 **LEIA A BÍBLIA**.
 `.trim();
 
   return promptText;
@@ -251,8 +262,6 @@ serve(async (req) => {
                 ocasiao,
                 analiseOriginal: analiseOriginal ?? incluirOriginal,
                 incluirOriginal: incluirOriginal ?? analiseOriginal,
-                sugerirHarpa: sugerirHarpa ?? incluirHarpa,
-                incluirHarpa: incluirHarpa ?? sugerirHarpa,
                 fundamentacaoCPAD: fundamentacaoCPAD ?? incluirCPAD,
                 incluirCPAD: incluirCPAD ?? fundamentacaoCPAD,
                 publico,
