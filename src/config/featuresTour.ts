@@ -46,7 +46,7 @@ export const TODAY_FEATURES: FeatureItem[] = [
     id: "epigraph-study-system",
     title: "Estudo Profundo da Epígrafe com IA 📖",
     description:
-      "Agora cada epígrafe/título de perícope da Bíblia possui o botão '[Estudar]'. Ao clicar, você acessa uma análise teológica estruturada com: Contexto Histórico, Local e Cenário, Personagens, Objetivo da passagem, Conexão com Cristo e Lições Práticas, tudo integrado com a IA Theos.",
+      "Agora cada epígrafe/título de perícope da Bíblia possui o botão '[Estudar]'. Ao clicar, você acessa uma análise teológica estruturada com: Contexto Histórico, Local e Cenário, Personagens, Objetivo da passagem, Conexão com Cristo e Lições Práticas, tudo integrado com o Assistente Teológico.",
     icon: "BookOpen",
     badge: "Exclusivo",
     howToTest:

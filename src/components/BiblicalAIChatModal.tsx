@@ -164,7 +164,7 @@ export function BiblicalAIChatModal({ isOpen, onClose }: BiblicalAIChatModalProp
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-serif font-black text-base sm:text-lg text-foreground">
-                  IATheos <span className="text-gradient-gold">Chat Bíblico</span>
+                  Assistente <span className="text-gradient-gold">Teológico</span>
                 </h3>
                 <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/30 text-[10px] font-bold uppercase tracking-wider">
                   Teologia & Exegese

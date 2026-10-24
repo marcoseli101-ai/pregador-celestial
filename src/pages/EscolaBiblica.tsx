@@ -184,7 +184,7 @@ Para cada ilustração forneça:
     }
   };
 
-  // Chat with IA Theos about this lesson
+  // Chat com Assistente Teológico sobre esta lição
   const handleSendChat = async () => {
     if (!chatQuestion.trim() || aiLoading) return;
     const userMsg = chatQuestion.trim();
@@ -540,7 +540,7 @@ Estudado em: ${window.location.origin}/ebd`;
                 {aiLoading && (
                   <div className="flex items-center gap-2 text-xs text-amber-500 py-4 justify-center">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>A IA Theos está desenvolvendo os subsídios pedagógicos...</span>
+                    <span>O Assistente Teológico está desenvolvendo os subsídios pedagógicos...</span>
                   </div>
                 )}
 
@@ -556,7 +556,7 @@ Estudado em: ${window.location.origin}/ebd`;
                         }`}
                       >
                         <span className="font-semibold block mb-1 text-[10px] uppercase opacity-70">
-                          {msg.role === "user" ? "Você" : "IA Theos"}
+                          {msg.role === "user" ? "Você" : "Assistente Teológico"}
                         </span>
                         {msg.content}
                       </div>

@@ -839,7 +839,7 @@ const AreaPregador = () => {
                   },
                   {
                     key: "theosAssistant" as const,
-                    title: "Sugestor Homilético IA Theos",
+                    title: "Sugestor Homilético Assistente Teológico",
                     desc: "Exibe sugestões de ilustrações históricas e conexões tipológicas ao estruturar sermões.",
                     badge: "Homilética",
                   },

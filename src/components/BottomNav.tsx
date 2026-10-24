@@ -112,18 +112,18 @@ export const BottomNav: React.FC = () => {
             <span className="text-[10px] mt-0.5 tracking-tight">Bíblia</span>
           </Link>
 
-          {/* 3. Central Glowing IA Chat Orb (estilo IATheos Chat do mbiblia.app) */}
+          {/* 3. Central Glowing Chat Orb (Assistente Teológico) */}
           <button
             type="button"
             onClick={() => setAiChatOpen(true)}
             className="group relative -top-3 flex flex-col items-center justify-center shrink-0 px-2 active:scale-95 transition-transform"
-            aria-label="Abrir Chat com IA Teológica"
+            aria-label="Abrir Assistente Teológico"
           >
             <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-300 text-background shadow-[0_0_20px_rgba(245,158,11,0.6)] border-2 border-background ring-2 ring-amber-500/30 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(245,158,11,0.85)] transition-all">
               <Sparkles className="h-6 w-6 animate-[pulse_2.5s_ease-in-out_infinite]" />
               <div className="absolute inset-0 rounded-full animate-ping opacity-25 bg-amber-400 pointer-events-none" />
             </div>
-            <span className="text-[10px] font-bold text-amber-500 mt-0.5 tracking-tight">IA Theos</span>
+            <span className="text-[10px] font-bold text-amber-500 mt-0.5 tracking-tight">Assistente</span>
           </button>
 
           {/* 4. Harpa Cristã */}

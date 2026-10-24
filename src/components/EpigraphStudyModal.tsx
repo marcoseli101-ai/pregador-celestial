@@ -353,7 +353,7 @@ ${analysis.licoesPraticas.map((l, i) => `${i + 1}. ${l}`).join("\n")}
                 className="gap-1.5 text-xs rounded-xl bg-gradient-gold text-background font-bold shadow-md hover:opacity-90"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                Aprofundar com IA Theos
+                Aprofundar com Assistente Teológico
               </Button>
             </div>
           </div>

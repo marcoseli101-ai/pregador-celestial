@@ -23,18 +23,39 @@ import { biblicalPlan } from "@/data/biblicalPlan";
 import { getHymnOfTheDay } from "@/data/harpaCrista";
 import { ShareVerseImageModal } from "@/components/ShareVerseImageModal";
 import { useDailyDevotional } from "@/hooks/useDailyDevotional";
+import {
+  getVerifiedDailyVerse,
+  VerifiedDailyVerse,
+  CANONICAL_365_VERSES,
+  getBrasiliaDayOfYear,
+} from "@/lib/dailyVerseService";
 import { toast } from "sonner";
 
 export const DailyEngagementHub: React.FC = () => {
   const { devotional } = useDailyDevotional();
   const [shareModalOpen, setShareModalOpen] = useState(false);
 
-  // Calculate day of the year (1 - 365)
+  // Calculate day of the year in Brasília (1 - 365)
   const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - startOfYear.getTime();
-  const oneDay = 1000 * 60 * 60 * 24;
-  const dayOfYear = Math.min(365, Math.max(1, Math.floor(diff / oneDay)));
+  const dayOfYear = getBrasiliaDayOfYear(now);
+
+  // Verified Verse of the Day state with real-time Bible check
+  const [dailyVerse, setDailyVerse] = useState<VerifiedDailyVerse>(() => {
+    const canonical = CANONICAL_365_VERSES[dayOfYear] || {
+      reference: "Salmos 119:105",
+      text: "Lâmpada para os meus pés é tua palavra, e luz para o meu caminho.",
+      theme: "Luz para a Nossa Caminhada",
+      reflectionShort: "A Palavra de Deus ilumina cada passo da nossa jornada.",
+    };
+    return {
+      day: dayOfYear,
+      reference: canonical.reference,
+      text: canonical.text,
+      theme: canonical.theme,
+      reflectionShort: canonical.reflectionShort,
+      version: "ACF",
+    };
+  });
 
   // Today's reading plan entry
   const todayPlan = biblicalPlan.find((p) => p.day === dayOfYear) || biblicalPlan[0];
@@ -49,6 +70,19 @@ export const DailyEngagementHub: React.FC = () => {
       return [];
     }
   });
+
+  // Real-time verification of verse and reference against the Bible
+  useEffect(() => {
+    let isMounted = true;
+    getVerifiedDailyVerse(devotional, dayOfYear).then((verified) => {
+      if (isMounted) {
+        setDailyVerse(verified);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [devotional, dayOfYear]);
 
   const toggleRefCheck = (ref: string) => {
     setCheckedRefs((prev) => {
@@ -84,12 +118,10 @@ export const DailyEngagementHub: React.FC = () => {
     }
   }, []);
 
-  // Verse of the Day details
-  const verseText =
-    devotional?.versiculo_base_texto ||
-    "Lâmpada para os meus pés é a tua palavra e luz para o meu caminho.";
-  const verseRef = devotional?.versiculo_base || "Salmos 119:105";
-  const verseVersion = "ACF"; // Almeida Corrigida Fiel
+  // Verse of the Day verified details
+  const verseText = dailyVerse.text;
+  const verseRef = dailyVerse.reference;
+  const verseVersion = dailyVerse.version;
 
   return (
     <section className="py-12 relative overflow-hidden bg-gradient-to-b from-background via-amber-500/[0.02] to-background">
@@ -129,13 +161,18 @@ export const DailyEngagementHub: React.FC = () => {
             <div className="h-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600" />
             <CardContent className="p-6 flex flex-col justify-between h-full space-y-4">
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                   <span className="text-[11px] font-bold uppercase tracking-widest text-amber-500 flex items-center gap-1.5">
                     <Sparkles className="h-3.5 w-3.5" /> Versículo do Dia
                   </span>
-                  <Badge variant="outline" className="border-amber-500/40 text-amber-500 font-mono text-[10px] px-2">
-                    Versão: {verseVersion}
-                  </Badge>
+                  <div className="flex items-center gap-1.5">
+                    <Badge variant="outline" className="border-amber-500/40 text-amber-500 font-mono text-[10px] px-2">
+                      Versão: {verseVersion}
+                    </Badge>
+                    <Badge variant="outline" className="border-emerald-500/40 text-emerald-400 bg-emerald-500/10 text-[10px] px-2 py-0.5 font-semibold flex items-center gap-1">
+                      <CheckCircle2 className="h-3 w-3" /> Bíblia Verificada
+                    </Badge>
+                  </div>
                 </div>
 
                 <blockquote className="font-serif text-base sm:text-lg italic text-foreground leading-relaxed my-3">
@@ -146,9 +183,9 @@ export const DailyEngagementHub: React.FC = () => {
                   <span className="w-4 h-px bg-amber-400/60" /> {verseRef}
                 </p>
 
-                {devotional?.titulo && (
+                {(dailyVerse.theme || devotional?.titulo) && (
                   <p className="text-xs text-muted-foreground mt-3 line-clamp-2 bg-accent/10 p-2.5 rounded-xl border border-border/50">
-                    <span className="font-semibold text-foreground">Reflexão:</span> {devotional.titulo}
+                    <span className="font-semibold text-foreground">Reflexão:</span> {dailyVerse.theme || devotional?.titulo}
                   </p>
                 )}
               </div>
