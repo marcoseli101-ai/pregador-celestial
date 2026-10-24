@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuthToken } from "@/lib/auth-helpers";
-import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb, Bookmark } from "lucide-react";
+import { BookOpen, Search, ChevronLeft, ChevronRight, Loader2, AlertCircle, Sparkles, Heart, Star, Flame, ScrollText, Cross, ChevronDown, Filter, BrainCircuit, CheckCircle2, Lightbulb, Bookmark, Heading } from "lucide-react";
 import { ContentActions } from "@/components/ContentActions";
 import { VerseToolsMenu } from "@/components/VerseToolsMenu";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useVerseBookmarks } from "@/hooks/useVerseBookmarks";
 import { usePersistedState } from "@/hooks/usePersistedState";
 import { SUPABASE_URL } from "@/integrations/supabase/client";
+import { getChapterEpigraphs } from "@/data/bibleEpigraphs";
 
 const COMMENTARY_URL = `${SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
@@ -100,6 +101,7 @@ const EstudoBiblico = () => {
   const { isBookmarked, toggleBookmark, getBookmark } = useVerseBookmarks(selectedBook?.name, selectedChapter ?? undefined);
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
   const [selectedVerseRange, setSelectedVerseRange] = useState<{ start: number; end: number } | null>(null);
+  const [showEpigraphs, setShowEpigraphs] = usePersistedState<boolean>("estudo:showEpigraphs", true);
   const [searchQuery, setSearchQuery] = usePersistedState<string>("estudo:searchQuery", "");
   const [activeTab, setActiveTab] = usePersistedState<"biblia" | "versiculos" | "estudos" | "tematicos">("estudo:activeTab", "biblia");
   const [expandedStudy, setExpandedStudy] = usePersistedState<string | null>("estudo:expandedStudy", null);
@@ -174,6 +176,11 @@ const EstudoBiblico = () => {
     selectedChapter,
     selectedTranslation
   );
+
+  const chapterEpigraphs = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return {};
+    return getChapterEpigraphs(selectedBook.name, selectedChapter);
+  }, [selectedBook?.name, selectedChapter]);
 
   const filteredBooks = searchQuery
     ? books.filter((b) => b.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -284,10 +291,26 @@ const EstudoBiblico = () => {
               <ChevronLeft className="h-4 w-4" /> Voltar aos capítulos
             </Button>
 
-            {/* Floating Golden Version Selector */}
-            <div className="flex items-center gap-1.5" data-tour="bible-version-selector">
+            {/* Floating Golden Version Selector & Epigraphs Toggle */}
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end" data-tour="bible-version-selector">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEpigraphs((prev) => !prev)}
+                className={`h-9 px-3 rounded-full text-xs font-semibold border transition-all ${
+                  showEpigraphs
+                    ? "bg-amber-500/15 border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/25"
+                    : "bg-muted/40 border-border/80 text-muted-foreground hover:text-foreground"
+                }`}
+                title={showEpigraphs ? "Ocultar epígrafes da Bíblia" : "Exibir epígrafes da Bíblia"}
+              >
+                <Heading className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
+                <span className="hidden sm:inline">Epígrafes:</span>
+                <span className="font-bold text-[11px] ml-0.5">{showEpigraphs ? "Ativadas" : "Ocultas"}</span>
+              </Button>
+
               <Select value={selectedTranslation} onValueChange={setSelectedTranslation}>
-                <SelectTrigger className="w-[180px] sm:w-[230px] h-9 text-xs font-semibold glass-card-gold rounded-full border-amber-500/40 text-foreground shadow-sm">
+                <SelectTrigger className="w-[170px] sm:w-[210px] h-9 text-xs font-semibold glass-card-gold rounded-full border-amber-500/40 text-foreground shadow-sm">
                   <SelectValue placeholder="Selecione a versão" />
                 </SelectTrigger>
                 <SelectContent className="glass-card border border-border/80 shadow-2xl rounded-2xl">
@@ -461,12 +484,29 @@ const EstudoBiblico = () => {
                     }
                   };
 
+                  const epigraph = showEpigraphs ? chapterEpigraphs[v.number] : null;
+
                   return (
                     <div
                       key={v.number}
                       data-verse-item={v.number}
                       data-tour={vIdx === 0 ? "bible-verse-item" : undefined}
                     >
+                      {epigraph && (
+                        <div className={`epigraph-section ${vIdx === 0 ? "pt-2 pb-4" : "pt-8 pb-4"} select-none`}>
+                          <div className="flex items-center gap-3">
+                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-500/35 to-amber-500/15" />
+                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 shadow-xs">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.8)]" />
+                              <h3 className="font-serif text-xs sm:text-sm md:text-base font-bold text-amber-600 dark:text-amber-400 tracking-wide uppercase text-center">
+                                {epigraph}
+                              </h3>
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.8)]" />
+                            </div>
+                            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-amber-500/35 to-amber-500/15" />
+                          </div>
+                        </div>
+                      )}
                       <p
                         id={`verse-${v.number}`}
                         className={`transition-all duration-150 group/verse flex items-start gap-3 cursor-pointer select-text font-reading text-lg sm:text-[20px] leading-[1.95] ${
@@ -541,7 +581,10 @@ const EstudoBiblico = () => {
                 {chapterData?.verses && chapterData.verses.length > 0 && (
                   <div className="pt-6 border-t border-border/50">
                     <ContentActions
-                      content={chapterData.verses.map(v => `${v.number} ${v.text}`).join("\n")}
+                      content={chapterData.verses.map(v => {
+                        const epi = showEpigraphs ? chapterEpigraphs[v.number] : null;
+                        return epi ? `\n--- ${epi} ---\n${v.number} ${v.text}` : `${v.number} ${v.text}`;
+                      }).join("\n").trim()}
                       title={`${selectedBook.name} ${selectedChapter}`}
                       contentType="estudo"
                     />
