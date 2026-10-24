@@ -6,11 +6,12 @@ import { shareContent } from "@/lib/share";
 import {
   BookOpen, Sparkles, FileText, Mic, GraduationCap, Languages,
   HelpCircle, Calendar, ArrowRight, Star, Users, ChevronRight, BookMarked, ScrollText,
-  StickyNote, Bookmark, Zap, Heart, Shield, Loader2, Share2
+  StickyNote, Bookmark, Zap, Heart, Shield, Loader2, Share2, Music, DownloadCloud
 } from "lucide-react";
 import { useRef } from "react";
 import { useDailyDevotional } from "@/hooks/useDailyDevotional";
 import { HeroBackgroundCarousel } from "@/components/HeroBackgroundCarousel";
+import { DailyEngagementHub } from "@/components/DailyEngagementHub";
 
 import bibleLandscape from "@/assets/bible-landscape.jpg";
 import bibleScrolls from "@/assets/bible-scrolls.jpg";
@@ -28,6 +29,9 @@ const features = [
   { icon: GraduationCap, title: "Área do Pregador", desc: "Salve seus sermões, anotações e acesse seu histórico.", link: "/area-pregador", color: "from-[hsl(220,50%,48%)] to-[hsl(240,55%,58%)]" },
   { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas", color: "from-[hsl(42,70%,48%)] to-[hsl(50,65%,55%)]" },
   { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores", color: "from-[hsl(275,50%,52%)] to-[hsl(295,45%,55%)]" },
+  { icon: Music, title: "Harpa Cristã Completa", desc: "640 hinos para louvor, edificação e devocional com cifras e letras.", link: "/harpa", color: "from-[hsl(230,60%,48%)] to-[hsl(260,65%,58%)]" },
+  { icon: GraduationCap, title: "Escola Bíblica (EBD)", desc: "Lições completas, subsídios e ferramentas com IA de apoio ao professor.", link: "/ebd", color: "from-[hsl(35,80%,48%)] to-[hsl(45,85%,55%)]" },
+  { icon: DownloadCloud, title: "Modo Offline & Downloads", desc: "Baixe a Bíblia e a Harpa para ler e cantar mesmo sem sinal de internet.", link: "/downloads", color: "from-[hsl(160,50%,40%)] to-[hsl(180,55%,45%)]" },
 ];
 
 const themes = [
@@ -241,6 +245,9 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Daily Engagement Hub (Versículo do Dia + Imagem, Plano de Leitura, Hino do Dia, Rascunhos) */}
+      <DailyEngagementHub />
 
       {/* Bible Landscape Parallax Divider */}
       <section className="relative h-[40vh] min-h-[260px] overflow-hidden flex items-center justify-center">
@@ -500,7 +507,7 @@ const Index = () => {
                           <h3 className="font-serif text-xl font-bold mb-4">{devotional.titulo}</h3>
                         )}
                         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4 mb-6">
-                          {devotional.conteudo.replace(/[#*_📖💛🙏✅]/g, "").slice(0, 250).trim()}...
+                          {(devotional?.conteudo || (devotional as any)?.content || "").replace(/[#*_📖💛🙏✅]/g, "").slice(0, 250).trim()}...
                         </p>
                         <div className="flex gap-3 justify-center flex-wrap">
                           <Link to="/devocional">
@@ -514,7 +521,7 @@ const Index = () => {
                             <Button
                               variant="outline"
                               className="gap-2 border-[hsl(142,70%,45%/0.5)] text-[hsl(142,70%,45%)] hover:bg-[hsl(142,70%,45%/0.1)]"
-                              onClick={() => shareWhatsApp(`📖 Devocional de Hoje\n\n${devotional.titulo}\n\n${devotional.conteudo.slice(0, 400)}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`)}
+                              onClick={() => shareWhatsApp(`📖 Devocional de Hoje\n\n${devotional?.titulo || ""}\n\n${(devotional?.conteudo || (devotional as any)?.content || "").slice(0, 400)}\n\n🔗 Leia mais em: ${window.location.origin}/devocional`)}
                             >
                               <Share2 className="h-4 w-4" /> Compartilhar
                             </Button>

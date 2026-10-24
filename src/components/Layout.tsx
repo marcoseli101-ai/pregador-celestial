@@ -4,6 +4,7 @@ import { Footer } from "./Footer";
 import { BottomNav } from "./BottomNav";
 import { ReadingProgressBar } from "./ReadingProgressBar";
 import { AppTourProvider } from "./tour/AppTourProvider";
+import { FloatingNotepad } from "./FloatingNotepad";
 
 import bgSpiritualLight from "@/assets/bg-spiritual-light.jpg";
 import bgBibleWarm from "@/assets/bg-bible-warm.jpg";
@@ -19,6 +20,8 @@ const bgMap: Record<string, string> = {
   "/dicionario": bgBibleWarm,
   "/curso-teologia": bgSpiritualLight,
   "/questionarios": bibleCross,
+  "/harpa": bibleCross,
+  "/downloads": bgSpiritualLight,
   "/login": bgBibleWarm,
 };
 
@@ -79,6 +82,7 @@ export function Layout() {
         </main>
         <Footer />
         <BottomNav />
+        <FloatingNotepad />
       </div>
     </AppTourProvider>
   );

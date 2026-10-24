@@ -10,6 +10,10 @@ import {
   ArrowRight,
   CheckCircle2,
   HelpCircle,
+  GraduationCap,
+  Music,
+  DownloadCloud,
+  Calendar,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -31,6 +35,10 @@ const ICON_MAP: Record<string, React.ElementType> = {
   GitCompare,
   Link2,
   ScrollText,
+  GraduationCap,
+  Music,
+  DownloadCloud,
+  Calendar,
 };
 
 export function WhatsNewModal({

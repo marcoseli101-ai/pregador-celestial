@@ -22,10 +22,17 @@ import {
   Users,
   ShieldCheck,
   WifiOff,
+  FlaskConical,
+  Gift,
+  Copy,
+  Check,
+  Share2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -60,8 +67,70 @@ const AreaPregador = () => {
   const { user } = useAuth();
   const { openLogin } = useLoginPrompt();
 
-  // Tab State: "sermoes" vs "outros"
-  const [activeTab, setActiveTab] = useState<"sermoes" | "outros">("sermoes");
+  // Tab State: "sermoes" | "outros" | "beta" | "indicacao"
+  const [activeTab, setActiveTab] = useState<"sermoes" | "outros" | "beta" | "indicacao">("sermoes");
+
+  // BETA Features State
+  const [betaFlags, setBetaFlags] = useState<{
+    semanticSearch: boolean;
+    voiceSynthesis: boolean;
+    highContrastPulpit: boolean;
+    backgroundDownloads: boolean;
+    theosAssistant: boolean;
+  }>(() => {
+    try {
+      const saved = localStorage.getItem("pregador:beta_flags");
+      return saved
+        ? JSON.parse(saved)
+        : {
+            semanticSearch: true,
+            voiceSynthesis: false,
+            highContrastPulpit: true,
+            backgroundDownloads: true,
+            theosAssistant: true,
+          };
+    } catch {
+      return {
+        semanticSearch: true,
+        voiceSynthesis: false,
+        highContrastPulpit: true,
+        backgroundDownloads: true,
+        theosAssistant: true,
+      };
+    }
+  });
+
+  const toggleBetaFlag = (key: keyof typeof betaFlags) => {
+    setBetaFlags((prev) => {
+      const updated = { ...prev, [key]: !prev[key] };
+      try {
+        localStorage.setItem("pregador:beta_flags", JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      toast.success("Configuração experimental atualizada!");
+      return updated;
+    });
+  };
+
+  // Referral / Indique e Ganhe
+  const refCode = user?.id ? user.id.slice(0, 8) : "pregador-vip";
+  const referralUrl = typeof window !== "undefined" ? `${window.location.origin}/?ref=${refCode}` : "";
+  const [refCopied, setRefCopied] = useState(false);
+
+  const copyReferral = () => {
+    navigator.clipboard.writeText(referralUrl);
+    setRefCopied(true);
+    toast.success("Link de indicação copiado com sucesso!");
+    setTimeout(() => setRefCopied(false), 2500);
+  };
+
+  const shareReferralWhatsApp = () => {
+    const text = encodeURIComponent(
+      `Paz do Senhor! Estou usando a plataforma Pregador Celestial para estudos bíblicos e pregações. Acesse pelo meu link de convidado: ${referralUrl}`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+  };
 
   // Sermons & Ministration State
   const [sermons, setSermons] = useState<RegistroSermon[]>([]);
@@ -398,14 +467,14 @@ const AreaPregador = () => {
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pulpit-hide-print">
           {/* Tabs */}
-          <div className="flex gap-2 p-1 bg-background/80 rounded-2xl border border-border/80 w-full sm:w-auto">
+          <div className="flex flex-wrap gap-2 p-1 bg-background/80 rounded-2xl border border-border/80 w-full sm:w-auto">
             <Button
               variant={activeTab === "sermoes" ? "default" : "ghost"}
               className={activeTab === "sermoes" ? "bg-gradient-gold text-background font-bold shadow-sm" : "rounded-xl"}
               onClick={() => setActiveTab("sermoes")}
               size="sm"
             >
-              <Sparkles className="h-4 w-4 mr-1.5" /> Sermões & Ministrações ({sermons.length})
+              <Sparkles className="h-4 w-4 mr-1.5" /> Sermões ({sermons.length})
             </Button>
             <Button
               variant={activeTab === "outros" ? "default" : "ghost"}
@@ -413,7 +482,23 @@ const AreaPregador = () => {
               onClick={() => setActiveTab("outros")}
               size="sm"
             >
-              <FolderOpen className="h-4 w-4 mr-1.5" /> Outros Conteúdos ({otherItems.length})
+              <FolderOpen className="h-4 w-4 mr-1.5" /> Outros ({otherItems.length})
+            </Button>
+            <Button
+              variant={activeTab === "beta" ? "default" : "ghost"}
+              className={activeTab === "beta" ? "bg-gradient-gold text-background font-bold shadow-sm" : "rounded-xl"}
+              onClick={() => setActiveTab("beta")}
+              size="sm"
+            >
+              <FlaskConical className="h-4 w-4 mr-1.5 text-amber-500" /> Funções BETA
+            </Button>
+            <Button
+              variant={activeTab === "indicacao" ? "default" : "ghost"}
+              className={activeTab === "indicacao" ? "bg-gradient-gold text-background font-bold shadow-sm" : "rounded-xl"}
+              onClick={() => setActiveTab("indicacao")}
+              size="sm"
+            >
+              <Gift className="h-4 w-4 mr-1.5 text-amber-500" /> Indique e Ganhe
             </Button>
           </div>
 
@@ -703,6 +788,173 @@ const AreaPregador = () => {
                 })}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ========================================================
+            TAB 3: FUNÇÕES EXPERIMENTAIS & RECURSOS BETA
+           ======================================================== */}
+        {activeTab === "beta" && (
+          <div className="space-y-6">
+            <Card className="glass-card border-amber-500/30 rounded-3xl p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/40">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/15 text-amber-500">
+                  <FlaskConical className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold text-foreground flex items-center gap-2">
+                    Laboratório de Inovação Teológica <Badge className="bg-amber-500 text-background font-mono text-[10px]">BETA</Badge>
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Ative recursos experimentais em primeira mão para testar no seu ministério antes do lançamento oficial.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  {
+                    key: "semanticSearch" as const,
+                    title: "Busca Exegética Semântica",
+                    desc: "Permite pesquisar na Bíblia por intenção e conceitos teológicos além das palavras exatas.",
+                    badge: "Inteligência Artificial",
+                  },
+                  {
+                    key: "voiceSynthesis" as const,
+                    title: "Leitura em Áudio do Sermão (TTS)",
+                    desc: "Narração por voz sintética para você ensaiar e ouvir sua ministração no fone de ouvido.",
+                    badge: "Áudio & Púlpito",
+                  },
+                  {
+                    key: "highContrastPulpit" as const,
+                    title: "Modo Altar com Alto Contraste",
+                    desc: "Otimiza a tela cheia para tablets e púlpitos com fundo preto puro e texto dourado luminescente.",
+                    badge: "Visual Púlpito",
+                  },
+                  {
+                    key: "backgroundDownloads" as const,
+                    title: "Cache em Segundo Plano da Bíblia",
+                    desc: "Baixa e atualiza as versões bíblicas em IndexedDB de forma invisível para uso offline.",
+                    badge: "Offline",
+                  },
+                  {
+                    key: "theosAssistant" as const,
+                    title: "Sugestor Homilético IA Theos",
+                    desc: "Exibe sugestões de ilustrações históricas e conexões tipológicas ao estruturar sermões.",
+                    badge: "Homilética",
+                  },
+                ].map((feature) => (
+                  <div
+                    key={feature.key}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-background/60 border border-border/60 hover:border-amber-500/30 transition-all"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-foreground">{feature.title}</span>
+                        <Badge variant="outline" className="border-amber-500/30 text-amber-500 text-[10px] py-0">
+                          {feature.badge}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground max-w-xl leading-relaxed">
+                        {feature.desc}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 self-end sm:self-center">
+                      <span className="text-xs font-mono font-semibold text-muted-foreground">
+                        {betaFlags[feature.key] ? "Ativado" : "Desativado"}
+                      </span>
+                      <Switch
+                        checked={betaFlags[feature.key]}
+                        onCheckedChange={() => toggleBetaFlag(feature.key)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* ========================================================
+            TAB 4: SISTEMA DE INDICAÇÃO (INDIQUE E GANHE)
+           ======================================================== */}
+        {activeTab === "indicacao" && (
+          <div className="space-y-6">
+            <Card className="glass-card border-amber-500/30 rounded-3xl p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border/40">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-gold text-background">
+                  <Gift className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold text-foreground">
+                    Programa Indique e Ganhe
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Abençoe outros pregadores e pastores. Compartilhe seu link exclusivo e acumule recompensas no app.
+                  </p>
+                </div>
+              </div>
+
+              {/* Referral Metrics */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-center">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Seus Pontos</p>
+                  <p className="font-serif text-3xl font-extrabold text-amber-500 mt-1">150 pts</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Irmãos Cadastrados</p>
+                  <p className="font-serif text-3xl font-extrabold text-emerald-400 mt-1">3 pregadores</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-center">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Nível Ministerial</p>
+                  <p className="font-serif text-3xl font-extrabold text-indigo-400 mt-1">Embaixador</p>
+                </div>
+              </div>
+
+              {/* Share Box */}
+              <div className="space-y-3 bg-background/70 p-5 rounded-2xl border border-border/70">
+                <Label className="text-xs font-bold text-foreground uppercase tracking-wider">
+                  Seu Link de Afiliado / Indicação Exclusivo:
+                </Label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value={referralUrl}
+                    className="flex-1 rounded-xl border border-input bg-background px-3.5 py-2.5 text-xs font-mono text-muted-foreground focus:outline-none"
+                  />
+                  <Button
+                    onClick={copyReferral}
+                    className="bg-gradient-gold text-background font-bold text-xs h-10 rounded-xl shadow-sm gap-1.5"
+                  >
+                    {refCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {refCopied ? "Copiado!" : "Copiar Link"}
+                  </Button>
+                  <Button
+                    onClick={shareReferralWhatsApp}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs h-10 rounded-xl shadow-sm gap-1.5"
+                  >
+                    <Share2 className="h-4 w-4" /> WhatsApp
+                  </Button>
+                </div>
+              </div>
+
+              {/* How it works */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div className="p-4 rounded-2xl bg-accent/10 border border-border/50 space-y-1.5">
+                  <span className="font-bold text-amber-500 text-sm">1. Envie o Link</span>
+                  <p className="text-muted-foreground">Convide pastores, obreiros e líderes pelo WhatsApp ou redes sociais.</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-accent/10 border border-border/50 space-y-1.5">
+                  <span className="font-bold text-amber-500 text-sm">2. Cadastro Gratuito</span>
+                  <p className="text-muted-foreground">O irmão se cadastra e experimenta a Bíblia, a Harpa e o gerador de pregações.</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-accent/10 border border-border/50 space-y-1.5">
+                  <span className="font-bold text-amber-500 text-sm">3. Desbloqueie Bônus</span>
+                  <p className="text-muted-foreground">Ganhe 50 pontos por indicação para trocar por e-books teológicos e modelos VIP.</p>
+                </div>
+              </div>
+            </Card>
           </div>
         )}
       </div>

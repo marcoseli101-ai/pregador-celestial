@@ -17,6 +17,8 @@ import { useVerseBookmarks } from "@/hooks/useVerseBookmarks";
 import { usePersistedState } from "@/hooks/usePersistedState";
 import { SUPABASE_URL } from "@/integrations/supabase/client";
 import { getChapterEpigraphs } from "@/data/bibleEpigraphs";
+import { EpigraphStudyModal } from "@/components/EpigraphStudyModal";
+import { FloatingVerseActionDock } from "@/components/FloatingVerseActionDock";
 
 const COMMENTARY_URL = `${SUPABASE_URL}/functions/v1/generate-bible-commentary`;
 
@@ -102,6 +104,17 @@ const EstudoBiblico = () => {
   const [highlightVerse, setHighlightVerse] = useState<number | null>(null);
   const [selectedVerseRange, setSelectedVerseRange] = useState<{ start: number; end: number } | null>(null);
   const [showEpigraphs, setShowEpigraphs] = usePersistedState<boolean>("estudo:showEpigraphs", true);
+  const [epigraphModal, setEpigraphModal] = useState<{
+    open: boolean;
+    title: string;
+    start: number;
+    end: number;
+  }>({
+    open: false,
+    title: "",
+    start: 1,
+    end: 1,
+  });
   const [searchQuery, setSearchQuery] = usePersistedState<string>("estudo:searchQuery", "");
   const [activeTab, setActiveTab] = usePersistedState<"biblia" | "versiculos" | "estudos" | "tematicos">("estudo:activeTab", "biblia");
   const [expandedStudy, setExpandedStudy] = usePersistedState<string | null>("estudo:expandedStudy", null);
@@ -492,21 +505,56 @@ const EstudoBiblico = () => {
                       data-verse-item={v.number}
                       data-tour={vIdx === 0 ? "bible-verse-item" : undefined}
                     >
-                      {epigraph && (
-                        <div className={`epigraph-section ${vIdx === 0 ? "pt-2 pb-4" : "pt-8 pb-4"} select-none`}>
-                          <div className="flex items-center gap-3">
-                            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-500/35 to-amber-500/15" />
-                            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 shadow-xs">
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.8)]" />
-                              <h3 className="font-serif text-xs sm:text-sm md:text-base font-bold text-amber-600 dark:text-amber-400 tracking-wide uppercase text-center">
-                                {epigraph}
-                              </h3>
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.8)]" />
+                      {epigraph && (() => {
+                        const epigraphKeys = Object.keys(chapterEpigraphs).map(Number).sort((a, b) => a - b);
+                        const curIdx = epigraphKeys.indexOf(v.number);
+                        const nextStart = curIdx !== -1 && curIdx + 1 < epigraphKeys.length ? epigraphKeys[curIdx + 1] : (chapterData?.verses?.length || v.number) + 1;
+                        const epigraphEnd = Math.max(v.number, nextStart - 1);
+                        const rangeSubtitle = `${selectedBook?.name} ${selectedChapter}:${v.number}${epigraphEnd > v.number ? `-${epigraphEnd}` : ""}`;
+
+                        return (
+                          <div className={`epigraph-section ${vIdx === 0 ? "pt-2 pb-5" : "pt-8 pb-5"} select-none`}>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/25 shadow-xs">
+                              <div
+                                onClick={() =>
+                                  setEpigraphModal({
+                                    open: true,
+                                    title: epigraph,
+                                    start: v.number,
+                                    end: epigraphEnd,
+                                  })
+                                }
+                                className="cursor-pointer group flex-1"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse" />
+                                  <h3 className="font-serif text-sm sm:text-base font-bold text-amber-500 dark:text-amber-400 tracking-wide group-hover:text-amber-300 transition-colors">
+                                    {epigraph}
+                                  </h3>
+                                </div>
+                                <p className="text-[11px] font-mono text-muted-foreground ml-4 mt-0.5">
+                                  {rangeSubtitle}
+                                </p>
+                              </div>
+
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  setEpigraphModal({
+                                    open: true,
+                                    title: epigraph,
+                                    start: v.number,
+                                    end: epigraphEnd,
+                                  })
+                                }
+                                className="self-start sm:self-center bg-gradient-gold text-background hover:opacity-90 font-bold text-xs h-8 px-3 rounded-xl shadow-xs gap-1.5 shrink-0"
+                              >
+                                <BookOpen className="h-3.5 w-3.5" /> Estudar
+                              </Button>
                             </div>
-                            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-amber-500/35 to-amber-500/15" />
                           </div>
-                        </div>
-                      )}
+                        );
+                      })()}
                       <p
                         id={`verse-${v.number}`}
                         className={`transition-all duration-150 group/verse flex items-start gap-3 cursor-pointer select-text font-reading text-lg sm:text-[20px] leading-[1.95] ${
@@ -550,28 +598,7 @@ const EstudoBiblico = () => {
                         </button>
                       </p>
 
-                      {/* Menu de ferramentas abre abaixo do último versículo do intervalo selecionado */}
-                      {isRangeEnd && selectedBook && selectedVerseRange && (
-                        <div className="my-3">
-                          <VerseToolsMenu
-                            bookName={selectedBook.name}
-                            bookSlug={selectedBook.name
-                              .normalize("NFD")
-                              .replace(/[\u0300-\u036f]/g, "")
-                              .toLowerCase()
-                              .replace(/\s+/g, "-")}
-                            chapter={selectedChapter!}
-                            verseNumber={selectedVerseRange.start}
-                            verseEnd={selectedVerseRange.end > selectedVerseRange.start ? selectedVerseRange.end : undefined}
-                            verseText={selectedRangeText}
-                            versesList={selectedVersesList}
-                            translationCode={selectedTranslation}
-                            maxVerse={chapterData?.verses?.length}
-                            onRangeChange={(start, end) => setSelectedVerseRange({ start, end })}
-                            onClose={() => setSelectedVerseRange(null)}
-                          />
-                        </div>
-                      )}
+
                     </div>
                   );
                 })}
@@ -995,6 +1022,44 @@ const EstudoBiblico = () => {
           </div>
         </div>
       )}
+
+      {/* Floating Bottom Action Dock (Me Explica, Comparar, Referências, Marcar, Temas, Anotar, Copiar, Compartilhar, Imagem) */}
+      {selectedVerseRange && selectedBook && selectedChapter && (
+        <FloatingVerseActionDock
+          bookName={selectedBook.name}
+          bookSlug={selectedBook.name
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/\s+/g, "-")}
+          chapter={selectedChapter}
+          startVerse={selectedVerseRange.start}
+          endVerse={selectedVerseRange.end}
+          maxVerse={chapterData?.verses?.length}
+          selectedText={(chapterData?.verses ?? [])
+            .filter(
+              (item) =>
+                item.number >= selectedVerseRange.start &&
+                item.number <= selectedVerseRange.end
+            )
+            .map((item) => `${item.number}. ${item.text}`)
+            .join("\n")}
+          translationCode={selectedTranslation}
+          onRangeChange={(start, end) => setSelectedVerseRange({ start, end })}
+          onClear={() => setSelectedVerseRange(null)}
+        />
+      )}
+
+      {/* Epigraph Study Modal (Contexto, Local, Personagens, Objetivo, Cristo, Lições) */}
+      <EpigraphStudyModal
+        open={epigraphModal.open}
+        onOpenChange={(open) => setEpigraphModal((prev) => ({ ...prev, open }))}
+        bookName={selectedBook?.name || ""}
+        chapter={selectedChapter || 1}
+        verseStart={epigraphModal.start}
+        verseEnd={epigraphModal.end}
+        title={epigraphModal.title}
+      />
     </div>
   );
 };

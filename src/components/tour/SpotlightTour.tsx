@@ -138,35 +138,15 @@ export function SpotlightTour({
     }
   };
 
-  // Card Positioning logic (Avoid covering the spotlighted target!)
+  // Card Positioning logic: Centralizado no meio da tela em todos os dispositivos
   const getCardPositionStyle = (): React.CSSProperties => {
-    if (!targetRect || step.placement === "center") {
-      return {
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      };
-    }
-
-    const isTargetInTopHalf = targetRect.top < windowSize.height / 2;
-
-    if (isTargetInTopHalf) {
-      // Place below target
-      const topPos = Math.min(windowSize.height - 320, targetRect.top + targetRect.height + 16);
-      return {
-        top: `${Math.max(80, topPos)}px`,
-        left: "50%",
-        transform: "translateX(-50%)",
-      };
-    } else {
-      // Place above target
-      const bottomPos = Math.max(20, windowSize.height - targetRect.top + 16);
-      return {
-        bottom: `${bottomPos}px`,
-        left: "50%",
-        transform: "translateX(-50%)",
-      };
-    }
+    return {
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      maxHeight: "88vh",
+      overflowY: "auto",
+    };
   };
 
   const padding = 6;

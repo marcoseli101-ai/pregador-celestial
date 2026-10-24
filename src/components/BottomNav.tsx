@@ -20,6 +20,9 @@ import {
   X,
   ChevronRight,
   Lightbulb,
+  Music,
+  DownloadCloud,
+  Bot,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -27,10 +30,12 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useAppTour } from "@/components/tour/AppTourProvider";
+import { BiblicalAIChatModal } from "@/components/BiblicalAIChatModal";
 
 export const BottomNav: React.FC = () => {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [aiChatOpen, setAiChatOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { openLogin } = useLoginPrompt();
   const { isAdmin } = useAdminCheck();
@@ -40,21 +45,16 @@ export const BottomNav: React.FC = () => {
     document.documentElement.classList.toggle("dark");
   };
 
-  const navItems = [
-    { label: "Início", path: "/", icon: Home },
-    { label: "Bíblia", path: "/estudo-biblico", icon: BookOpen },
-    { label: "Esboços", path: "/gerador-pregacoes", icon: Sparkles },
-    { label: "Devocional", path: "/devocional", icon: Calendar },
-  ];
-
   const drawerSections = [
     {
       title: "Estudo Bíblico",
       items: [
         { label: "Bíblia Sagrada", path: "/estudo-biblico", icon: BookOpen },
+        { label: "Harpa Cristã (640 Hinos)", path: "/harpa", icon: Music },
         { label: "Plano de Leitura Anual", path: "/plano-leitura", icon: BookMarked },
         { label: "Dicionário Hebraico/Grego", path: "/dicionario", icon: Languages },
         { label: "Marcadores de Versículos", path: "/marcadores", icon: Bookmark },
+        { label: "Modo Offline & Downloads", path: "/downloads", icon: DownloadCloud },
       ],
     },
     {
@@ -69,6 +69,7 @@ export const BottomNav: React.FC = () => {
     {
       title: "Academia & Discipulado",
       items: [
+        { label: "Escola Bíblica (EBD)", path: "/ebd", icon: GraduationCap },
         { label: "Curso de Teologia", path: "/curso-teologia", icon: GraduationCap },
         { label: "Questionários Bíblicos", path: "/questionarios", icon: HelpCircle },
         { label: "Devocional Diário", path: "/devocional", icon: Calendar },
@@ -80,29 +81,67 @@ export const BottomNav: React.FC = () => {
     <>
       {/* Fixed Bottom Bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 lg:hidden glass-header border-t border-border/60 pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-5px_20px_rgba(0,0,0,0.15)]">
-        <div className="flex items-center justify-around h-16 px-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 min-h-[44px] min-w-[44px] ${
-                  active
-                    ? "text-amber-500 font-semibold"
-                    : "text-muted-foreground hover:text-foreground active:scale-95"
-                }`}
-              >
-                <div className={`p-1 rounded-lg transition-colors ${active ? "bg-amber-500/15" : ""}`}>
-                  <Icon className="h-5 w-5" />
-                </div>
-                <span className="text-[10px] mt-0.5 tracking-tight">{item.label}</span>
-              </Link>
-            );
-          })}
+        <div className="flex items-center justify-around h-16 px-1">
+          {/* 1. Início */}
+          <Link
+            to="/"
+            className={`flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 min-h-[44px] min-w-[44px] ${
+              location.pathname === "/"
+                ? "text-amber-500 font-semibold"
+                : "text-muted-foreground hover:text-foreground active:scale-95"
+            }`}
+          >
+            <div className={`p-1 rounded-lg transition-colors ${location.pathname === "/" ? "bg-amber-500/15" : ""}`}>
+              <Home className="h-5 w-5" />
+            </div>
+            <span className="text-[10px] mt-0.5 tracking-tight">Início</span>
+          </Link>
 
-          {/* Drawer Trigger ("Mais") */}
+          {/* 2. Bíblia */}
+          <Link
+            to="/estudo-biblico"
+            className={`flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 min-h-[44px] min-w-[44px] ${
+              location.pathname === "/estudo-biblico"
+                ? "text-amber-500 font-semibold"
+                : "text-muted-foreground hover:text-foreground active:scale-95"
+            }`}
+          >
+            <div className={`p-1 rounded-lg transition-colors ${location.pathname === "/estudo-biblico" ? "bg-amber-500/15" : ""}`}>
+              <BookOpen className="h-5 w-5" />
+            </div>
+            <span className="text-[10px] mt-0.5 tracking-tight">Bíblia</span>
+          </Link>
+
+          {/* 3. Central Glowing IA Chat Orb (estilo IATheos Chat do mbiblia.app) */}
+          <button
+            type="button"
+            onClick={() => setAiChatOpen(true)}
+            className="group relative -top-3 flex flex-col items-center justify-center shrink-0 px-2 active:scale-95 transition-transform"
+            aria-label="Abrir Chat com IA Teológica"
+          >
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-300 text-background shadow-[0_0_20px_rgba(245,158,11,0.6)] border-2 border-background ring-2 ring-amber-500/30 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(245,158,11,0.85)] transition-all">
+              <Sparkles className="h-6 w-6 animate-[pulse_2.5s_ease-in-out_infinite]" />
+              <div className="absolute inset-0 rounded-full animate-ping opacity-25 bg-amber-400 pointer-events-none" />
+            </div>
+            <span className="text-[10px] font-bold text-amber-500 mt-0.5 tracking-tight">IA Theos</span>
+          </button>
+
+          {/* 4. Harpa Cristã */}
+          <Link
+            to="/harpa"
+            className={`flex flex-col items-center justify-center flex-1 py-1 rounded-xl transition-all duration-200 min-h-[44px] min-w-[44px] ${
+              location.pathname === "/harpa"
+                ? "text-amber-500 font-semibold"
+                : "text-muted-foreground hover:text-foreground active:scale-95"
+            }`}
+          >
+            <div className={`p-1 rounded-lg transition-colors ${location.pathname === "/harpa" ? "bg-amber-500/15" : ""}`}>
+              <Music className="h-5 w-5" />
+            </div>
+            <span className="text-[10px] mt-0.5 tracking-tight">Harpa</span>
+          </Link>
+
+          {/* 5. Drawer Trigger ("Mais") */}
           <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
             <SheetTrigger asChild>
               <button
@@ -228,6 +267,9 @@ export const BottomNav: React.FC = () => {
           </Sheet>
         </div>
       </nav>
+
+      {/* Modal de IA Theos / Chat Teológico */}
+      <BiblicalAIChatModal open={aiChatOpen} onOpenChange={setAiChatOpen} />
     </>
   );
 };

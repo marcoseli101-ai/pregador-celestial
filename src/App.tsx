@@ -24,6 +24,9 @@ import AreaPregador from "./pages/AreaPregador";
 import PlanoLeitura from "./pages/PlanoLeitura";
 import NotasPessoais from "./pages/NotasPessoais";
 import Marcadores from "./pages/Marcadores";
+import HarpaCrista from "./pages/HarpaCrista";
+import Downloads from "./pages/Downloads";
+import EscolaBiblica from "./pages/EscolaBiblica";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +58,10 @@ const App = () => (
                   <Route path="/area-pregador" element={<AreaPregador />} />
                   <Route path="/notas" element={<NotasPessoais />} />
                   <Route path="/marcadores" element={<Marcadores />} />
+                  <Route path="/harpa" element={<HarpaCrista />} />
+                  <Route path="/downloads" element={<Downloads />} />
+                  <Route path="/ebd" element={<EscolaBiblica />} />
+                  <Route path="/escola-biblica" element={<Navigate to="/ebd" replace />} />
                 </Route>
                 <Route element={<AdminRoute><Layout /></AdminRoute>}>
                   <Route path="/admin" element={<Admin />} />

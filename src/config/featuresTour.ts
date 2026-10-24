@@ -25,57 +25,78 @@ export interface FeatureItem {
 }
 
 // Atualize esta constante sempre que houver novas funcionalidades ou melhorias
-export const DEPLOY_VERSION = "2026-09-08-v4-multi-verse-edit";
+// O sistema abre automaticamente o tutorial para os usuários quando esta versão é alterada!
+export const DEPLOY_VERSION = "2026-10-24-v6-ebd-epigrafe-parity";
 
 // Lista detalhada de todas as novidades implementadas para usuários existentes
 export const TODAY_FEATURES: FeatureItem[] = [
   {
-    id: "multi-verse-tools",
-    title: "Seleção Múltipla de Versículos nas Ferramentas 📖",
+    id: "verse-dock-tools",
+    title: "Dock Flutuante de Versículos & 9 Ferramentas ⚡",
     description:
-      "Agora você pode selecionar vários versículos consecutivos (um intervalo, ex: Marcos 5:25-29) e usar todas as 7 ferramentas exegéticas (Me Explica, Comparar, Referências, Temas, Marcar, Anotar, Copiar) no trecho completo.",
-    icon: "GitCompare",
-    badge: "Novo",
-    howToTest:
-      "Na página Bíblia, toque em um primeiro versículo e depois toque em um versículo posterior para selecionar o intervalo completo.",
-    path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-books-grid']",
-  },
-  {
-    id: "sermon-live-edit",
-    title: "Edição Livre de Esboços Pós-Geração ✏️",
-    description:
-      "Após gerar seu sermão, use o novo botão 'Editar' para personalizar, acrescentar ou reescrever qualquer divisão ou anotação diretamente na interface.",
+      "Ao selecionar qualquer versículo ou conjunto de versículos, uma barra flutuante surge na parte inferior com 9 ferramentas instantâneas: Me Explica com IA, Comparar (ARC, ACF, NVI, NTLH), Referências Cruzadas, Marcar em 6 cores com persistência, Temas Bíblicos, Anotar, Copiar, Compartilhar e Gerador de Imagem comemorativa.",
     icon: "Sparkles",
     badge: "Novo",
     howToTest:
-      "Gere um esboço no Gerador de Pregações e clique em 'Editar Esboço' para alterar o texto livremente antes de salvar ou ministrar.",
-    path: "/gerador-pregacoes",
-    targetSelector: "[data-tour='sermon-generator-form']",
+      "Na página da Bíblia, clique em qualquer versículo ou selecione um intervalo para abrir a dock de ferramentas.",
+    path: "/estudo-biblico",
+    targetSelector: "[data-tour='bible-books-grid']",
   },
   {
-    id: "bible-reader-13-versions",
-    title: "13 Versões da Bíblia na Leitura Principal",
+    id: "epigraph-study-system",
+    title: "Estudo Profundo da Epígrafe com IA 📖",
     description:
-      "Alterne instantaneamente entre 13 traduções (ARC, ACF, ARA, NVI, NVT, NAA, NTLH, KJA, AME, KJV, BBE, RVR e AA) no cabeçalho de qualquer capítulo.",
+      "Agora cada epígrafe/título de perícope da Bíblia possui o botão '[Estudar]'. Ao clicar, você acessa uma análise teológica estruturada com: Contexto Histórico, Local e Cenário, Personagens, Objetivo da passagem, Conexão com Cristo e Lições Práticas, tudo integrado com a IA Theos.",
     icon: "BookOpen",
-    badge: "Atualizado",
+    badge: "Exclusivo",
     howToTest:
-      "Acesse a aba 'Bíblia', abra qualquer livro/capítulo e clique no seletor de versões no topo para ler na versão de sua preferência.",
+      "Abra qualquer capítulo da Bíblia (ex: Levítico 4 ou Mateus 1) e clique no botão 'Estudar' ao lado da epígrafe amarela.",
     path: "/estudo-biblico",
     targetSelector: "[data-tour='bible-books-grid']",
   },
   {
-    id: "pulpit-reading-mode",
-    title: "Modo Púlpito Imersivo & Tipografia Editorial",
+    id: "escola-biblica-dominical",
+    title: "Escola Bíblica Dominical (EBD) com IA 🎓",
     description:
-      "Leitura bíblica e de esboços com tipografia Lora em 20px, entrelinhas de alto conforto, menu lateral flutuante e visualização sem distrações.",
-    icon: "ScrollText",
-    badge: "Imersivo",
+      "Nova aba completa da EBD (/ebd) com revistas para Adultos, Jovens e Discipulado. Traz Texto Áureo, Verdade Prática, Leitura em Classe, Tópicos I, II, III com subtópicos, Perguntas de Fixação e bloco de anotações do professor com salvamento automático. Inclui ferramentas de IA para gerar Plano de Aula de 50 min, 2 Dinâmicas quebra-gelo, Perguntas de debate e Ilustrações homiléticas.",
+    icon: "GraduationCap",
+    badge: "Novo Módulo",
     howToTest:
-      "Abra qualquer capítulo da Bíblia ou esboço homilético para experimentar a visualização em tela cheia otimizada para o púlpito.",
-    path: "/estudo-biblico",
-    targetSelector: "[data-tour='bible-books-grid']",
+      "Acesse o menu 'Academia' -> 'Escola Bíblica (EBD)' ou vá para /ebd e explore as lições e a barra de apoio com IA ao professor.",
+    path: "/ebd",
+  },
+  {
+    id: "harpa-crista-640",
+    title: "Harpa Cristã Completa (640 Hinos) 🎵",
+    description:
+      "Todos os 640 hinos tradicionais da Harpa Cristã com letras completas, cifras para ministério de louvor e busca ágil por número ou tema.",
+    icon: "Music",
+    badge: "640 Hinos",
+    howToTest:
+      "Acesse a Harpa Cristã no menu 'Estudo Bíblico' e busque por hinos como 15 (Foi na Cruz) ou 545.",
+    path: "/harpa",
+  },
+  {
+    id: "offline-mode",
+    title: "Modo Offline & Downloads em IndexedDB 📥",
+    description:
+      "Baixe a Bíblia completa e os 640 hinos da Harpa diretamente na memória do seu aparelho para estudar e ministrar mesmo em locais sem internet.",
+    icon: "DownloadCloud",
+    badge: "Offline",
+    howToTest:
+      "Abra a página 'Modo Offline' (/downloads) e baixe a Bíblia e Harpa com um clique.",
+    path: "/downloads",
+  },
+  {
+    id: "daily-engagement-hub",
+    title: "Hub Diário com Gerador de Artes e Reflexão 🌅",
+    description:
+      "Novo painel na tela inicial com versículo do dia, reflexão bíblica, progresso anual de leitura e criador de imagens personalizadas para redes sociais.",
+    icon: "Calendar",
+    badge: "Visual",
+    howToTest:
+      "Na página inicial, role até a seção devocional e clique em 'Criar Imagem' no versículo do dia.",
+    path: "/",
   },
 ];
 
@@ -85,56 +106,63 @@ export const FULL_APP_TOUR_STEPS: TourStep[] = [
     id: "welcome",
     title: "Bem-vindo ao Pregador Pro! 👋",
     description:
-      "Sua plataforma completa para estudo bíblico exegético, preparação de sermões e crescimento ministerial. Vamos fazer um tour guiado pelas principais ferramentas?",
+      "Sua plataforma completa para estudo bíblico exegético, preparação de sermões, escola bíblica e ministração da Palavra. Vamos conhecer as principais ferramentas?",
     placement: "center",
   },
   {
     id: "navigation",
     title: "Navegação por Menus Agrupados 🧭",
     description:
-      "Acesse de forma organizada: Estudo Bíblico, Pregação e Academia através dos menus dropdown no topo ou pela barra móvel no rodapé.",
+      "Acesse de forma organizada: Estudo Bíblico, Pregação e Academia através dos menus no topo ou pela barra de navegação no rodapé móvel.",
     path: "/",
     targetSelector: "[data-tour='main-nav']",
-    placement: "bottom",
+    placement: "center",
   },
   {
     id: "bible-reading",
-    title: "Bíblia Sagrada & Seleção Múltipla de Versículos 📖",
+    title: "Bíblia com Estudo de Epígrafe & Dock Flutuante 📖",
     description:
-      "Navegue pelos 66 livros em 13 versões consagradas. Ao tocar nos versículos, você pode selecionar um ou múltiplos versículos em intervalo (ex: Marcos 5:25-29) e usar as 7 ferramentas exegéticas (Me Explica, Comparar, Referências, Temas, Marcar, Anotar e Copiar) no bloco completo.",
+      "Leia a Bíblia com epígrafes explicadas (botão 'Estudar' com contexto histórico e cristologia) e selecione versículos para abrir a dock com 9 ferramentas: Me Explica, Comparar versões, Referências, Temas, Marcação colorida, Anotações e Criador de Imagem.",
     path: "/estudo-biblico",
     targetSelector: "[data-tour='bible-books-grid']",
-    howToTest: "Clique em qualquer livro para abrir os capítulos e experimentar a seleção de versículos.",
-    placement: "top",
+    howToTest: "Abra qualquer capítulo e clique em um versículo ou no botão 'Estudar' da epígrafe.",
+    placement: "center",
+  },
+  {
+    id: "ebd-module",
+    title: "Escola Bíblica Dominical (EBD) com IA 🎓",
+    description:
+      "Módulo completo de lições com Texto Áureo, Verdade Prática, leitura em classe e apoio inteligente com IA para gerar planos de aula de 50 min, dinâmicas quebra-gelo e perguntas de debate.",
+    path: "/ebd",
+    howToTest: "Acesse /ebd para navegar pelas revistas de Adultos, Jovens e Discipulado.",
+    placement: "center",
   },
   {
     id: "sermon-generator",
-    title: "Gerador de Esboços com Edição Livre & Modo Púlpito 📜",
+    title: "Gerador de Esboços com Edição Livre 📜",
     description:
-      "Crie sermões fiéis e exegéticos com divisões claras e sem apelo/oração automáticos. Após a geração, edite o texto livremente com o botão 'Editar' e visualize em tela cheia no Modo Púlpito.",
+      "Gere esboços homiléticos estruturados e exegéticos. Após a geração, edite o texto livremente com o botão 'Editar' e utilize o Modo Púlpito para ministração sem distrações.",
     path: "/gerador-pregacoes",
     targetSelector: "[data-tour='sermon-generator-form']",
-    howToTest: "Preencha o tema, gere o esboço e personalize qualquer trecho com a edição livre.",
-    placement: "top",
+    howToTest: "Defina o tema e gere sermões ricos prontos para o púlpito.",
+    placement: "center",
   },
   {
-    id: "global-search",
-    title: "Busca Global Rápida ⚡",
+    id: "harpa-offline",
+    title: "Harpa Cristã (640 Hinos) & Modo Offline 🎵",
     description:
-      "Encontre rapidamente qualquer livro, sermão ou ferramenta pressionando Ctrl+K (ou Cmd+K) no teclado a qualquer momento.",
-    path: "/",
-    targetSelector: "[data-tour='global-search-btn']",
-    howToTest: "Pressione Ctrl+K para abrir a paleta de comandos rápida.",
-    placement: "bottom",
+      "Hinos cifrados para momentos de louvor e adoração, além do recurso de download local para leitura bíblica sem internet.",
+    path: "/harpa",
+    placement: "center",
   },
   {
     id: "help-center",
     title: "Central de Novidades & Ajuda 💡",
     description:
-      "Você pode rever este tutorial ou conferir as novidades de cada atualização clicando no botão 'Novidades' no topo.",
+      "Você pode rever este tutorial ou conferir o histórico de melhorias a qualquer momento clicando no botão 'Novidades' no topo.",
     path: "/",
     targetSelector: "[data-tour='tour-button']",
-    placement: "bottom",
+    placement: "center",
   },
 ];
 
@@ -144,36 +172,36 @@ export const WHATS_NEW_TOUR_STEPS: TourStep[] = [
     id: "intro-whats-new",
     title: "Novidades desta Atualização! 🚀",
     description:
-      "Confira os novos recursos: seleção de múltiplos versículos nas ferramentas da Bíblia, edição livre de esboços gerados e motor homilético aprimorado.",
+      "Chegaram os novos recursos: Dock Flutuante de Versículos, Estudo Teológico da Epígrafe, Escola Bíblica Dominical (EBD) com IA e centralização aprimorada de interface.",
     placement: "center",
   },
   {
-    id: "step-multi-verse",
-    title: "1. Seleção Múltipla de Versículos na Bíblia 📖",
+    id: "step-verse-dock",
+    title: "1. Dock Flutuante de Versículos ⚡",
     description:
-      "Agora você pode tocar no primeiro versículo e estender a seleção até um versículo posterior (ex: Marcos 5:25-29). Todas as 7 ferramentas (Me Explica, Comparar, Referências, Temas, Marcar, Anotar e Copiar) atuam sobre o intervalo inteiro!",
+      "Toque nos versículos para abrir instantaneamente o menu inferior com 9 ferramentas: Me Explica, Comparar, Referências, Marcar (6 cores), Temas, Anotar, Copiar, Compartilhar e Imagem.",
     path: "/estudo-biblico",
     targetSelector: "[data-tour='bible-books-grid']",
-    howToTest: "Abra um capítulo bíblico e selecione um trecho de versículos para testar.",
-    placement: "top",
+    howToTest: "Abra a Bíblia e clique sobre qualquer versículo.",
+    placement: "center",
   },
   {
-    id: "step-sermon-edit",
-    title: "2. Edição Livre de Esboços Gerados ✏️",
+    id: "step-epigraph",
+    title: "2. Estudo da Epígrafe com IA 📖",
     description:
-      "Após a geração do sermão, clique no botão 'Editar' para modificar, adicionar ou reescrever qualquer parte livremente antes de salvar ou ministrar.",
-    path: "/gerador-pregacoes",
-    targetSelector: "[data-tour='sermon-generator-form']",
-    howToTest: "Acesse o gerador para criar mensagens e editar seu texto.",
-    placement: "top",
-  },
-  {
-    id: "step-bible-versions",
-    title: "3. Leitura Bíblica com 13 Versões 📖",
-    description:
-      "Alterne instantaneamente entre as 13 traduções consagradas e aproveite o Modo Púlpito para ministração.",
+      "Clique no botão 'Estudar' ao lado das epígrafes amarelas para abrir a análise de contexto histórico, personagens, local, cenário e conexão cristológica.",
     path: "/estudo-biblico",
     targetSelector: "[data-tour='bible-books-grid']",
-    placement: "top",
+    howToTest: "Acesse a Bíblia e clique no botão 'Estudar' de uma epígrafe.",
+    placement: "center",
+  },
+  {
+    id: "step-ebd",
+    title: "3. Escola Bíblica Dominical (EBD) 🎓",
+    description:
+      "Novo módulo de EBD com lições das revistas de Adultos, Jovens e Discipulado, anotações salvas do professor e gerador de planos de aula e dinâmicas com IA.",
+    path: "/ebd",
+    howToTest: "Navegue para /ebd ou acesse pelo menu Academia.",
+    placement: "center",
   },
 ];

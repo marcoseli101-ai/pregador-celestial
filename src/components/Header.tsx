@@ -18,6 +18,8 @@ import {
   StickyNote,
   Bookmark,
   Lightbulb,
+  Music,
+  DownloadCloud,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,9 +53,11 @@ export function Header() {
       title: "Estudo Bíblico",
       items: [
         { label: "Bíblia Sagrada", path: "/estudo-biblico", desc: "Leitura, versões e comentários", icon: BookOpen },
+        { label: "Harpa Cristã", path: "/harpa", desc: "640 hinos com letras e cifras", icon: Music },
         { label: "Plano de Leitura", path: "/plano-leitura", desc: "Acompanhamento anual organizado", icon: BookMarked },
         { label: "Dicionário Bíblico", path: "/dicionario", desc: "Léxico Hebraico e Grego", icon: Languages },
         { label: "Marcadores", path: "/marcadores", desc: "Versículos salvos e notas rápidas", icon: Bookmark },
+        { label: "Modo Offline", path: "/downloads", desc: "Baixe a Bíblia e Harpa localmente", icon: DownloadCloud },
       ],
     },
     {
@@ -68,6 +72,7 @@ export function Header() {
     {
       title: "Academia",
       items: [
+        { label: "Escola Bíblica (EBD)", path: "/ebd", desc: "Lições e apoio com IA ao professor", icon: GraduationCap },
         { label: "Curso de Teologia", path: "/curso-teologia", desc: "Teologia sistemática interativa", icon: GraduationCap },
         { label: "Questionários", path: "/questionarios", desc: "Testes e desafios bíblicos", icon: HelpCircle },
         { label: "Devocional Diário", path: "/devocional", desc: "Versículo e reflexão diária", icon: Calendar },
