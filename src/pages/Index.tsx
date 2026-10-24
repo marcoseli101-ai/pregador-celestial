@@ -243,28 +243,38 @@ const Index = () => {
       </section>
 
       {/* Bible Landscape Parallax Divider */}
-      <section className="relative h-[40vh] min-h-[250px] overflow-hidden">
+      <section className="relative h-[40vh] min-h-[260px] overflow-hidden flex items-center justify-center">
         <motion.img
           src={bibleLandscape}
           alt="Paisagem bíblica - Monte das Oliveiras ao pôr do sol"
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
           initial={{ scale: 1.1 }}
           whileInView={{ scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.p
-            className="font-serif text-2xl sm:text-3xl font-bold text-primary-foreground drop-shadow-lg text-center px-4"
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-black/55 to-background/80" />
+        <div className="relative z-10 container flex items-center justify-center px-4">
+          <motion.div
+            className="max-w-2xl w-full px-6 sm:px-10 py-5 sm:py-6 rounded-3xl bg-black/60 backdrop-blur-md border border-amber-500/30 shadow-[0_12px_40px_rgba(0,0,0,0.65)] text-center relative overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            "Lâmpada para os meus pés é a tua <span className="text-gradient-gold">Palavra</span>"
-          </motion.p>
+            {/* Subtle golden ambient glow inside card */}
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/20 rounded-full blur-2xl pointer-events-none" />
+
+            <p className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-wide leading-relaxed drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)]">
+              “Lâmpada para os meus pés é a tua <span className="text-amber-400 font-extrabold text-gradient-gold drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]">Palavra</span>”
+            </p>
+            <p className="mt-2.5 font-sans text-xs sm:text-sm font-semibold uppercase tracking-widest text-amber-300/90 flex items-center justify-center gap-2.5">
+              <span className="w-8 h-px bg-amber-400/50" />
+              Salmo 119:105
+              <span className="w-8 h-px bg-amber-400/50" />
+            </p>
+          </motion.div>
         </div>
       </section>
 
