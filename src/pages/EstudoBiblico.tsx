@@ -516,14 +516,16 @@ const EstudoBiblico = () => {
                           <div className={`epigraph-section ${vIdx === 0 ? "pt-2 pb-5" : "pt-8 pb-5"} select-none`}>
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/25 shadow-xs">
                               <div
-                                onClick={() =>
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
                                   setEpigraphModal({
                                     open: true,
                                     title: epigraph,
                                     start: v.number,
                                     end: epigraphEnd,
-                                  })
-                                }
+                                  });
+                                }}
                                 className="cursor-pointer group flex-1"
                               >
                                 <div className="flex items-center gap-2">
@@ -539,14 +541,17 @@ const EstudoBiblico = () => {
 
                               <Button
                                 size="sm"
-                                onClick={() =>
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
                                   setEpigraphModal({
                                     open: true,
                                     title: epigraph,
                                     start: v.number,
                                     end: epigraphEnd,
-                                  })
-                                }
+                                  });
+                                }}
                                 className="self-start sm:self-center bg-gradient-gold text-background hover:opacity-90 font-bold text-xs h-8 px-3 rounded-xl shadow-xs gap-1.5 shrink-0"
                               >
                                 <BookOpen className="h-3.5 w-3.5" /> Estudar
@@ -640,6 +645,44 @@ const EstudoBiblico = () => {
               </div>
             </>
           )}
+
+          {/* Floating Bottom Action Dock (Me Explica, Comparar, Referências, Marcar, Temas, Anotar, Copiar, Compartilhar, Imagem) */}
+          {selectedVerseRange && selectedBook && selectedChapter && (
+            <FloatingVerseActionDock
+              bookName={selectedBook.name}
+              bookSlug={selectedBook.name
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replace(/\s+/g, "-")}
+              chapter={selectedChapter}
+              startVerse={selectedVerseRange.start}
+              endVerse={selectedVerseRange.end}
+              maxVerse={chapterData?.verses?.length}
+              selectedText={(chapterData?.verses ?? [])
+                .filter(
+                  (item) =>
+                    item.number >= selectedVerseRange.start &&
+                    item.number <= selectedVerseRange.end
+                )
+                .map((item) => `${item.number}. ${item.text}`)
+                .join("\n")}
+              translationCode={selectedTranslation}
+              onRangeChange={(start, end) => setSelectedVerseRange({ start, end })}
+              onClear={() => setSelectedVerseRange(null)}
+            />
+          )}
+
+          {/* Epigraph Study Modal (Contexto, Local, Personagens, Objetivo, Cristo, Lições) */}
+          <EpigraphStudyModal
+            open={epigraphModal.open}
+            onOpenChange={(open) => setEpigraphModal((prev) => ({ ...prev, open }))}
+            bookName={selectedBook?.name || ""}
+            chapter={selectedChapter || 1}
+            verseStart={epigraphModal.start}
+            verseEnd={epigraphModal.end}
+            title={epigraphModal.title}
+          />
         </div>
       </div>
     );
