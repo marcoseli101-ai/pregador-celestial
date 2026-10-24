@@ -1,5 +1,5 @@
-// Pregador Pro - Service Worker simples (cache-first para assets, network-first para HTML)
-const CACHE = "pregador-pro-v1";
+// Pregador Fiel - Service Worker simples (cache-first para assets, network-first para HTML)
+const CACHE = "pregador-fiel-v1";
 const ASSETS = ["/", "/favicon.png", "/manifest.json"];
 
 self.addEventListener("install", (event) => {

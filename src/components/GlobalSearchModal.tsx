@@ -46,7 +46,7 @@ const SEARCH_ITEMS = [
   {
     category: "Pregação & Homilética",
     items: [
-      { title: "Gerador de Esboços", description: "Estruturas de sermão e mensagens com IA", path: "/gerador-pregacoes", icon: Sparkles },
+      { title: "Estruturador de Esboços", description: "Estruture sermões homiléticos com base bíblica sólida", path: "/gerador-pregacoes", icon: Sparkles },
       { title: "Biblioteca de Mensagens", description: "Pregações organizadas por temas e livros", path: "/biblioteca", icon: FileText },
       { title: "Área do Pregador", description: "Seus sermões salvos e histórico", path: "/area-pregador", icon: GraduationCap },
       { title: "Notas Pessoais", description: "Rascunhos e anotações ministeriais", path: "/notas", icon: StickyNote },
@@ -55,7 +55,8 @@ const SEARCH_ITEMS = [
   {
     category: "Academia & Crescimento",
     items: [
-      { title: "Curso de Teologia", description: "Teologia sistemática interativa com IA", path: "/curso-teologia", icon: GraduationCap },
+      { title: "Escola Bíblica (EBD)", description: "Lições e ferramentas inteligentes de subsídio ao professor", path: "/ebd", icon: GraduationCap },
+      { title: "Curso de Teologia", description: "Teologia sistemática interativa e pastoral", path: "/curso-teologia", icon: GraduationCap },
       { title: "Questionários Bíblicos", description: "Testes e desafios de conhecimento", path: "/questionarios", icon: HelpCircle },
       { title: "Devocional Diário", description: "Reflexão, oração e versículo do dia", path: "/devocional", icon: Calendar },
     ],

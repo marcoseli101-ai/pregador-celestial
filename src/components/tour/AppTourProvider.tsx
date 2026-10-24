@@ -132,7 +132,7 @@ export function AppTourProvider({ children }: { children: React.ReactNode }) {
               </DialogTitle>
             </div>
             <DialogDescription className="text-xs text-muted-foreground">
-              Escolha uma opção para conhecer ou rever os recursos do Pregador Pro:
+              Escolha uma opção para conhecer ou rever os recursos do Pregador Fiel:
             </DialogDescription>
           </DialogHeader>
 

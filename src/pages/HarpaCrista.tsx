@@ -81,7 +81,7 @@ export default function HarpaCrista() {
   const handleCopy = () => {
     if (!selectedHymn) return;
     navigator.clipboard.writeText(
-      `🎵 Harpa Cristã - Hino ${String(selectedHymn.number).padStart(3, "0")}: ${selectedHymn.title}\n\n${selectedHymn.fullText}\n\nVia Pregador Pro`
+      `🎵 Harpa Cristã - Hino ${String(selectedHymn.number).padStart(3, "0")}: ${selectedHymn.title}\n\n${selectedHymn.fullText}\n\nVia Pregador Fiel`
     );
     setCopied(true);
     toast.success("Letra copiada para a área de transferência!");

@@ -14,7 +14,7 @@ export async function shareContent(rawContent: string, title?: string) {
   const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> };
   if (nav.share) {
     try {
-      await nav.share({ title: title ?? "Pregador Pro", text: message });
+      await nav.share({ title: title ?? "Pregador Fiel", text: message });
       return;
     } catch {
       // user cancelled or share failed → fall through to WhatsApp

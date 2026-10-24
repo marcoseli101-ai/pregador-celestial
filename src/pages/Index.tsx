@@ -19,7 +19,7 @@ import bibleCross from "@/assets/bible-cross.jpg";
 
 const features = [
   { icon: BookOpen, title: "Estudo Bíblico Avançado", desc: "Bíblia completa com busca, comparação e comentários teológicos.", link: "/estudo-biblico", color: "from-[hsl(220,55%,50%)] to-[hsl(250,50%,60%)]" },
-  { icon: Sparkles, title: "Gerador de Esboço de Pregação", desc: "Esboços e sermões completos com base bíblica sólida.", link: "/gerador-pregacoes", color: "from-[hsl(38,70%,50%)] to-[hsl(45,65%,58%)]" },
+  { icon: Sparkles, title: "Estruturador de Esboços", desc: "Estruture seus sermões com introdução, desenvolvimento, referências cruzadas e aplicação prática com base bíblica sólida.", link: "/gerador-pregacoes", color: "from-[hsl(38,70%,50%)] to-[hsl(45,65%,58%)]" },
   { icon: FileText, title: "Biblioteca de Mensagens", desc: "Pregações organizadas por temas com texto base e aplicação.", link: "/biblioteca", color: "from-[hsl(260,45%,52%)] to-[hsl(280,50%,58%)]" },
   { icon: GraduationCap, title: "Curso de Teologia", desc: "Estudo completo de teologia sistemática para tirar dúvidas.", link: "/curso-teologia", color: "from-[hsl(195,65%,42%)] to-[hsl(210,60%,52%)]" },
   { icon: Languages, title: "Dicionário Hebraico/Grego", desc: "Palavras bíblicas com significado teológico e pronúncia.", link: "/dicionario", color: "from-[hsl(155,50%,38%)] to-[hsl(170,55%,48%)]" },
@@ -30,18 +30,19 @@ const features = [
   { icon: StickyNote, title: "Notas Pessoais", desc: "Crie e organize suas anotações de estudo, pregações e reflexões.", link: "/notas", color: "from-[hsl(42,70%,48%)] to-[hsl(50,65%,55%)]" },
   { icon: Bookmark, title: "Marcadores de Versículos", desc: "Salve e destaque versículos importantes com cores e anotações.", link: "/marcadores", color: "from-[hsl(275,50%,52%)] to-[hsl(295,45%,55%)]" },
   { icon: Music, title: "Harpa Cristã Completa", desc: "640 hinos para louvor, edificação e devocional com cifras e letras.", link: "/harpa", color: "from-[hsl(230,60%,48%)] to-[hsl(260,65%,58%)]" },
-  { icon: GraduationCap, title: "Escola Bíblica (EBD)", desc: "Lições completas, subsídios e ferramentas com IA de apoio ao professor.", link: "/ebd", color: "from-[hsl(35,80%,48%)] to-[hsl(45,85%,55%)]" },
+  { icon: GraduationCap, title: "Escola Bíblica (EBD)", desc: "Lições completas, subsídios e ferramentas inteligentes de subsídio e apoio ao professor.", link: "/ebd", color: "from-[hsl(35,80%,48%)] to-[hsl(45,85%,55%)]" },
   { icon: DownloadCloud, title: "Modo Offline & Downloads", desc: "Baixe a Bíblia e a Harpa para ler e cantar mesmo sem sinal de internet.", link: "/downloads", color: "from-[hsl(160,50%,40%)] to-[hsl(180,55%,45%)]" },
 ];
 
 const themes = [
   "Avivamento", "Fé", "Santidade", "Salvação", "Arrependimento",
-  "Espírito Santo", "Escatologia", "Evangelismo", "Oração", "Graça"
+  "Espírito Santo", "Escatologia", "Evangelismo", "Oração", "Graça",
+  "Santa Ceia", "Família", "Jovens", "Missões", "Consolo e Esperança", "Liderança e Obreiros"
 ];
 
 const testimonials = [
   { name: "Pr. Marcos Silva", role: "Pastor Titular", text: "Esta plataforma revolucionou minha preparação para os cultos. Os esboços gerados são profundos e cheios de unção." },
-  { name: "Ev. Ana Beatriz", role: "Evangelista", text: "O gerador de pregações me ajuda a preparar mensagens impactantes para cruzadas em poucos minutos." },
+  { name: "Ev. Ana Beatriz", role: "Evangelista", text: "As ferramentas de estudo e esboço me ajudam a organizar mensagens com base bíblica profunda e clareza para as cruzadas." },
   { name: "Dc. Pedro Santos", role: "Diácono e Líder", text: "Os questionários bíblicos são perfeitos para o discipulado dos novos convertidos na nossa igreja." },
 ];
 
@@ -143,7 +144,7 @@ const Index = () => {
                 className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-5 py-1.5 text-xs sm:text-sm font-semibold text-amber-500 shadow-sm backdrop-blur-md"
                 whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(245, 158, 11, 0.35)" }}
               >
-                <Star className="h-3.5 w-3.5 animate-[pulse_2s_ease-in-out_infinite]" /> Plataforma Oficial para Pregadores do Evangelho
+                <Star className="h-3.5 w-3.5 animate-[pulse_2s_ease-in-out_infinite]" /> Estudo Bíblico, Devoção e Preparo Ministerial
               </motion.span>
             </motion.div>
 
@@ -386,7 +387,7 @@ const Index = () => {
 
           <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
             {[
-              { icon: Mic, title: "Esboços de Pregação", desc: "Sermões completos com introdução, desenvolvimento e aplicação prática, gerados por IA com base bíblica sólida.", link: "/gerador-pregacoes", cta: "Gerar esboço" },
+              { icon: Mic, title: "Esboços de Pregação", desc: "Estruture seus sermões com introdução, desenvolvimento, referências cruzadas e aplicação prática com base bíblica sólida.", link: "/gerador-pregacoes", cta: "Criar esboço" },
               { icon: BookMarked, title: "Mensagens Bíblicas", desc: "Pregações organizadas por temas como Fé, Avivamento, Santidade e Salvação, prontas para uso no púlpito.", link: "/biblioteca", cta: "Ver mensagens" },
               { icon: ScrollText, title: "Estudos Bíblicos", desc: "Estudos aprofundados dos 66 livros da Bíblia com esboços, temas centrais e análises temáticas transversais.", link: "/estudo-biblico", cta: "Explorar estudos" },
             ].map((item, i) => (

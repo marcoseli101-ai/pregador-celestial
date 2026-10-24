@@ -252,7 +252,7 @@ export function ShareVerseImageModal({
               {/* Header inside card */}
               <div className="relative z-10 flex items-center justify-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-bold uppercase tracking-widest text-white/90">
-                  <Sparkles className="h-3 w-3 text-amber-300" /> Pregador Celestial
+                  <Sparkles className="h-3 w-3 text-amber-300" /> Pregador Fiel
                 </span>
               </div>
 

@@ -104,7 +104,7 @@ export const TODAY_FEATURES: FeatureItem[] = [
 export const FULL_APP_TOUR_STEPS: TourStep[] = [
   {
     id: "welcome",
-    title: "Bem-vindo ao Pregador Pro! 👋",
+    title: "Bem-vindo ao Pregador Fiel! 👋",
     description:
       "Sua plataforma completa para estudo bíblico exegético, preparação de sermões, escola bíblica e ministração da Palavra. Vamos conhecer as principais ferramentas?",
     placement: "center",
@@ -139,12 +139,12 @@ export const FULL_APP_TOUR_STEPS: TourStep[] = [
   },
   {
     id: "sermon-generator",
-    title: "Gerador de Esboços com Edição Livre 📜",
+    title: "Estruturador de Esboços com Edição Livre 📜",
     description:
-      "Gere esboços homiléticos estruturados e exegéticos. Após a geração, edite o texto livremente com o botão 'Editar' e utilize o Modo Púlpito para ministração sem distrações.",
+      "Estruture sermões homiléticos exegéticos com base bíblica sólida. Após a estruturação, edite o texto livremente com o botão 'Editar' e utilize o Modo Púlpito para ministração sem distrações.",
     path: "/gerador-pregacoes",
     targetSelector: "[data-tour='sermon-generator-form']",
-    howToTest: "Defina o tema e gere sermões ricos prontos para o púlpito.",
+    howToTest: "Defina o tema e estruture sermões ricos prontos para o púlpito.",
     placement: "center",
   },
   {

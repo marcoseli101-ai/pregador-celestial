@@ -19,7 +19,7 @@ interface ContentActionsProps {
   hideSave?: boolean;
 }
 
-export function ContentActions({ content, title = "Pregador Pro", contentType = "geral", compact = false, className = "", hideSave = false }: ContentActionsProps) {
+export function ContentActions({ content, title = "Pregador Fiel", contentType = "geral", compact = false, className = "", hideSave = false }: ContentActionsProps) {
   const { user } = useAuth();
   const { requireLogin } = useLoginPrompt();
   const [isSaving, setIsSaving] = useState(false);
@@ -79,7 +79,7 @@ export function ContentActions({ content, title = "Pregador Pro", contentType = 
         doc.setPage(i);
         doc.setFontSize(8);
         doc.setTextColor(150);
-        doc.text("Pregador Pro · pregadorpro.com", margin, doc.internal.pageSize.getHeight() - 10);
+        doc.text("Pregador Fiel", margin, doc.internal.pageSize.getHeight() - 10);
         doc.text(`Página ${i}/${pageCount}`, pageWidth - margin - 20, doc.internal.pageSize.getHeight() - 10);
       }
 

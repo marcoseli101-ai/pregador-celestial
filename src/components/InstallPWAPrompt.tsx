@@ -99,7 +99,7 @@ export function InstallPWAPrompt() {
         </div>
         <div className="flex-1">
           <p className="text-sm font-semibold text-foreground">
-            Instalar o Pregador Pro no seu celular
+            Instalar o Pregador Fiel no seu celular
           </p>
           {showIOS ? (
             <p className="mt-1 text-xs text-muted-foreground">

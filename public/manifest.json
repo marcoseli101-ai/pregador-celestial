@@ -1,7 +1,7 @@
 {
-  "name": "Pregador Bíblico Pro",
-  "short_name": "Pregador Pro",
-  "description": "Plataforma completa para pregadores evangélicos estudarem a Bíblia, prepararem sermões e gerarem materiais de pregação.",
+  "name": "Pregador Fiel",
+  "short_name": "Pregador Fiel",
+  "description": "Estudo Bíblico, Devoção e Preparo Ministerial. Ferramentas inteligentes para pregadores e líderes cristãos.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

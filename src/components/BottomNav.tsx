@@ -60,7 +60,7 @@ export const BottomNav: React.FC = () => {
     {
       title: "Pregação",
       items: [
-        { label: "Gerador de Esboços", path: "/gerador-pregacoes", icon: Sparkles },
+        { label: "Estruturador de Esboços", path: "/gerador-pregacoes", icon: Sparkles },
         { label: "Biblioteca de Mensagens", path: "/biblioteca", icon: FileText },
         { label: "Área do Pregador", path: "/area-pregador", icon: GraduationCap },
         { label: "Notas Pessoais", path: "/notas", icon: StickyNote },
@@ -164,7 +164,7 @@ export const BottomNav: React.FC = () => {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-gold text-background font-serif font-black text-sm">
                     P
                   </div>
-                  Pregador <span className="text-gradient-gold">Pro</span>
+                  PREGADOR <span className="text-gradient-gold font-extrabold">FIEL</span>
                 </SheetTitle>
               </SheetHeader>
 
@@ -269,7 +269,12 @@ export const BottomNav: React.FC = () => {
       </nav>
 
       {/* Modal de IA Theos / Chat Teológico */}
-      <BiblicalAIChatModal open={aiChatOpen} onOpenChange={setAiChatOpen} />
+      <BiblicalAIChatModal
+        open={aiChatOpen}
+        isOpen={aiChatOpen}
+        onOpenChange={setAiChatOpen}
+        onClose={() => setAiChatOpen(false)}
+      />
     </>
   );
 };

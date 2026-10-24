@@ -355,10 +355,10 @@ const GeradorPregacoes = () => {
     <AnimatedPage className="container px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <AnimatedSection className="mb-8 text-center pulpit-hide-print">
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 tracking-tight">
-          Gerador de <span className="text-gradient-gold">Pregações & Esboços</span>
+          Estruturador de <span className="text-gradient-gold">Esboços Bíblicos</span>
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
-          Motor Homilético Pentecostal Clássico (CGADB) com rigor exegético ARC, léxico no original e bibliografia CPAD.
+          Estruture seus sermões com introdução, desenvolvimento, referências cruzadas e aplicação prática com base bíblica sólida.
         </p>
       </AnimatedSection>
 
@@ -517,7 +517,7 @@ const GeradorPregacoes = () => {
                 ) : (
                   <Sparkles className="h-5 w-5 animate-pulse" />
                 )}
-                {loading ? "Gerando Pregação Exegética..." : "Gerar Pregação Completa"}
+                {loading ? "Estruturando Esboço com Base Bíblica..." : "Criar Esboço Bíblico"}
               </Button>
             </CardContent>
           </Card>

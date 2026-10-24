@@ -34,9 +34,11 @@ import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useAppTour } from "@/components/tour/AppTourProvider";
 import { GlobalSearchModal } from "@/components/GlobalSearchModal";
+import { BiblicalAIChatModal } from "@/components/BiblicalAIChatModal";
 
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [aiChatOpen, setAiChatOpen] = useState(false);
   const location = useLocation();
   const { user, signOut } = useAuth();
   const { openLogin } = useLoginPrompt();
@@ -63,7 +65,7 @@ export function Header() {
     {
       title: "Pregação",
       items: [
-        { label: "Gerador de Esboços", path: "/gerador-pregacoes", desc: "Estruturação homilética com IA", icon: Sparkles },
+        { label: "Estruturador de Esboços", path: "/gerador-pregacoes", desc: "Estruturação homilética com base bíblica sólida", icon: Sparkles },
         { label: "Biblioteca de Mensagens", path: "/biblioteca", desc: "Sermões temáticos e exegéticos", icon: FileText },
         { label: "Área do Pregador", path: "/area-pregador", desc: "Seus sermões salvos e histórico", icon: GraduationCap },
         { label: "Notas Pessoais", path: "/notas", desc: "Rascunhos e anotações ministeriais", icon: StickyNote },
@@ -72,7 +74,7 @@ export function Header() {
     {
       title: "Academia",
       items: [
-        { label: "Escola Bíblica (EBD)", path: "/ebd", desc: "Lições e apoio com IA ao professor", icon: GraduationCap },
+        { label: "Escola Bíblica (EBD)", path: "/ebd", desc: "Lições e ferramentas inteligentes de subsídio e apoio ao professor", icon: GraduationCap },
         { label: "Curso de Teologia", path: "/curso-teologia", desc: "Teologia sistemática interativa", icon: GraduationCap },
         { label: "Questionários", path: "/questionarios", desc: "Testes e desafios bíblicos", icon: HelpCircle },
         { label: "Devocional Diário", path: "/devocional", desc: "Versículo e reflexão diária", icon: Calendar },
@@ -94,8 +96,8 @@ export function Header() {
               <BookOpen className="h-5 w-5 text-background" />
             </div>
             <div className="flex flex-col">
-              <span className="font-serif text-lg font-bold tracking-wide text-foreground flex items-center gap-1">
-                Pregador <span className="text-gradient-gold font-extrabold">Pro</span>
+              <span className="font-serif text-lg font-bold tracking-wide text-foreground flex items-center gap-1.5">
+                PREGADOR <span className="text-gradient-gold font-extrabold">FIEL</span>
               </span>
             </div>
           </Link>
@@ -200,6 +202,17 @@ export function Header() {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => setAiChatOpen(true)}
+              className="hidden lg:flex gap-1.5 text-xs text-amber-500 font-bold hover:bg-amber-500/15 border border-amber-500/40 rounded-full px-3.5 h-8 bg-amber-500/10 shadow-sm transition-all"
+              title="Abrir Assistente Teológico"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
+              Assistente
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
               data-tour="tour-button"
               onClick={openTourMenu}
               className="hidden sm:flex gap-1.5 text-xs text-amber-500 font-semibold hover:bg-amber-500/15 border border-amber-500/30 rounded-full px-3 h-8"
@@ -268,6 +281,9 @@ export function Header() {
 
       {/* Global Search Modal */}
       <GlobalSearchModal open={searchOpen} onOpenChange={setSearchOpen} />
+
+      {/* Biblical AI Chat Modal */}
+      <BiblicalAIChatModal open={aiChatOpen} onOpenChange={setAiChatOpen} />
     </>
   );
 }

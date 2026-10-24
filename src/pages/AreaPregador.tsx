@@ -127,7 +127,7 @@ const AreaPregador = () => {
 
   const shareReferralWhatsApp = () => {
     const text = encodeURIComponent(
-      `Paz do Senhor! Estou usando a plataforma Pregador Celestial para estudos bíblicos e pregações. Acesse pelo meu link de convidado: ${referralUrl}`
+      `Paz do Senhor! Estou usando a plataforma Pregador Fiel para estudos bíblicos e pregações. Acesse pelo meu link de convidado: ${referralUrl}`
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
@@ -381,7 +381,7 @@ const AreaPregador = () => {
       <AnimatedPage className="container py-12 px-4">
         <div className="mx-auto max-w-lg text-center space-y-6">
           <FolderOpen className="h-16 w-16 mx-auto text-amber-500/50" />
-          <h1 className="font-serif text-3xl font-bold text-foreground">Área do Pregador PRO</h1>
+          <h1 className="font-serif text-3xl font-bold text-foreground">Área do Pregador Fiel</h1>
           <p className="text-muted-foreground">
             Acesse seu acervo bíblico completo, histórico de ministrações no altar e frutos espirituais colhidos.
           </p>
@@ -405,7 +405,7 @@ const AreaPregador = () => {
           )}
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 tracking-tight">
-          Área do <span className="text-gradient-gold">Pregador PRO</span>
+          Área do <span className="text-gradient-gold">Pregador Fiel</span>
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
           Gestão completa de sermões exegéticos, diário de ministrações no altar e relatórios de frutos colhidos.
@@ -529,7 +529,7 @@ const AreaPregador = () => {
                 <Sparkles className="h-12 w-12 mx-auto mb-3 text-amber-500/40" />
                 <h3 className="font-serif text-lg font-bold text-foreground">Nenhuma pregação encontrada</h3>
                 <p className="text-sm max-w-sm mx-auto mt-1">
-                  Gere e salve seus sermões no "Gerador de Esboços" para registrar suas ministrações aqui.
+                  Estruture e salve seus sermões no "Estruturador de Esboços" para registrar suas ministrações aqui.
                 </p>
               </Card>
             ) : (
@@ -947,7 +947,7 @@ const AreaPregador = () => {
                 </div>
                 <div className="p-4 rounded-2xl bg-accent/10 border border-border/50 space-y-1.5">
                   <span className="font-bold text-amber-500 text-sm">2. Cadastro Gratuito</span>
-                  <p className="text-muted-foreground">O irmão se cadastra e experimenta a Bíblia, a Harpa e o gerador de pregações.</p>
+                  <p className="text-muted-foreground">O irmão se cadastra e experimenta a Bíblia, a Harpa e o estruturador de esboços.</p>
                 </div>
                 <div className="p-4 rounded-2xl bg-accent/10 border border-border/50 space-y-1.5">
                   <span className="font-bold text-amber-500 text-sm">3. Desbloqueie Bônus</span>
