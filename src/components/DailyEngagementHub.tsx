@@ -29,6 +29,7 @@ import {
   CANONICAL_365_VERSES,
   getBrasiliaDayOfYear,
 } from "@/lib/dailyVerseService";
+import { VERSE_BACKGROUNDS } from "@/data/verseBackgrounds";
 import { toast } from "sonner";
 
 export const DailyEngagementHub: React.FC = () => {
@@ -38,6 +39,7 @@ export const DailyEngagementHub: React.FC = () => {
   // Calculate day of the year in Brasília (1 - 365)
   const now = new Date();
   const dayOfYear = getBrasiliaDayOfYear(now);
+  const todayBackground = VERSE_BACKGROUNDS[dayOfYear % VERSE_BACKGROUNDS.length];
 
   // Verified Verse of the Day state with real-time Bible check
   const [dailyVerse, setDailyVerse] = useState<VerifiedDailyVerse>(() => {
@@ -157,9 +159,16 @@ export const DailyEngagementHub: React.FC = () => {
           {/* ========================================================
               CARD 1: VERSÍCULO DO DIA & COMPARTILHAR IMAGEM
              ======================================================== */}
-          <Card className="glass-card border-amber-500/30 rounded-3xl overflow-hidden shadow-lg hover:border-amber-500/50 transition-all flex flex-col justify-between">
-            <div className="h-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600" />
-            <CardContent className="p-6 flex flex-col justify-between h-full space-y-4">
+          <Card className="glass-card border-amber-500/30 rounded-3xl overflow-hidden shadow-lg hover:border-amber-500/50 transition-all flex flex-col justify-between relative group">
+            {/* Subtle background from today's canonical theme */}
+            <img
+              src={todayBackground.thumbUrl}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-10 group-hover:opacity-15 transition-opacity duration-300 pointer-events-none"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/95 pointer-events-none" />
+            <div className="h-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 relative z-10" />
+            <CardContent className="p-6 flex flex-col justify-between h-full space-y-4 relative z-10">
               <div>
                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                   <span className="text-[11px] font-bold uppercase tracking-widest text-amber-500 flex items-center gap-1.5">
@@ -195,7 +204,7 @@ export const DailyEngagementHub: React.FC = () => {
                   onClick={() => setShareModalOpen(true)}
                   className="flex-1 bg-gradient-gold text-background font-semibold text-xs h-10 rounded-xl shadow-gold gap-1.5 hover:opacity-95"
                 >
-                  <Share2 className="h-3.5 w-3.5" /> Gerar Imagem
+                  <Share2 className="h-3.5 w-3.5" /> Criar Imagem (10 Fundos)
                 </Button>
                 <Link to="/devocional" className="flex-1">
                   <Button
