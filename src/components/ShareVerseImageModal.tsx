@@ -16,8 +16,6 @@ import {
   Check,
   Loader2,
   Sparkles,
-  ChevronDown,
-  ChevronUp,
   Sliders,
   Type,
   SunMedium,
@@ -71,11 +69,10 @@ export function ShareVerseImageModal({
   const [format, setFormat] = useState<"square" | "story">("square");
   const [contrastLevel, setContrastLevel] = useState<"normal" | "high" | "soft">("normal");
   const [fontSizeDelta, setFontSizeDelta] = useState<number>(0);
-  const [showAllBackgrounds, setShowAllBackgrounds] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(true);
 
-  // Hidden 1080p master export card reference
+  // References
   const exportCardRef = useRef<HTMLDivElement>(null);
   const previewCardRef = useRef<HTMLDivElement>(null);
 
@@ -100,41 +97,65 @@ export function ShareVerseImageModal({
     const img = new Image();
     img.src = currentBgUrl;
     img.onload = () => setImageLoaded(true);
-    img.onerror = () => setImageLoaded(true); // fallback to gradient
+    img.onerror = () => setImageLoaded(true);
   }, [currentBgUrl]);
 
-  // Calculate dynamic font size to fit short, medium and long verses
+  // Character count to dynamically scale font size
   const textLength = cleanVerseText.length;
-  const baseFontSizeClass = useMemo(() => {
-    if (format === "story") {
-      if (textLength > 300) return "text-sm sm:text-base leading-relaxed";
-      if (textLength > 180) return "text-base sm:text-lg leading-relaxed";
-      if (textLength > 100) return "text-lg sm:text-xl leading-relaxed";
-      return "text-xl sm:text-2xl leading-relaxed";
-    } else {
-      if (textLength > 300) return "text-xs sm:text-sm leading-relaxed";
-      if (textLength > 180) return "text-sm sm:text-base leading-relaxed";
-      if (textLength > 100) return "text-base sm:text-lg leading-relaxed";
-      return "text-lg sm:text-xl leading-relaxed";
-    }
-  }, [textLength, format]);
 
-  // Dynamic font size for master 1080p export
+  // Auto-calculated compact font size for preview card
+  // Guarantees that even very long verses (e.g. 1 Coríntios 13:4-7 with ~290 chars)
+  // fit comfortably without clipping or pushing the biblical reference out.
+  const previewFontSize = useMemo(() => {
+    let size = 13;
+    if (format === "story") {
+      if (textLength > 320) size = 9.5;
+      else if (textLength > 240) size = 10.5;
+      else if (textLength > 160) size = 12;
+      else if (textLength > 90) size = 13.5;
+      else size = 15.5;
+    } else {
+      // Square card
+      if (textLength > 320) size = 8.5;
+      else if (textLength > 240) size = 9.5;
+      else if (textLength > 160) size = 11;
+      else if (textLength > 90) size = 12.5;
+      else size = 14.5;
+    }
+    return Math.max(7.5, size + fontSizeDelta * 0.75);
+  }, [textLength, format, fontSizeDelta]);
+
+  const previewLineHeight = useMemo(() => {
+    if (textLength > 240) return 1.34;
+    if (textLength > 160) return 1.42;
+    return 1.48;
+  }, [textLength]);
+
+  // Auto-calculated font size for master 1080p export
   const masterFontSizePx = useMemo(() => {
     let size = 44;
     if (format === "story") {
-      if (textLength > 300) size = 34;
-      else if (textLength > 180) size = 40;
-      else if (textLength > 100) size = 48;
-      else size = 56;
+      if (textLength > 320) size = 26;
+      else if (textLength > 240) size = 30;
+      else if (textLength > 160) size = 36;
+      else if (textLength > 90) size = 44;
+      else size = 54;
     } else {
-      if (textLength > 300) size = 30;
-      else if (textLength > 180) size = 36;
-      else if (textLength > 100) size = 44;
-      else size = 52;
+      // Square 1080x1080
+      if (textLength > 320) size = 22;
+      else if (textLength > 240) size = 26;
+      else if (textLength > 160) size = 32;
+      else if (textLength > 90) size = 38;
+      else size = 48;
     }
-    return Math.max(22, size + fontSizeDelta * 4);
+    return Math.max(18, size + fontSizeDelta * 3);
   }, [textLength, format, fontSizeDelta]);
+
+  const masterLineHeight = useMemo(() => {
+    if (textLength > 240) return 1.38;
+    if (textLength > 160) return 1.46;
+    return 1.55;
+  }, [textLength]);
 
   // Overlay opacity based on contrast level
   const contrastOverlayStyle = useMemo(() => {
@@ -158,7 +179,6 @@ export function ShareVerseImageModal({
   const generateMasterCanvas = async (): Promise<HTMLCanvasElement | null> => {
     if (!exportCardRef.current) return null;
 
-    // Ensure asset is decoded
     await ensureImageReady(currentBgUrl);
 
     const targetWidth = 1080;
@@ -174,7 +194,6 @@ export function ShareVerseImageModal({
       logging: false,
     });
 
-    // Enforce exact 1080x1080 or 1080x1920 output
     const exactCanvas = document.createElement("canvas");
     exactCanvas.width = targetWidth;
     exactCanvas.height = targetHeight;
@@ -241,15 +260,12 @@ export function ShareVerseImageModal({
             }
           }
         } else {
-          // Native file sharing not supported: download directly
           const link = document.createElement("a");
           link.download = filename;
           link.href = URL.createObjectURL(blob);
           link.click();
           URL.revokeObjectURL(link.href);
-          toast.success(
-            "Imagem baixada em alta resolução! Você pode publicá-la em suas redes sociais."
-          );
+          toast.success("Imagem baixada em alta resolução para compartilhamento!");
         }
       }, "image/png", 1.0);
     } catch (e) {
@@ -275,46 +291,49 @@ export function ShareVerseImageModal({
           )}
         </DialogTrigger>
 
-        <DialogContent className="max-w-2xl max-h-[92vh] overflow-y-auto glass-card border border-border/80 shadow-2xl rounded-3xl p-4 sm:p-7">
-          <DialogHeader className="pb-2 border-b border-border/40">
+        <DialogContent className="w-[96vw] max-w-4xl max-h-[92vh] overflow-y-auto overflow-x-hidden glass-card border border-border/80 shadow-2xl rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 md:p-6">
+          {/* Dialog Header */}
+          <DialogHeader className="pb-2.5 border-b border-border/40">
             <div className="flex items-center justify-between gap-2">
-              <DialogTitle className="font-serif text-lg sm:text-2xl font-bold flex items-center gap-2 text-foreground">
-                <Sparkles className="h-5 w-5 text-amber-500" />
-                Compartilhar Versículo
+              <DialogTitle className="font-serif text-base sm:text-xl font-bold flex items-center gap-2 text-foreground">
+                <Sparkles className="h-4 sm:h-5 w-4 sm:w-5 text-amber-500 shrink-0" />
+                <span>Compartilhar Versículo</span>
               </DialogTitle>
-              <Badge className="bg-amber-500/15 text-amber-400 border-amber-500/30 text-[10px] font-mono font-bold">
+              <Badge className="bg-amber-500/15 text-amber-400 border-amber-500/30 text-[10px] font-mono font-bold shrink-0">
                 {format === "square" ? "1080 × 1080 px" : "1080 × 1920 px"}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground text-left">
-              Gere artes com fundos fotográficos bíblicos e fidelidade ao texto das Escrituras.
+            <p className="text-xs text-muted-foreground text-left line-clamp-1">
+              Artes prontas para Feed e Stories com fundos fotográficos e fidelidade às Escrituras.
             </p>
           </DialogHeader>
 
-          <div className="space-y-5 pt-3">
-            {/* 1. Format Selection & Quick Customizations Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-muted/40 p-2.5 rounded-2xl border border-border/60">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden sm:inline mr-1">
-                  Formato:
-                </span>
+          {/* Responsive 2-Column Desktop / 1-Column Mobile Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 pt-3 min-w-0">
+            {/* =========================================================
+                COLUMN 1 (Desktop Left / Mobile Top):
+                Compact Preview & Export Action Buttons
+               ========================================================= */}
+            <div className="md:col-span-5 flex flex-col items-center justify-between gap-3 bg-muted/25 p-3 sm:p-4 rounded-2xl border border-border/50 min-w-0">
+              {/* Format Toggle (Feed 1:1 vs Stories 9:16) */}
+              <div className="flex items-center justify-center gap-1.5 w-full bg-background/70 p-1 rounded-xl border border-border/60">
                 <button
                   type="button"
                   onClick={() => setFormat("square")}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all text-center ${
                     format === "square"
-                      ? "bg-gradient-gold text-background shadow-md"
+                      ? "bg-gradient-gold text-background shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  1:1 Feed / Card
+                  1:1 Feed
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormat("story")}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all text-center ${
                     format === "story"
-                      ? "bg-gradient-gold text-background shadow-md"
+                      ? "bg-gradient-gold text-background shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -322,115 +341,135 @@ export function ShareVerseImageModal({
                 </button>
               </div>
 
-              {/* Contrast and Font Adjustment Tools */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 bg-background/60 p-1 rounded-xl border border-border/50 text-[11px]">
-                  <SunMedium className="h-3.5 w-3.5 text-muted-foreground ml-1" />
-                  <button
-                    onClick={() => setContrastLevel("soft")}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-medium transition-all ${
-                      contrastLevel === "soft"
-                        ? "bg-amber-500/20 text-amber-400 font-bold"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                    title="Contraste suave"
-                  >
-                    Suave
-                  </button>
-                  <button
-                    onClick={() => setContrastLevel("normal")}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-medium transition-all ${
-                      contrastLevel === "normal"
-                        ? "bg-amber-500/20 text-amber-400 font-bold"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                    title="Contraste equilibrado"
-                  >
-                    Normal
-                  </button>
-                  <button
-                    onClick={() => setContrastLevel("high")}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-medium transition-all ${
-                      contrastLevel === "high"
-                        ? "bg-amber-500/20 text-amber-400 font-bold"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                    title="Alto contraste"
-                  >
-                    Forte
-                  </button>
-                </div>
+              {/* Compact Preview Card Frame */}
+              <div className="w-full flex items-center justify-center py-1 sm:py-2">
+                <div
+                  ref={previewCardRef}
+                  style={{
+                    width: format === "square" ? "230px" : "170px",
+                    height: format === "square" ? "230px" : "302px",
+                  }}
+                  className={`relative overflow-hidden rounded-2xl border border-border/80 shadow-2xl flex flex-col justify-between text-center select-none shrink-0 transition-all duration-200 ${selectedTheme.fallbackGradient}`}
+                >
+                  {/* Background Photo */}
+                  <img
+                    src={currentBgUrl}
+                    alt={selectedTheme.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                    style={{ opacity: imageLoaded ? 1 : 0.6 }}
+                  />
 
-                <div className="flex items-center gap-0.5 bg-background/60 p-1 rounded-xl border border-border/50 text-[11px]">
-                  <Type className="h-3.5 w-3.5 text-muted-foreground ml-1 mr-0.5" />
-                  <button
-                    onClick={() => setFontSizeDelta((p) => Math.max(-2, p - 1))}
-                    className="h-6 w-6 rounded-md hover:bg-accent/20 text-xs font-bold flex items-center justify-center text-muted-foreground hover:text-foreground"
-                    title="Diminuir tamanho do texto"
-                  >
-                    A-
-                  </button>
-                  <button
-                    onClick={() => setFontSizeDelta((p) => Math.min(3, p + 1))}
-                    className="h-6 w-6 rounded-md hover:bg-accent/20 text-xs font-bold flex items-center justify-center text-muted-foreground hover:text-foreground"
-                    title="Aumentar tamanho do texto"
-                  >
-                    A+
-                  </button>
+                  {/* Contrast Overlays */}
+                  <div className={`absolute inset-0 ${selectedTheme.overlayClass}`} />
+                  <div className={`absolute inset-0 ${contrastOverlayStyle}`} />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_35%,rgba(0,0,0,0.6)_100%)] pointer-events-none" />
+
+                  {/* 1. Header: Sacred Brand Badge (Strictly shrink-0) */}
+                  <div className="relative z-10 shrink-0 pt-2.5 flex items-center justify-center">
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full backdrop-blur-md border text-[9px] font-black uppercase tracking-widest shadow-md ${selectedTheme.badgeBg}`}
+                    >
+                      <Sparkles className="h-2.5 w-2.5 text-amber-300" /> PREGADOR FIEL
+                    </span>
+                  </div>
+
+                  {/* 2. Verse Text: Middle Flex Area with Auto-fitting Font Size */}
+                  <div className="relative z-10 flex-1 min-h-0 flex items-center justify-center px-2.5 py-1 overflow-hidden">
+                    <blockquote
+                      style={{
+                        fontSize: `${previewFontSize}px`,
+                        lineHeight: previewLineHeight,
+                      }}
+                      className={`font-serif italic font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center line-clamp-[10] ${selectedTheme.quoteColor}`}
+                    >
+                      “{cleanVerseText}”
+                    </blockquote>
+                  </div>
+
+                  {/* 3. Footer: Scripture Reference & Watermark (Strictly shrink-0: NEVER CLIPPED) */}
+                  <div className="relative z-10 shrink-0 pb-2.5 space-y-0.5">
+                    <div className="flex items-center justify-center gap-1 px-1.5">
+                      <div className="w-3.5 h-px bg-white/40 shrink-0" />
+                      <p
+                        className={`font-serif font-black tracking-wide uppercase text-[11px] truncate drop-shadow-md ${selectedTheme.accentColor}`}
+                      >
+                        {resolvedReference}
+                      </p>
+                      <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-black/50 border border-white/20 text-white font-bold shrink-0">
+                        {resolvedVersion}
+                      </span>
+                      <div className="w-3.5 h-px bg-white/40 shrink-0" />
+                    </div>
+
+                    <p className="text-[8px] uppercase tracking-widest text-white/70 font-semibold drop-shadow-sm">
+                      pregador.site
+                    </p>
+                  </div>
                 </div>
+              </div>
+
+              {/* Action Buttons directly under preview */}
+              <div className="w-full flex flex-col gap-2">
+                <Button
+                  onClick={handleDownload}
+                  disabled={generating}
+                  className="w-full bg-gradient-gold text-background hover:opacity-95 font-bold gap-2 rounded-xl shadow-gold h-10 text-xs sm:text-sm"
+                >
+                  {generating ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
+                  Baixar Imagem PNG ({format === "square" ? "1080×1080" : "1080×1920"})
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={handleShare}
+                  disabled={generating}
+                  className="w-full gap-2 rounded-xl border-border/80 h-9 hover:bg-accent/15 text-xs font-semibold"
+                >
+                  <Share2 className="h-3.5 w-3.5" /> Compartilhar
+                </Button>
               </div>
             </div>
 
-            {/* 2. Visual Backgrounds Library */}
-            <div className="space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-foreground flex items-center gap-1.5 uppercase tracking-wider">
-                  <Sliders className="h-3.5 w-3.5 text-amber-500" />
-                  Biblioteca de Fundos Bíblicos
-                </span>
+            {/* =========================================================
+                COLUMN 2 (Desktop Right / Mobile Bottom):
+                Backgrounds Library, Category Filters & Fine Controls
+               ========================================================= */}
+            <div className="md:col-span-7 flex flex-col justify-between gap-3 min-w-0">
+              {/* Category Filter Tabs */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5 uppercase tracking-wider">
+                    <Sliders className="h-3.5 w-3.5 text-amber-500" />
+                    Biblioteca de Fundos ({VERSE_BACKGROUNDS.length})
+                  </span>
+                  <span className="text-[10px] text-muted-foreground hidden sm:inline">
+                    Selecione um tema
+                  </span>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowAllBackgrounds(!showAllBackgrounds)}
-                  className="text-xs font-semibold text-amber-500 hover:text-amber-400 flex items-center gap-1"
-                >
-                  {showAllBackgrounds ? (
-                    <>
-                      Ver compacto <ChevronUp className="h-3.5 w-3.5" />
-                    </>
-                  ) : (
-                    <>
-                      Ver todos (10) <ChevronDown className="h-3.5 w-3.5" />
-                    </>
-                  )}
-                </button>
+                <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none max-w-full">
+                  {VERSE_BACKGROUND_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-all border shrink-0 ${
+                        selectedCategory === cat.id
+                          ? "bg-amber-500/20 text-amber-400 border-amber-500/50 font-bold"
+                          : "bg-card/60 text-muted-foreground border-border/60 hover:text-foreground hover:border-border"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {/* Category Filter Pills */}
-              <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-                {VERSE_BACKGROUND_CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all border ${
-                      selectedCategory === cat.id
-                        ? "bg-amber-500/20 text-amber-400 border-amber-500/50 font-bold"
-                        : "bg-card/60 text-muted-foreground border-border/60 hover:text-foreground hover:border-border"
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Background Cards Grid / Horizontal Scroll */}
-              <div
-                className={`transition-all duration-300 ${
-                  showAllBackgrounds
-                    ? "grid grid-cols-2 sm:grid-cols-5 gap-2.5 max-h-[280px] overflow-y-auto pr-1"
-                    : "flex gap-2.5 overflow-x-auto pb-2 scrollbar-none"
-                }`}
-              >
+              {/* Backgrounds Grid: 5 columns on desktop/tablet, 2 on mobile */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 max-h-[260px] sm:max-h-[300px] md:max-h-[320px] overflow-y-auto pr-1">
                 {filteredBackgrounds.map((bg) => {
                   const isSelected = selectedTheme.id === bg.id;
                   return (
@@ -438,11 +477,9 @@ export function ShareVerseImageModal({
                       key={bg.id}
                       type="button"
                       onClick={() => setSelectedTheme(bg)}
-                      className={`group relative rounded-2xl overflow-hidden border text-left transition-all duration-200 shrink-0 ${
-                        showAllBackgrounds ? "w-full" : "w-[124px] sm:w-[136px]"
-                      } ${
+                      className={`group relative rounded-xl overflow-hidden border text-left transition-all duration-150 ${
                         isSelected
-                          ? "ring-2 ring-amber-500 border-amber-400 shadow-lg shadow-amber-500/20 scale-[1.02]"
+                          ? "ring-2 ring-amber-500 border-amber-400 shadow-md shadow-amber-500/20 scale-[1.01]"
                           : "border-border/70 hover:border-amber-500/50 hover:scale-[1.01]"
                       }`}
                     >
@@ -452,32 +489,30 @@ export function ShareVerseImageModal({
                           src={bg.thumbUrl}
                           alt={bg.name}
                           loading="lazy"
-                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200"
                           onError={(e) => {
-                            // Fallback gradient if thumb image fails
                             e.currentTarget.style.display = "none";
                           }}
                         />
                         <div className={`absolute inset-0 ${bg.fallbackGradient} -z-10`} />
 
-                        {/* Selected Indicator Checkmark */}
                         {isSelected && (
-                          <div className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-background shadow-md">
-                            <Check className="h-3 w-3 stroke-[3]" />
+                          <div className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-background shadow-md">
+                            <Check className="h-2.5 w-2.5 stroke-[3]" />
                           </div>
                         )}
                       </div>
 
-                      {/* Theme Name Footer */}
-                      <div className="p-2 bg-card/90 backdrop-blur-sm border-t border-border/50">
+                      {/* Theme Name */}
+                      <div className="p-1.5 bg-card/90 backdrop-blur-sm border-t border-border/50">
                         <span
-                          className={`block text-[11px] font-bold truncate leading-tight ${
+                          className={`block text-[10px] font-bold truncate leading-tight ${
                             isSelected ? "text-amber-400" : "text-foreground"
                           }`}
                         >
                           {bg.name}
                         </span>
-                        <span className="block text-[9px] text-muted-foreground truncate leading-tight mt-0.5">
+                        <span className="block text-[8px] text-muted-foreground truncate leading-tight mt-0.5">
                           {bg.tagline}
                         </span>
                       </div>
@@ -485,111 +520,80 @@ export function ShareVerseImageModal({
                   );
                 })}
               </div>
-            </div>
 
-            {/* 3. Live Preview Area */}
-            <div className="space-y-2">
-              <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block text-center">
-                Pré-visualização Dinâmica:
-              </span>
+              {/* Adjustments: Contrast & Font Size */}
+              <div className="flex flex-wrap items-center justify-between gap-2 bg-muted/30 p-2 rounded-xl border border-border/50">
+                {/* Contrast Tool */}
+                <div className="flex items-center gap-1 text-[11px]">
+                  <SunMedium className="h-3.5 w-3.5 text-muted-foreground mr-1" />
+                  <span className="text-[10px] text-muted-foreground font-semibold mr-1">Contraste:</span>
+                  <button
+                    onClick={() => setContrastLevel("soft")}
+                    className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all ${
+                      contrastLevel === "soft"
+                        ? "bg-amber-500/20 text-amber-400 font-bold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    Suave
+                  </button>
+                  <button
+                    onClick={() => setContrastLevel("normal")}
+                    className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all ${
+                      contrastLevel === "normal"
+                        ? "bg-amber-500/20 text-amber-400 font-bold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    Normal
+                  </button>
+                  <button
+                    onClick={() => setContrastLevel("high")}
+                    className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all ${
+                      contrastLevel === "high"
+                        ? "bg-amber-500/20 text-amber-400 font-bold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    Forte
+                  </button>
+                </div>
 
-              <div className="overflow-hidden flex items-center justify-center p-3 sm:p-5 bg-black/40 rounded-3xl border border-border/60">
-                <div
-                  ref={previewCardRef}
-                  className={`relative overflow-hidden rounded-3xl border border-border/80 shadow-2xl flex flex-col justify-between text-center transition-all duration-300 select-none ${
-                    selectedTheme.fallbackGradient
-                  } ${
-                    format === "square"
-                      ? "w-full max-w-[360px] aspect-square p-6 sm:p-8"
-                      : "w-full max-w-[300px] aspect-[9/16] p-6 sm:p-8 py-12 sm:py-14"
-                  }`}
-                >
-                  {/* Real Photo Background */}
-                  <img
-                    src={currentBgUrl}
-                    alt={selectedTheme.name}
-                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
-                    style={{ opacity: imageLoaded ? 1 : 0.6 }}
-                  />
-
-                  {/* Contrast Protective Overlays */}
-                  <div className={`absolute inset-0 ${selectedTheme.overlayClass}`} />
-                  <div className={`absolute inset-0 ${contrastOverlayStyle}`} />
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_35%,rgba(0,0,0,0.6)_100%)] pointer-events-none" />
-
-                  {/* Header: Sacred Brand Badge */}
-                  <div className="relative z-10 flex items-center justify-center">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full backdrop-blur-md border text-[10px] font-black uppercase tracking-widest shadow-md ${selectedTheme.badgeBg}`}
-                    >
-                      <Sparkles className="h-3 w-3 text-amber-300 animate-pulse" /> PREGADOR FIEL
-                    </span>
-                  </div>
-
-                  {/* Verse Text (Quote with Auto-scaling) */}
-                  <div className="relative z-10 my-auto py-3 px-2">
-                    <blockquote
-                      className={`font-serif italic font-medium leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] ${baseFontSizeClass} ${selectedTheme.quoteColor}`}
-                    >
-                      “{cleanVerseText}”
-                    </blockquote>
-                  </div>
-
-                  {/* Footer: Scripture Reference & Watermark */}
-                  <div className="relative z-10 space-y-1.5 pt-2">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-5 h-px bg-white/40" />
-                      <p
-                        className={`font-serif font-black tracking-wider uppercase text-sm sm:text-base drop-shadow-md ${selectedTheme.accentColor}`}
-                      >
-                        {resolvedReference}
-                      </p>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-black/40 border border-white/20 text-white font-bold backdrop-blur-xs">
-                        {resolvedVersion}
-                      </span>
-                      <div className="w-5 h-px bg-white/40" />
-                    </div>
-
-                    <p className="text-[9px] uppercase tracking-widest text-white/70 font-semibold drop-shadow-sm">
-                      pregador.site
-                    </p>
-                  </div>
+                {/* Font Adjustment Tool */}
+                <div className="flex items-center gap-1 text-[11px]">
+                  <Type className="h-3.5 w-3.5 text-muted-foreground mr-1" />
+                  <span className="text-[10px] text-muted-foreground font-semibold mr-1">Texto:</span>
+                  <button
+                    onClick={() => setFontSizeDelta((p) => Math.max(-2, p - 1))}
+                    className="h-6 w-6 rounded bg-card/60 hover:bg-accent/20 border border-border/40 text-[10px] font-bold flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    title="Diminuir texto"
+                  >
+                    A-
+                  </button>
+                  <button
+                    onClick={() => setFontSizeDelta(0)}
+                    className="px-1.5 h-6 rounded bg-card/60 hover:bg-accent/20 border border-border/40 text-[9px] font-bold flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    title="Restaurar tamanho automático"
+                  >
+                    Auto
+                  </button>
+                  <button
+                    onClick={() => setFontSizeDelta((p) => Math.min(3, p + 1))}
+                    className="h-6 w-6 rounded bg-card/60 hover:bg-accent/20 border border-border/40 text-[10px] font-bold flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    title="Aumentar texto"
+                  >
+                    A+
+                  </button>
                 </div>
               </div>
-            </div>
-
-            {/* 4. Action Buttons (Export PNG & Share) */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button
-                onClick={handleDownload}
-                disabled={generating}
-                className="flex-1 bg-gradient-gold text-background hover:opacity-95 font-bold gap-2 rounded-2xl shadow-gold h-12 text-sm"
-              >
-                {generating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-                Baixar Imagem PNG ({format === "square" ? "1080×1080" : "1080×1920"})
-              </Button>
-
-              <Button
-                variant="outline"
-                onClick={handleShare}
-                disabled={generating}
-                className="gap-2 rounded-2xl border-border/80 h-12 px-6 hover:bg-accent/15 text-sm font-semibold"
-                title="Compartilhar imagem"
-              >
-                <Share2 className="h-4 w-4" /> Compartilhar
-              </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* ====================================================================
-          5. HIDDEN MASTER EXPORT ELEMENT (Strict 1080x1080 or 1080x1920 Stage)
-          Ensures crystal-sharp 1080p output on every device.
+          HIDDEN MASTER EXPORT ELEMENT (Strict 1080x1080 or 1080x1920 Stage)
+          Ensures crystal-sharp 1080p output on every device without clipping.
          ==================================================================== */}
       <div
         ref={exportCardRef}
@@ -625,14 +629,15 @@ export function ShareVerseImageModal({
         <div className={`absolute inset-0 ${contrastOverlayStyle}`} />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,rgba(0,0,0,0.7)_100%)]" />
 
-        {/* Top Header Badge */}
+        {/* Top Header Badge (Strictly flexShrink: 0) */}
         <div
           style={{
             position: "relative",
             zIndex: 10,
-            paddingTop: format === "square" ? "75px" : "160px",
+            paddingTop: format === "square" ? "65px" : "140px",
             display: "flex",
             justifyContent: "center",
+            flexShrink: 0,
           }}
         >
           <div
@@ -657,13 +662,17 @@ export function ShareVerseImageModal({
           </div>
         </div>
 
-        {/* Main Verse Quote */}
+        {/* Main Verse Quote (Middle Flex Area) */}
         <div
           style={{
             position: "relative",
             zIndex: 10,
-            padding: format === "square" ? "0 90px" : "0 80px",
-            margin: "auto 0",
+            padding: format === "square" ? "0 80px" : "0 70px",
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <blockquote
@@ -672,26 +681,29 @@ export function ShareVerseImageModal({
               fontStyle: "italic",
               fontWeight: 500,
               fontSize: `${masterFontSizePx}px`,
-              lineHeight: 1.6,
+              lineHeight: masterLineHeight,
               color: "#ffffff",
               textShadow: "0 4px 20px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0,0,0,0.8)",
               wordBreak: "break-word",
+              margin: 0,
+              textAlign: "center",
             }}
           >
             “{cleanVerseText}”
           </blockquote>
         </div>
 
-        {/* Footer: Reference, Version and Watermark */}
+        {/* Footer: Reference, Version and Watermark (Strictly flexShrink: 0 - NEVER CLIPPED) */}
         <div
           style={{
             position: "relative",
             zIndex: 10,
-            paddingBottom: format === "square" ? "75px" : "150px",
+            paddingBottom: format === "square" ? "65px" : "130px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "14px",
+            gap: "12px",
+            flexShrink: 0,
           }}
         >
           <div
