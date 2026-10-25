@@ -176,19 +176,6 @@ export function AppTourProvider({ children }: { children: React.ReactNode }) {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Botão Flutuante Discreto para Abrir Tour & Novidades */}
-      <div className="fixed bottom-5 right-5 z-40">
-        <Button
-          onClick={openTourMenu}
-          size="sm"
-          className="rounded-full shadow-lg bg-card/90 hover:bg-card border border-accent/50 text-foreground text-xs font-semibold px-3 py-2 h-9 backdrop-blur-md gap-1.5 hover:shadow-accent/20 transition-all animate-in fade-in"
-          title="Novidades & Tutorial"
-        >
-          <Lightbulb className="h-4 w-4 text-accent animate-pulse" />
-          <span className="hidden sm:inline">Novidades & Tour</span>
-        </Button>
-      </div>
     </AppTourContext.Provider>
   );
 }

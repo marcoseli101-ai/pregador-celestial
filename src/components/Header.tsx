@@ -215,11 +215,11 @@ export function Header() {
               size="sm"
               data-tour="tour-button"
               onClick={openTourMenu}
-              className="hidden sm:flex gap-1.5 text-xs text-amber-500 font-semibold hover:bg-amber-500/15 border border-amber-500/30 rounded-full px-3 h-8"
+              className="flex gap-1.5 text-xs text-amber-500 font-semibold hover:bg-amber-500/15 border border-amber-500/30 rounded-full px-2.5 sm:px-3 h-8"
               title="Ver Novidades e Tutorial da Plataforma"
             >
               <Lightbulb className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
-              Novidades
+              <span className="hidden sm:inline">Novidades</span>
             </Button>
 
             {isAdmin && (
